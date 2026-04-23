@@ -130,35 +130,35 @@ body {
 
 <div class="grid">
 
-    <div class="card full" onclick="go('/saju')">
+    <div class="card full" onclick="go('https://chomibinine.github.io/destinyroot/saju/')">
         <span class="dot"></span>
         <h2>사주 분석</h2>
         <p>생년월일 기반 4기둥 구조 분석<br>가장 정밀한 개인 운명 엔진</p>
         <div class="tag">Core Engine</div>
     </div>
 
-    <div class="card" onclick="go('/compatibility')">
+    <div class="card" onclick="go('./compatibility/')">
         <span class="dot"></span>
         <h2>궁합 분석</h2>
         <p>두 사람의 관계 에너지 분석</p>
         <div class="tag">Relationship</div>
     </div>
 
-    <div class="card" onclick="go('/fortune')">
+    <div class="card" onclick="go('./fortune/')">
         <span class="dot"></span>
         <h2>토정비결</h2>
-        <p>2026 올해 운세 흐름 예측</p>
+        <p><span id="fortune-year"></span> 올해 운세 흐름 예측</p>
         <div class="tag">Yearly Forecast</div>
     </div>
 
-    <div class="card" onclick="go('/astrology')">
+    <div class="card" onclick="go('./astrology/')">
         <span class="dot"></span>
         <h2>점성술</h2>
         <p>서양 별자리 기반 운명 해석</p>
         <div class="tag">Astro System</div>
     </div>
 
-    <div class="card full" onclick="go('/tarot')">
+    <div class="card full" onclick="go('./tarot/')">
         <span class="dot"></span>
         <h2>타로 리딩</h2>
         <p>즉각적인 감정 기반 운명 카드 해석</p>
@@ -174,15 +174,23 @@ body {
         </a>
     </div>
 
-    © 2026 운명뿌리 (Destiny Root) · All systems powered by data-driven fate engine
+    © <span id="footer-year"></span> 운명뿌리 (Destiny Root) · All systems powered by data-driven fate engine
 </div>
 
-
-
 <script>
+// 페이지 이동 함수
 function go(path){
     window.location.href = path;
 }
+
+// 자동 연도 업데이트 로직
+document.addEventListener('DOMContentLoaded', function() {
+    const currentYear = new Date().getFullYear();
+    
+    // id가 fortune-year, footer-year인 곳에 현재 연도 삽입
+    document.getElementById('fortune-year').innerText = currentYear;
+    document.getElementById('footer-year').innerText = currentYear;
+});
 </script>
 
 </body>
