@@ -31,7 +31,6 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         #report-view { display: none; }
         
-        /* 💡 천문학 로그 박스 디자인 업그레이드 */
         .log-box { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 16px; padding: 25px; margin-bottom: 40px; font-size: 0.95rem; color: #a1b0c0; line-height: 1.8; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
         .log-box h4 { color: var(--color-info); margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px dashed rgba(88, 166, 255, 0.3); padding-bottom: 10px; font-weight: 800; }
         .log-item { margin-bottom: 15px; }
@@ -44,12 +43,17 @@
         .r-section { margin-bottom: 50px; text-align: left; }
         .r-section h3 { font-size: 1.5rem; margin-bottom: 20px; border-left: 4px solid var(--gold-primary); padding-left: 15px; font-weight: 900; color: #fff; }
         
-        /* 해설 박스 업그레이드 */
         .theory-box { background: rgba(212,175,55,0.05); padding: 20px; border-radius: 12px; font-size: 0.95rem; color: var(--gold-light); margin-bottom: 20px; border-left: 3px solid var(--gold-primary); line-height: 1.7; font-weight: 300;}
         .theory-box strong { font-weight: 800; color: #fff; }
         .result-content { font-size: 1.1rem; line-height: 1.9; color: #d1d5db; text-align: justify; padding: 0 10px;}
         
-        .cta-box { margin-top: 50px; padding: 40px 25px; border-radius: 20px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--gold-primary); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        /* 🤫 С텔스 마케팅 CSS - 튀지 않게 글과 자연스럽게 어우러짐 */
+        .stealth-advice { margin-top: 50px; padding: 25px; border-radius: 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); }
+        .stealth-advice h4 { color: var(--gold-primary); font-size: 1.15rem; margin-bottom: 12px; font-weight: 800; }
+        .stealth-advice p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px; }
+        .link-stealth { display: inline-flex; align-items: center; color: var(--gold-light); font-size: 1rem; font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(249, 229, 150, 0.4); padding-bottom: 2px; transition: 0.2s;}
+        .link-stealth:hover { color: #fff; border-color: #fff; }
+        
         @media (max-width: 600px) { .grid-half { grid-template-columns: 1fr; } .big3-grid { grid-template-columns: 1fr; gap: 12px; } .big3-card { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; text-align: left; } }
     </style>
 </head>
@@ -106,11 +110,26 @@ const Core = (() => {
         { name: "물고기자리", icon: "♓", el: "Water", deg: "330°~360°", sun: "무한한 상상력과 동정심을 가진 예술가입니다.", moon: "예민하고 영적인 내면을 지녀 예술적 감각이 뛰어납니다.", ris: "눈빛이 몽환적이고 부드러우며 신비로운 분위기를 풍깁니다." }
     ];
 
+    // 🌍 더 풍성해진 지역 데이터
     const LOC = { 
-        SEOUL: { lat: 37.56, lon: 126.97, tz: 9, label: "한국 (서울/경기)" },
-        BUSAN: { lat: 35.17, lon: 129.07, tz: 9, label: "한국 (경남/부산)" },
-        NEWYORK: { lat: 40.71, lon: -74.00, tz: -5, label: "미국 (뉴욕)" },
-        LONDON: { lat: 51.50, lon: -0.12, tz: 0, label: "영국 (런던)" }
+        SEOUL: { lat: 37.56, lon: 126.97, tz: 9, label: "한국 - 서울/경기/인천" },
+        GANGWON: { lat: 37.82, lon: 128.15, tz: 9, label: "한국 - 강원도" },
+        CHUNGCHEONG: { lat: 36.35, lon: 127.38, tz: 9, label: "한국 - 충청/대전/세종" },
+        JEOLLA: { lat: 35.15, lon: 126.85, tz: 9, label: "한국 - 전라/광주" },
+        GYEONGSANG_N: { lat: 35.87, lon: 128.60, tz: 9, label: "한국 - 경북/대구" },
+        GYEONGSANG_S: { lat: 35.17, lon: 129.07, tz: 9, label: "한국 - 경남/부산/울산" },
+        JEJU: { lat: 33.49, lon: 126.53, tz: 9, label: "한국 - 제주특별자치도" },
+        TOKYO: { lat: 35.67, lon: 139.65, tz: 9, label: "아시아 - 일본 (도쿄)" },
+        BEIJING: { lat: 39.90, lon: 116.40, tz: 8, label: "아시아 - 중국 (베이징)" },
+        BANGKOK: { lat: 13.75, lon: 100.50, tz: 7, label: "아시아 - 동남아시아 (방콕)" },
+        SYDNEY: { lat: -33.86, lon: 151.20, tz: 10, label: "오세아니아 - 호주 (시드니)" },
+        DUBAI: { lat: 25.20, lon: 55.27, tz: 4, label: "중동 - UAE (두바이)" },
+        LONDON: { lat: 51.50, lon: -0.12, tz: 0, label: "유럽 - 영국 (런던)" },
+        PARIS: { lat: 48.85, lon: 2.35, tz: 1, label: "유럽 - 프랑스 (파리)" },
+        NEWYORK: { lat: 40.71, lon: -74.00, tz: -5, label: "북미 - 미국 동부 (뉴욕)" },
+        LA: { lat: 34.05, lon: -118.24, tz: -8, label: "북미 - 미국 서부 (LA)" },
+        SAOPAULO: { lat: -23.55, lon: -46.63, tz: -3, label: "남미 - 브라질 (상파울루)" },
+        UTC: { lat: 0, lon: 0, tz: 0, label: "기타 지역 (협정세계시 UTC)" }
     };
 
     const run = () => {
@@ -196,16 +215,17 @@ const Core = (() => {
         `;
 
         const link = (ZODIAC[s].el === 'Earth' || ZODIAC[s].el === 'Fire') ? 'https://link.coupang.com/a/eu5uLR' : 'https://link.coupang.com/a/eu5td7';
+        
+        // 🤫 스텔스 마케팅 로직 적용 (노골적이지 않게, 정보를 주는 척하며 스며들기)
         document.getElementById('cta-area').innerHTML = `
-            <div class="cta-box">
-                <h3 style="color:#fff; margin-bottom:15px; font-weight:900; font-size:1.3rem;">✨ 우주적 에너지를 내 편으로 만드는 개운법</h3>
-                <p style="color:var(--text-muted); font-size:1rem; margin-bottom:25px;">별자리의 긍정적인 기운은 극대화하고, 부족한 원소의 파동은 물리적인 아이템을 통해 상쇄시켜 완벽한 운명의 밸런스를 맞출 수 있습니다.</p>
-                <a href="${link}" target="_blank" class="btn btn-primary" style="padding:18px 30px; font-size:1.15rem; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);">나에게 맞는 행운템 확인하기 ></a>
-                <p style="margin-top:20px; font-size:0.8rem; color:rgba(255,255,255,0.3);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
+            <div class="stealth-advice">
+                <h4>💡 별자리 에너지를 채우는 일상 속 작은 변화</h4>
+                <p>점성학에서는 타고난 기운의 불균형을 주변의 색상이나 물건으로 보완할 수 있다고 봅니다. 거창한 부적이 아니라, 일상에서 쉽게 접할 수 있는 소품만으로도 나만의 에너지를 정돈할 수 있습니다.</p>
+                <a href="${link}" target="_blank" class="link-stealth">내 별자리에 맞는 시크릿 소품 조용히 찾아보기 ↗</a>
+                <p style="margin-top: 15px; font-size: 0.7rem; color: rgba(255,255,255,0.15);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
             </div>
         `;
         
-        // MathJax 렌더링 호출
         if(window.MathJax) MathJax.typesetPromise();
 
         document.getElementById('input-view').style.display = 'none';
