@@ -83,6 +83,7 @@
         .r-conclusion { margin-top: 60px; padding: 35px 30px; background: rgba(212,175,55,0.05); border-radius: 16px; border: 1px solid rgba(212,175,55,0.2); text-align: center; }
         .r-conclusion h3 { font-size: 1.4rem; color: var(--gold-light); margin-bottom: 15px; font-weight: 900;}
 
+        /* 스텔스 CTA 박스 */
         .cta-box { margin-top: 50px; padding: 45px 30px; border-radius: 16px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--border-light); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; font-weight: 800; padding: 18px 35px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s;}
         .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.05);}
@@ -98,6 +99,8 @@
         .spinner { width: 55px; height: 55px; border: 4px solid transparent; border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite; margin-bottom:25px;} 
         .loading-txt { color: var(--gold-light); font-size: 1.25rem; font-weight: 700; letter-spacing: 1px;}
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .modal { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #161b22; color: #fff; padding: 20px 25px; border-radius: 12px; z-index: 100001; text-align: center; width: 90%; max-width: 320px; border: 1px solid var(--border-line); box-shadow: 0 10px 30px rgba(0,0,0,0.8);}
         
         @media (max-width: 768px) { 
             .dual-input-container, .dual-bazi-container { grid-template-columns: 1fr; }
@@ -203,13 +206,13 @@ const CompatibilityEngine = (() => {
 
     const RELATIONS = {
         '木': { gen: '火', ctrl: '土', ctrlBy: '金', genBy: '水' }, '火': { gen: '土', ctrl: '金', ctrlBy: '水', genBy: '木' },
-        '土': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' }, '金': { gen: '水', ctrl: '목', ctrlBy: '火', genBy: '土' },
+        '土': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' }, '金': { gen: '水', ctrl: '木', ctrlBy: '火', genBy: '土' },
         '水': { gen: '木', ctrl: '火', ctrlBy: '土', genBy: '金' }
     };
 
     const ZHI_CHONG = ['子午','丑未','寅申','卯酉','辰戌','巳亥','午子','未丑','申寅','酉卯','戌辰','亥巳'];
-    const ZHI_HAP = ['子丑','寅亥','卯戌','辰酉','巳申','午미','丑子','亥寅','戌卯','酉辰','申巳','未午'];
-    const ZHI_WONJIN = ['子未','丑午','寅酉','卯申','辰亥','巳戌','未子','午丑','酉寅','申卯','亥辰','戌巳'];
+    const ZHI_HAP = ['子丑','寅亥','卯戌','辰酉','巳申','午未','丑子','亥인','戌卯','酉辰','申巳','未午'];
+    const ZHI_WONJIN = ['子미','丑午','寅酉','卯申','辰亥','巳戌','未자','午丑','酉寅','申卯','亥辰','戌巳'];
 
     const getBaziData = (req) => {
         let hr = 12; if(req.h === 'yaja') hr = 23; else if(req.h === 'joja') hr = 0; else if(req.h !== 'none') hr = parseInt(req.h);
@@ -250,14 +253,14 @@ const CompatibilityEngine = (() => {
         const mCore = ELEMENTS[me.dayGan], pCore = ELEMENTS[p.dayGan];
         let sec1Desc = "";
         if (mCore === pCore) { sec1Desc = `두 사람은 <b>${mCore}</b>라는 같은 본질을 공유하는 '거울 같은 관계'입니다. 친구처럼 편안하고 취향이 잘 맞아 연애 초기부터 급속도로 가까워집니다. 다만 자존심 싸움이 시작되면 서로 절대 굽히지 않아 냉전이 길어질 수 있습니다.`; totalScore += 5; } 
-        else if (RELATIONS[mCore].gen === pCore) { sec1Desc = `나의 <b>${mCore}</b> 기운이 상대의 <b>${pCore}</b> 기운을 조건 없이 생(生)해주는 헌신적인 궁합입니다. 내가 상대를 리드하고 챙겨주며 모성애/부성애적 사랑을 베풀게 되는 따뜻한 관계입니다.`; totalScore += 15; } 
-        else if (RELATIONS[mCore].genBy === pCore) { sec1Desc = `상대방의 <b>${pCore}</b> 기운이 나의 <b>${mCore}</b>를 든든하게 받쳐주는 '보호받는 궁합'입니다. 상대방의 넓은 이해심 덕분에 심리적인 안정감을 크게 느끼며 사랑받는 연애를 하게 됩니다.`; totalScore += 15; } 
-        else { sec1Desc = `서로를 제어하고 자극하는 상극(相剋)의 궁합입니다. 나와 정반대의 매력에 강렬한 스파크를 느끼며 끌리게 되지만, 관계가 깊어질수록 상대를 내 마음대로 통제하려다 잦은 마찰이 발생할 수 있습니다. <b>다름을 인정하는 것</b>이 교제의 핵심 키워드입니다.`; totalScore -= 5; }
+        else if (RELATIONS[mCore]?.gen === pCore) { sec1Desc = `나의 <b>${mCore}</b> 기운이 상대의 <b>${pCore}</b> 기운을 조건 없이 생(生)해주는 헌신적인 궁합입니다. 내가 상대를 리드하고 챙겨주며 모성애/부성애적 사랑을 베풀게 되는 따뜻한 관계입니다.`; totalScore += 15; } 
+        else if (RELATIONS[mCore]?.genBy === pCore) { sec1Desc = `상대방의 <b>${pCore}</b> 기운이 나의 <b>${mCore}</b>를 든든하게 받쳐주는 '보호받는 궁합'입니다. 상대방의 넓은 이해심 덕분에 심리적인 안정감을 크게 느끼며 사랑받는 연애를 하게 됩니다.`; totalScore += 15; } 
+        else { sec1Desc = `서로를 제어하고 자극하는 상극(상剋)의 궁합입니다. 나와 정반대의 매력에 강렬한 스파크를 느끼며 끌리게 되지만, 관계가 깊어질수록 상대를 내 마음대로 통제하려다 잦은 마찰이 발생할 수 있습니다. <b>다름을 인정하는 것</b>이 교제의 핵심 키워드입니다.`; totalScore -= 5; }
 
         sections.push({
             title: "1. 겉궁합과 첫 끌림 (코어 에너지 교차)",
             paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[명리 근거]</strong> 두 사람의 자아를 상징하는 일간(日干) <b>${me.dayGan}</b>과 <b>${p.dayGan}</b>의 생극제화(生剋제化)를 분석했습니다.</div>`,
+                `<div class="basis-box"><span class="magnify">🔍</span><strong>[명리 근거]</strong> 두 사람의 자아를 상징하는 일간(日干) <b>${me.dayGan}</b>과 <b>${p.dayGan}</b>의 생극제화(生剋제화)를 분석했습니다.</div>`,
                 sec1Desc
             ]
         });
@@ -312,8 +315,8 @@ const CompatibilityEngine = (() => {
 
         let sec4Desc = "";
         let controller = "";
-        if (RELATIONS[mCore].ctrl === pCore) controller = me.name;
-        else if (RELATIONS[pCore].ctrl === mCore) controller = p.name;
+        if (RELATIONS[mCore]?.ctrl === pCore) controller = me.name;
+        else if (RELATIONS[pCore]?.ctrl === mCore) controller = p.name;
         
         if (controller) {
             sec4Desc = `결혼 후 가정의 <b>실질적인 주도권과 경제권은 ${controller} 님</b>이 쥐고 가는 것이 가정의 평화와 재산 증식에 압도적으로 유리합니다. ${controller} 님의 결단력에 상대방이 부드럽게 맞춰주는 룰을 정립하십시오.<br><br>`;
@@ -369,6 +372,7 @@ window.MockAPI = { post: async (payload) => { return await CompatibilityEngine.a
 const SaaSFrontend = (() => {
     const showMsg = (msg, isError = false) => {
         const modal = document.getElementById('custom-modal');
+        if(!modal) return;
         const msgEl = document.getElementById('modal-msg');
         if(msgEl) msgEl.textContent = msg;
         modal.style.display = 'block';
@@ -406,20 +410,30 @@ const SaaSFrontend = (() => {
         `;
     };
 
-    // 🚀 스텔스 쿠파스 (제공하신 링크 적용 및 검색 방식 라벨 적용)
+    // 🚀 정직한 검색결과 링크 매칭 (실제 파트너스 단축 링크들 3종 적용 완료)
     const renderCTA = (score) => {
         const wrap = document.createElement('div'); 
         wrap.className = 'cta-box';
         
-        // 사용자가 제공한 단축 링크
-        const myLink = 'https://link.coupang.com/a/eu2HBv';
+        let targetUrl = '';
+        let label = '';
 
-        let label = score >= 85 ? '✨ 천생연분 시크릿템 확인' 
-                  : score >= 70 ? '💌 숨겨진 진심 확인하기' 
-                  : '🍀 관계 회복 힐링템 확인';
+        if (score >= 85) {
+            // 커플 여행용품
+            targetUrl = 'https://link.coupang.com/a/eu32VW'; 
+            label = '✨ 천생연분 커플 여행용품 확인';
+        } else if (score >= 70) {
+            // 커플 백문백답
+            targetUrl = 'https://link.coupang.com/a/eu39RD'; 
+            label = '💌 서로의 진심을 확인하는 추천템 보기';
+        } else {
+            // 힐링 아이템
+            targetUrl = 'https://link.coupang.com/a/eu4d2D'; 
+            label = '🍀 관계 회복을 돕는 힐링템 확인';
+        }
 
         wrap.innerHTML = `
-            <a href="${myLink}" target="_blank" class="btn-coupang">
+            <a href="${targetUrl}" target="_blank" class="btn-coupang">
                 ${label}
             </a>
             <p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
