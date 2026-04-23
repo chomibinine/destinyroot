@@ -209,11 +209,11 @@ const AuthenticTojeongEngine = (() => {
         { h: "水到渠成", t: "물이 이르면 자연히 도랑이 이루어진다", d: "억지로 애쓰지 않아도 때가 되면 모든 것이 순리대로 풀립니다. 노력에 대한 정직한 금전적 보상이 쏟아지는 기분 좋은 달입니다." },
         { h: "口舌愼之", t: "구설수를 삼가라", d: "의도치 않은 당신의 가벼운 한마디가 눈덩이처럼 불어나 명예를 실추시킬 수 있습니다. 귀는 열되 입은 무겁게 닫아야 화를 피합니다." },
         { h: "先憂後樂", t: "먼저 근심하고 나중에 즐긴다", d: "초순에는 벅찬 업무나 골치 아픈 문제로 스트레스를 받으나, 중순을 넘어가며 극적으로 문제가 해결되고 두 배의 기쁨을 누리게 됩니다." },
-        { h: "貴人相助", t: "귀인이 서로 돕는다", d: "막막했던 상황에서 생각지도 못했던 뜻밖의 귀인이 나타나 손을 내밉니다. 타인의 조언을 스펀지처럼 흡수하십시오." },
+        { h: "貴인相助", t: "귀인이 서로 돕는다", d: "막막했던 상황에서 생각지도 못했던 뜻밖의 귀인이 나타나 손을 내밉니다. 타인의 조언을 스펀지처럼 흡수하십시오." },
         { h: "安步當車", t: "편안히 걷는 것이 수레를 타는 것과 같다", d: "서두를 이유가 전혀 없습니다. 건강을 챙기며 현재의 일상을 음미하십시오. 휴식 속에서 번뜩이는 엄청난 아이디어가 떠오릅니다." },
         { h: "錦衣還鄕", t: "비단옷을 입고 고향에 돌아간다", d: "직장에서의 승진, 합격, 혹은 투자 수익 실현 등 남들에게 떳떳하게 자랑할 만한 크나큰 성과와 명예를 거머쥐는 화려한 달입니다." },
         { h: "有備無患", t: "준비가 있으면 근심이 없다", d: "들어오는 재물이 많은 만큼 나갈 곳도 생깁니다. 충동구매를 막고 자금을 철저히 분산시켜 다가올 지출에 대비하십시오." },
-        { h: "逢凶化吉", t: "흉한 것을 만나도 길한 것으로 바뀐다", d: "작은 사고나 손실이 발생할 수 있으나, 오히려 그것이 액땜이 되어 더 큰 화를 막아냅니다. 긍정적인 마음가짐이 만병통치약입니다." },
+        { h: "逢흉化吉", t: "흉한 것을 만나도 길한 것으로 바뀐다", d: "작은 사고나 손실이 발생할 수 있으나, 오히려 그것이 액땜이 되어 더 큰 화를 막아냅니다. 긍정적인 마음가짐이 만병통치약입니다." },
         { h: "結實之秋", t: "결실의 가을을 맞이하다", d: "일 년 동안 뿌린 땀방울이 황금빛 열매로 돌아옵니다. 주변 사람들에게 베풀며 한 해를 아름답게 마무리하기에 완벽한 달입니다." }
     ];
 
@@ -304,12 +304,26 @@ const SaaSFrontend = (() => {
         return p;
     };
 
-    // 🚀 스텔스 쿠파스 링크 (제공하신 본인 링크로 적용 완료)
-    const renderCTA = () => {
-        const wrap = document.createElement('div'); wrap.className = 'cta-box';
+    // 🚀 [쿠파스 업데이트] 괘 점수별 정직한 검색 결과 링크 적용
+    const renderCTA = (gwaeNum) => {
+        const wrap = document.createElement('div'); 
+        wrap.className = 'cta-box';
+        
+        let url = 'https://link.coupang.com/a/eu56gw'; // 기본 행운템
+        let label = '🍀 올해 뻗어나갈 기운을 더 꽉 잡아줄 행운템 확인하기';
+        
+        const num = parseInt(gwaeNum);
+        if (num >= 500) {
+            url = 'https://link.coupang.com/a/eu55sB'; // 재물운 상승 소품
+            label = '💰 올해 터져나올 재물운을 더 꽉 잡아줄 행운템 확인하기';
+        } else if (num < 300) {
+            url = 'https://link.coupang.com/a/eu568Q'; // 심신 안정 힐링템
+            label = '🍀 올해의 안녕과 평안을 더 꽉 잡아줄 수호템 확인하기';
+        }
+
         wrap.innerHTML = `
-            <a href="https://link.coupang.com/a/eu2HBv" target="_blank" class="btn-coupang">
-                🍀 올해 뻗어나갈 기운을 더 꽉 잡아줄 행운템 확인하기
+            <a href="${url}" target="_blank" class="btn-coupang">
+                ${label}
             </a>
             <p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
         `;
@@ -369,7 +383,7 @@ const SaaSFrontend = (() => {
             document.getElementById('monthly-section').style.display = 'block';
             
             const ctaContainer = document.getElementById('cta-container');
-            if(ctaContainer) { ctaContainer.innerHTML = ''; ctaContainer.appendChild(renderCTA()); }
+            if(ctaContainer) { ctaContainer.innerHTML = ''; ctaContainer.appendChild(renderCTA(data.gwaeNum)); }
 
             document.getElementById('r-conclusion-box').innerHTML = `<h3>운명뿌리 종합 제언</h3><p>토정비결은 미신이 아니라 일 년의 거시적인 템포를 조절하게 해주는 선조들의 훌륭한 타이밍 예술입니다. 운이 좋을 때는 겸손하게 돛을 올리고, 운이 나쁠 때는 분노를 거두고 닻을 내리는 지혜를 가지십시오. 올 한 해 당신의 위대한 항해를 진심으로 응원합니다.</p>`;
 
