@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>운명뿌리 | 점성술 천궁도 분석</title>
     
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
@@ -14,7 +15,6 @@
         body { background: var(--bg-base); color: #fff; line-height: 1.7; min-height: 100vh; position: relative; overflow-x: hidden; }
         body::before { content: ''; position: absolute; width: 350px; height: 350px; background: rgba(162, 155, 254, 0.12); filter: blur(120px); top: 5%; left: -100px; z-index: 0; }
         body::after { content: ''; position: absolute; width: 300px; height: 300px; background: rgba(212, 175, 55, 0.06); filter: blur(100px); bottom: 10%; right: -50px; z-index: 0; }
-        
         .app-container { max-width: 750px; margin: 0 auto; padding: 50px 20px 120px; position: relative; z-index: 1; }
         
         .header { text-align: center; margin-bottom: 40px; }
@@ -34,14 +34,15 @@
         .btn-gps { background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.3); color: #58a6ff; padding: 12px; width: 100%; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; margin-bottom: 15px;}
         .btn-gps:hover { background: rgba(88, 166, 255, 0.2); }
 
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 18px; border-radius: 30px; font-weight: 800; font-size: 1.15rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; margin-top: 10px;}
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 18px; border-radius: 30px; font-weight: 800; font-size: 1.15rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; margin-bottom: 12px;}
         .btn-primary { background: var(--gold-primary); color: #000; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
         
         #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3,5,9,0.98); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; }
         .orbit { width: 60px; height: 60px; border: 2px solid var(--gold-primary); border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* 리포트 뷰 */
         #report-view { display: none; }
         
         .big3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 45px; }
@@ -53,7 +54,6 @@
         .theory-box { background: rgba(212,175,55,0.05); padding: 25px; border-radius: 12px; font-size: 1rem; color: var(--gold-light); margin-bottom: 20px; border-left: 3px solid var(--gold-primary); line-height: 1.7; font-weight: 300;}
         .theory-box strong { font-weight: 800; color: #fff; }
         
-        /* ⚙️ 각 항목에 스며든 수학/천문 로그 박스 */
         .math-log { background: rgba(0, 0, 0, 0.5); border: 1px dashed rgba(88, 166, 255, 0.4); border-radius: 12px; padding: 20px; margin-bottom: 25px; font-size: 0.9rem; color: #a1b0c0; line-height: 1.7; }
         .math-log-title { color: var(--color-info); font-weight: 800; display: block; margin-bottom: 8px; font-size: 1rem; }
         .math-wrap { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-top: 10px; font-family: monospace; overflow-x: auto; white-space: nowrap;}
@@ -62,12 +62,15 @@
         .result-content p { margin-bottom: 20px; }
         .result-content strong { color: var(--gold-light); font-weight: 800; }
         
-        /* CTA 박스 */
-        .cta-box { margin-top: 50px; padding: 45px 30px; border-radius: 16px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--border-glass); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; font-weight: 800; padding: 18px 35px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s; word-break: keep-all;}
-        .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.05);}
+        /* 🤫 스텔스 마케팅 CSS (자연스럽게 스며드는 링크) */
+        .stealth-advice { margin-top: 40px; padding: 30px 25px; border-radius: 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); text-align: left; }
+        .stealth-advice h4 { color: var(--gold-light); font-size: 1.2rem; margin-bottom: 15px; font-weight: 800; }
+        .stealth-advice p { font-size: 1rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; }
+        .link-stealth { display: inline-block; color: var(--gold-primary); font-size: 1.1rem; font-weight: 700; text-decoration: none; border-bottom: 1px solid rgba(212,175,55,0.4); padding-bottom: 3px; transition: 0.2s; word-break: keep-all;}
+        .link-stealth:hover { color: #fff; border-color: #fff; }
+        
+        .btn-group { display: flex; flex-direction: column; gap: 12px; margin-top: 40px; }
 
-        /* 📱 모바일 최적화 완벽 적용 */
         @media (max-width: 600px) { 
             .app-container { padding: 20px 15px 100px; } 
             .header h1 { font-size: 2rem; }
@@ -76,8 +79,6 @@
             .big3-grid { grid-template-columns: 1fr; gap: 10px; } 
             .big3-card { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; text-align: left; } 
             .r-section h3 { font-size: 1.4rem; }
-            .cta-box { padding: 35px 20px; }
-            .btn-coupang { font-size: 1rem; padding: 15px 25px; width: 100%;}
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -152,13 +153,17 @@
         <div class="big3-grid" id="r-big3"></div>
         <div id="dynamic-results"></div>
         <div id="cta-area"></div>
-        <button class="btn btn-secondary" onclick="location.href='../'" style="margin-top:50px;">🏠 메인 홈으로 돌아가기</button>
+        
+        <div class="btn-group">
+            <button class="btn btn-secondary" onclick="Core.shareLink()">🔗 내 결과 공유하기</button>
+            <button class="btn btn-primary" onclick="location.href='https://chomibinine.github.io/destinyroot/'">🏠 메인 홈으로 돌아가기</button>
+        </div>
     </div>
 </div>
 
 <script>
 const Core = (() => {
-    // 🔥 볼륨업 정밀 DB
+    // 12 별자리 해설 DB
     const ZODIAC = [
         { name: "양자리", icon: "♈", el: "Fire", deg: "0°~30°",
           sun: "<p>12별자리의 첫 번째 싸인인 양자리는 태어남 그 자체이자 강렬한 시작의 에너지를 품고 있습니다. <strong>당신의 본질은 '개척자'입니다.</strong> 남들이 주저하고 계산할 때, 당신은 직관적인 충동에 몸을 맡기고 가장 먼저 뛰어드는 용기를 가졌습니다.</p><p>거짓과 가식을 몹시 싫어하며 속을 훤히 내보이는 어린아이 같은 순수함이 당신의 가장 큰 무기입니다. 하지만 때로는 그 강력한 돌진 에너지가 브레이크 없는 자동차처럼 작용하여 주변 사람들을 당황하게 하거나 스스로 지치게 만들 수 있습니다. 화가 나면 불같이 폭발하지만 뒤끝이 전혀 없는 쿨한 성격의 소유자입니다.</p>",
@@ -397,12 +402,13 @@ const Core = (() => {
 
         const link = (ZODIAC[s].el === 'Earth' || ZODIAC[s].el === 'Fire') ? 'https://link.coupang.com/a/eu5uLR' : 'https://link.coupang.com/a/eu5td7';
         
+        // 🤫 스텔스 마케팅 - 자연스럽게 스며드는 링크
         document.getElementById('cta-area').innerHTML = `
-            <div class="cta-box">
-                <h3 style="color:#fff; margin-bottom:15px; font-weight:900; font-size:1.4rem;">✨ 타고난 우주적 에너지를 폭발시킬 아이템</h3>
-                <p style="color:var(--text-muted); font-size:1rem; margin-bottom:25px;">별자리의 긍정적인 기운은 극대화하고, 부족한 원소 파동은 물리적인 아이템을 통해 상쇄시켜 완벽한 운명의 밸런스를 맞출 수 있습니다.</p>
-                <a href="${link}" target="_blank" class="btn-coupang">나에게 맞는 시크릿 행운템 확인하기 ></a>
-                <p style="margin-top:20px; font-size:0.8rem; color:rgba(255,255,255,0.3);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
+            <div class="stealth-advice">
+                <h4>💡 우주의 파동을 맞추는 일상 속 작은 변화</h4>
+                <p>점성학에서는 행성들이 부여한 선천적 기운의 불균형을 주변의 색상이나 특정 파동을 지닌 물건으로 보완할 수 있다고 봅니다. 거창한 의식이 아니라, 내 일상에서 쉽게 접할 수 있는 소품만으로도 삶의 밸런스를 우아하게 정돈할 수 있습니다.</p>
+                <a href="${link}" target="_blank" class="link-stealth">나의 별자리 파동에 맞는 시크릿 소품 조용히 알아보기 ↗</a>
+                <p style="margin-top: 15px; font-size: 0.75rem; color: rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
             </div>
         `;
         
@@ -412,13 +418,30 @@ const Core = (() => {
         window.scrollTo(0,0);
     };
 
-    return { run, toggleCustom, getGPS, init: () => {
+    // 🔗 네이티브 공유하기 기능
+    const shareLink = async () => {
+        const url = 'https://chomibinine.github.io/destinyroot/astrology/';
+        const shareData = { title: '운명뿌리 - 점성술 천궁도', text: '스위스 천문력 기반 정통 점성술로 나의 타고난 우주적 운명을 확인해보세요.', url: url };
+        
+        if (navigator.share) {
+            try { await navigator.share(shareData); } catch (err) { console.error(err); }
+        } else {
+            const dummy = document.createElement('input'); document.body.appendChild(dummy);
+            dummy.value = url; dummy.select(); document.execCommand('copy'); document.body.removeChild(dummy);
+            alert('사이트 주소가 복사되었습니다. 카카오톡 등에 붙여넣기 하세요.');
+        }
+    };
+
+    return { run, toggleCustom, getGPS, shareLink, init: () => {
         const ys = document.getElementById('u-year'), ms = document.getElementById('u-month'), ds = document.getElementById('u-day'), ts = document.getElementById('u-time');
+        
         for(let i=new Date().getFullYear(); i>=1940; i--) ys.add(new Option(i+'년', i));
         for(let i=1; i<=12; i++) ms.add(new Option(i+'월', i));
         for(let i=1; i<=31; i++) ds.add(new Option(i+'일', i));
+        
         ts.add(new Option('모름 (정오 기준)', 'none'));
         for(let i=0; i<24; i++) ts.add(new Option(i.toString().padStart(2,'0')+':00', i));
+
         ys.value = 1995; ms.value = 1; ds.value = 1; ts.value = 'none';
         toggleCustom();
     }};
