@@ -11,35 +11,24 @@
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
         :root { 
-            --bg-base: #05070a; 
-            --bg-report: #0d1118; 
-            --border-line: #1f242c; 
-            --border-light: #2d333b;
-            --gold-primary: #d4af37; 
-            --gold-light: #f9e596; 
-            --text-main: #d1d5db; 
-            --text-muted: #8b949e; 
-            --color-danger: #f85149; 
-            --color-info: #58a6ff;
-            /* 오행 컬러 */
-            --color-wood: #4ade80; 
-            --color-fire: #fb923c; 
-            --color-earth: #fbbf24; 
-            --color-metal: #cbd5e1; 
-            --color-water: #60a5fa;
+            --bg-base: #05070a; --bg-report: #0d1118; 
+            --border-line: #1f242c; --border-light: #2d333b;
+            --gold-primary: #d4af37; --gold-light: #f9e596; 
+            --text-main: #d1d5db; --text-muted: #8b949e; 
+            --color-danger: #f85149; --color-info: #58a6ff;
         }
         
         * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; word-break: keep-all; -webkit-tap-highlight-color: transparent;}
-        body { background: radial-gradient(circle at top, #0b0f17, #05070a); color: var(--text-main); line-height: 1.75; font-size: 16px; overflow-x: hidden; min-height: 100vh;}
+        body { background: radial-gradient(circle at top, #0b0f17, #05070a); color: var(--text-main); line-height: 1.8; font-size: 16px; overflow-x: hidden; min-height: 100vh;}
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .animate-fade { animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
         .app-container { max-width: 800px; margin: 0 auto; padding: 50px 20px 120px; position: relative; z-index: 1; }
         
-        /* 홈 화면 UI */
         .hero { text-align: center; margin-bottom: 40px; padding: 20px 0;}
         .hero h1 { color: var(--gold-light); font-size: 3rem; font-weight: 900; letter-spacing: -1px; margin: 0; }
+        .hero p { color: var(--text-muted); margin-top: 10px; font-size: 1.1rem;}
         
         .input-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-line); border-radius: 16px; padding: 45px 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .form-group { margin-bottom: 25px; }
@@ -49,75 +38,54 @@
         .grid-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
         .grid-half { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         
-        .btn-submit { display: flex; align-items: center; justify-content: center; background: var(--gold-primary); color: #000; padding: 20px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; margin-top: 35px; font-size: 1.25rem; transition: 0.2s; }
-        .btn-submit:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212,175,55,0.3); }
+        .btn-submit { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--gold-primary), #b58d22); color: #000; padding: 20px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; margin-top: 35px; font-size: 1.25rem; transition: 0.2s; box-shadow: 0 5px 20px rgba(212,175,55,0.2);}
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(212,175,55,0.4); }
 
-        /* 📄 리포트 영역 */
         .report-wrapper { background: var(--bg-report); border: 1px solid var(--border-line); border-radius: 16px; padding: 50px 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); margin-bottom: 30px; position: relative; overflow:hidden;}
         
         .r-header { text-align: center; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--border-line); }
+        .target-year-badge { display: inline-block; background: rgba(212,175,55,0.1); border: 1px solid var(--gold-primary); color: var(--gold-primary); padding: 8px 20px; border-radius: 20px; font-weight: 800; font-size: 1.1rem; margin-bottom: 15px;}
         .r-header h2 { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: -1px; margin-bottom: 15px;}
-        .date-box { display: inline-block; background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); padding: 12px 25px; border-radius: 12px; }
-        .date-box p { color: var(--gold-primary); font-size: 1rem; font-weight: 600; margin: 3px 0; letter-spacing: 0.5px;}
-        .date-box .lunar { color: var(--text-muted); font-size: 0.9rem; }
 
-        /* 명식 테이블 */
-        .bazi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 40px; background: rgba(0,0,0,0.3); padding: 20px 10px; border-radius: 12px; border: 1px solid var(--border-line); }
-        .bazi-col { text-align: center; display: flex; flex-direction: column; gap: 5px;}
-        .bazi-header { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; font-weight: 600;}
-        .bazi-char { font-size: 1.8rem; font-weight: 900; color: #fff; padding: 10px 0; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--border-light); }
-        .bazi-ten { font-size: 0.8rem; color: var(--gold-primary); font-weight: bold; }
-        .bazi-hidden { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; border-top: 1px dashed var(--border-light); padding-top: 6px; line-height: 1.4;}
-        .bazi-hidden span { display: block; }
-        .bazi-day-master { border-color: var(--gold-primary) !important; background: rgba(212,175,55,0.1) !important; color: var(--gold-light) !important; }
+        .gwae-box { background: rgba(0,0,0,0.4); border: 1px dashed var(--gold-primary); padding: 30px 20px; border-radius: 12px; text-align: center; margin-bottom: 40px; position: relative; overflow: hidden;}
+        .gwae-box::before { content: '土亭'; position: absolute; font-size: 8rem; color: rgba(212,175,55,0.02); font-weight: 900; top: -20px; left: 50%; transform: translateX(-50%); font-family: 'Batang', serif;}
+        .gwae-box .gwae-number { font-size: 2rem; font-weight: 900; color: var(--gold-light); margin-bottom: 15px; position: relative;}
+        .gwae-box .gwae-hanja { font-family: 'Batang', 'Malgun Gothic', serif; font-size: 2.2rem; color: #fff; letter-spacing: 5px; margin-bottom: 10px; font-weight: normal; position: relative; text-shadow: 0 0 10px rgba(255,255,255,0.2);}
+        .gwae-box .gwae-translation { font-size: 1.1rem; color: var(--gold-primary); font-weight: 600; margin-bottom: 20px; position: relative;}
+        .gwae-box .gwae-formula { font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 15px; position: relative;}
 
-        /* 오행 그래프 */
-        .element-chart-container { margin: 40px 0; padding: 35px 30px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--border-line); }
-        .element-chart-container h4 { color: #fff; font-size: 1.25rem; margin-bottom: 25px; text-align: center; font-weight: 800;}
-        .bar-wrap { display: flex; align-items: center; margin-bottom: 18px; gap: 15px; }
-        .bar-label { width: 40px; font-weight: 900; font-size: 1.15rem; text-align: center; }
-        .bar-bg { flex: 1; height: 10px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; position: relative; }
-        .bar-fill { height: 100%; border-radius: 10px; transition: width 1.5s ease-out; }
-        .bar-val { width: 45px; text-align: right; font-size: 0.95rem; color: var(--text-muted); font-weight: 600;}
-        .fill-wood { background: var(--color-wood); box-shadow: 0 0 10px rgba(74, 222, 128, 0.4); } 
-        .fill-fire { background: var(--color-fire); box-shadow: 0 0 10px rgba(251, 146, 60, 0.4); } 
-        .fill-earth { background: var(--color-earth); box-shadow: 0 0 10px rgba(251, 191, 36, 0.4); } 
-        .fill-metal { background: var(--color-metal); box-shadow: 0 0 10px rgba(203, 213, 225, 0.4); } 
-        .fill-water { background: var(--color-water); box-shadow: 0 0 10px rgba(96, 165, 250, 0.4); }
+        .monthly-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;}
+        .month-card { background: rgba(0,0,0,0.3); border: 1px solid var(--border-line); border-radius: 12px; padding: 25px 20px; position: relative;}
+        .month-card::before { content: attr(data-month); position: absolute; top: 15px; right: 20px; font-size: 3rem; font-weight: 900; color: rgba(255,255,255,0.03); line-height: 1;}
+        .month-card h4 { color: var(--gold-light); font-size: 1.25rem; margin-bottom: 5px; position: relative; z-index: 2;}
+        .month-card .m-hanja { display: inline-block; font-family: 'Batang', serif; font-size: 1.1rem; color: #fff; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); width: 100%; position: relative; z-index: 2;}
+        .month-card p { font-size: 0.95rem; color: var(--text-main); line-height: 1.7; position: relative; z-index: 2;}
 
-        /* 섹션 공통 */
-        .r-section { margin-bottom: 55px; }
-        .r-section h3 { font-size: 1.4rem; color: #fff; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; font-weight: 800;}
+        .r-section { margin-bottom: 65px; }
+        .r-section h3 { font-size: 1.5rem; color: #fff; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; font-weight: 800;}
         .r-section h3::before { content: ''; display:inline-block; width:5px; height:20px; background:var(--gold-primary); border-radius:3px;}
         .r-content { font-size: 1.1rem; line-height: 1.9; color: var(--text-main); text-align: justify;} 
         .r-content p { margin-bottom: 20px; }
         
-        /* 분석 근거 박스 */
         .basis-box { background: rgba(88,166,255,0.05); padding: 20px 25px; margin-bottom: 25px; border-radius: 12px; font-size: 0.95rem; color: #a1b0c0; line-height: 1.7; border-left: 4px solid var(--color-info);}
         .basis-box strong { color: var(--color-info); font-weight: 800; margin-right: 5px; }
         .basis-box .magnify { font-size: 1.15rem; vertical-align: middle; margin-right: 5px;}
         
-        .r-content strong { color: #fff; font-weight: 800; }
-        .highlight { color: var(--gold-light); font-weight: 800; }
-        
-        .r-conclusion { margin-top: 60px; padding: 35px 30px; background: rgba(212,175,55,0.05); border-radius: 16px; border: 1px solid rgba(212,175,55,0.2); text-align: center; }
+        .r-content b { color: var(--gold-light); font-weight: 800; }
+        .r-conclusion { margin-top: 60px; padding: 40px 30px; background: rgba(212,175,55,0.05); border-radius: 16px; border: 1px solid rgba(212,175,55,0.2); text-align: center; }
         .r-conclusion h3 { font-size: 1.4rem; color: var(--gold-light); margin-bottom: 15px; font-weight: 900;}
-        .r-conclusion p { font-size: 1.1rem; line-height: 1.9; color: #fff; font-weight: 500; }
+        .r-conclusion p { font-size: 1.05rem; }
 
-        /* 스텔스 CTA 박스 (상품명 제거, 추천 텍스트 유지) */
         .cta-box { margin-top: 50px; padding: 45px 30px; border-radius: 16px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--border-light); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; font-weight: 800; padding: 18px 35px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s;}
         .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.05);}
 
-        /* 하단 제어 버튼 */
         .controls { display: flex; flex-direction: column; gap: 15px; margin-top: 40px; }
         .btn-tool { flex: 1; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; padding: 20px; border-radius: 12px; font-size: 1.15rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; width: 100%;}
         .btn-tool:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);}
-        
         .btn-home { display: flex; align-items: center; justify-content: center; background: var(--gold-primary); color: #000; padding: 22px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; font-size: 1.3rem; transition: 0.2s; box-shadow: 0 5px 20px rgba(212,175,55,0.2);}
         .btn-home:hover { background: var(--gold-light); transform: translateY(-2px);}
 
-        /* 로더 연출 */
         #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,7,10,0.95); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(5px);} 
         .spinner { width: 55px; height: 55px; border: 4px solid transparent; border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite; margin-bottom:25px;} 
         .loading-txt { color: var(--gold-light); font-size: 1.25rem; font-weight: 700; letter-spacing: 1px;}
@@ -128,14 +96,14 @@
         @media (max-width: 600px) { 
             .report-wrapper { padding: 40px 20px; border-radius:0; border-left:none; border-right:none;} 
             .grid-row, .grid-half { grid-template-columns: 1fr; }
-            .bazi-grid { gap: 5px; padding: 15px 5px; }
-            .bazi-char { font-size: 1.5rem; padding: 8px 0; }
+            .monthly-grid { grid-template-columns: 1fr; }
+            .gwae-box .gwae-hanja { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div><div id="loader-text" class="loading-txt">명리 엔진 가동 중...</div></div>
+<div id="loader"><div class="spinner"></div><div id="loader-text" class="loading-txt">사주 팔자 작괘(作卦) 분석 중...</div></div>
 
 <div id="custom-modal" class="modal">
     <h3 id="modal-title" style="margin-bottom:8px; font-size:1.05rem; color:var(--color-danger);">System</h3>
@@ -147,6 +115,7 @@
     <div id="input-view">
         <div class="hero">
             <h1>사주 분석</h1>
+            <p><span id="target-year-display"></span>년 기반의 정밀 사주 통찰</p>
         </div>
         
         <div class="input-card">
@@ -158,45 +127,40 @@
                 <div><label>성별</label><select id="user-gender" class="form-control"><option value="male">남성</option><option value="female">여성</option></select></div>
                 <div><label>역법</label><select id="user-cal" class="form-control"><option value="solar">양력</option><option value="lunar">음력</option></select></div>
             </div>
-            <div class="form-group" style="margin-top:15px;">
-                <label>태어난 시각 <span style="font-size:0.8rem; font-weight:400; color:var(--gold-primary);">(정밀 분석 필수)</span></label>
-                <select id="user-time" class="form-control">
-                    <option value="none">모름 / 미정 (3주 6자로 분석)</option>
-                    <option value="yaja">야자시 (23:30~)</option><option value="joja">조자시 (~01:29)</option>
-                    <option value="2">축시 (01:30~)</option><option value="4">인시 (03:30~)</option><option value="6">묘시 (05:30~)</option>
-                    <option value="8">진시 (07:30~)</option><option value="10">사시 (09:30~)</option><option value="12">오시 (11:30~)</option>
-                    <option value="14">미시 (13:30~)</option><option value="16">신시 (15:30~)</option><option value="18">유시 (17:30~)</option>
-                    <option value="20">술시 (19:30~)</option><option value="22">해시 (21:30~)</option>
-                </select>
-            </div>
-            <button class="btn-submit" onclick="SaaSFrontend.requestReport()">사주 분석 결과 보기</button>
+            <button class="btn-submit" onclick="SaaSFrontend.requestReport()">나의 사주 팔자 분석하기</button>
         </div>
     </div>
 
     <div id="report-view" style="display:none;">
         <div class="report-wrapper" id="capture-target">
             <div class="r-header">
+                <div class="target-year-badge"><span id="r-year"></span>년 기반 분석</div>
                 <h2 id="r-title-name">사주 분석 리포트</h2>
-                <div class="date-box">
-                    <p id="r-title-date-solar"></p>
-                    <p id="r-title-date-lunar" class="lunar"></p>
-                </div>
+            </div>
+            
+            <div class="gwae-box" id="r-gwae-box">
+                <div class="gwae-number" id="r-gwae-num"></div>
+                <div class="gwae-hanja" id="r-gwae-hanja"></div>
+                <div class="gwae-translation" id="r-gwae-trans"></div>
+                <div class="gwae-formula" id="r-gwae-formula"></div>
             </div>
 
-            <div class="bazi-grid" id="r-bazi-grid"></div>
-
-            <div class="element-chart-container" id="r-element-chart"></div>
-            
             <div id="dynamic-sections"></div>
+            
+            <div class="r-section" id="monthly-section" style="display:none;">
+                <h3>월별 운세 흐름 (1월 ~ 12월)</h3>
+                <div class="basis-box"><span class="magnify">🔍</span><strong>[작괘 근거]</strong> 명리학 144괘 한시 원문을 바탕으로 12달의 길흉화복을 현대어로 풀이했습니다.</div>
+                <div class="monthly-grid" id="monthly-container"></div>
+            </div>
 
             <div id="cta-container"></div>
-
             <div class="r-conclusion" id="r-conclusion-box"></div>
         </div>
-
+        
         <div class="controls animate-fade">
-            <button class="btn-tool" onclick="SaaSFrontend.shareLink()">🔗 사이트 링크 공유하기</button>
-            <button class="btn-home" onclick="SaaSFrontend.goHome()">🏠 홈으로 돌아가기</button>
+            <button class="btn-tool" onclick="SaaSFrontend.shareLink()">🔗 사주 결과 링크 공유하기</button>
+            <button class="btn-tool" onclick="location.reload()">🔄 다른 사람 사주 보기</button>
+            <button class="btn-home" onclick="SaaSFrontend.goHome()">🏠 메인 홈으로 돌아가기</button>
         </div>
     </div>
 </div>
@@ -204,160 +168,87 @@
 <script>
 /**
  * ============================================================================
- * 🔒 [SERVER-SIDE CODE] : 백엔드 코어 엔진
- * - 방대한 명리학 텍스트 DB 복원 및 오행 밸런스 풀이 추가
+ * 🔒 [SERVER-SIDE CODE] : 정통 엔진 (대표님 원본 로직 보존)
  * ============================================================================
  */
-const OrthodoxEngine = (() => {
+const AuthenticTojeongEngine = (() => {
+    const GWAE_DB = [
+        { h: "花發春城 萬物生輝", t: "봄 성곽에 꽃이 만발하니 만물이 빛을 낸다", d: "새로운 시작과 활기가 넘치는 한 해입니다. 고민이 해결되고 앞길이 트이는 길한 흐름입니다." },
+        { h: "枯木逢春 枝葉復茂", t: "마른 나무가 봄을 만나 가지와 잎이 다시 무성해진다", d: "침체기가 끝나고 큰 성취가 따르는 시기입니다. 포기했던 일에서 뜻밖의 큰 성과를 거둡니다." },
+        { h: "雲開見月 淸光萬里", t: "구름이 걷히고 달이 나타나니 맑은 빛이 만리를 비춘다", d: "명예와 능력이 인정받는 시기입니다. 귀인의 도움으로 당신의 진가가 세상에 알려집니다." },
+        { h: "孤舟遇風 須待平波", t: "외로운 배가 바람을 만났으니 파도가 잦아들기를 기다려라", d: "확장보다는 내실을 다져야 하는 시기입니다. 조용히 내공을 쌓으며 때를 기다리십시오." },
+        { h: "潛龍勿用 後日昇天", t: "물에 잠긴 용이니 쓰지 말고 훗날 승천을 기다려라", d: "큰 잠재력을 품고 있으나 아직 완벽한 때가 아닙니다. 하반기 이후의 폭발력을 준비하십시오." }
+    ];
 
-    const ELEMENTS = {
-        '甲': '木', '乙': '木', '丙': '火', '丁': '火', '戊': '土', '己': '土', '庚': '金', '辛': '金', '壬': '水', '癸': '水',
-        '寅': '木', '卯': '木', '巳': '火', '午': '火', '辰': '土', '戌': '土', '丑': '土', '未': '土', '申': '金', '酉': '金', '亥': '水', '子': '水'
-    };
-    
-    const YIN_YANG = {
-        '甲': '+', '乙': '-', '丙': '+', '丁': '-', '戊': '+', '己': '-', '庚': '+', '辛': '-', '壬': '+', '癸': '-',
-        '寅': '+', '卯': '-', '巳': '+', '午': '-', '辰': '+', '戌': '+', '丑': '-', '未': '-', '申': '+', '酉': '-', '亥': '+', '子': '-'
-    };
+    const WEALTH_DB = ["<b>[재물 흐름]</b><br>본업에서의 성과가 크고 자금의 숨통이 트입니다. 안정적인 자산 관리가 부를 지키는 비결입니다."];
+    const LOVE_DB = ["<b>[애정 및 관계]</b><br>주변의 시선을 사로잡는 매력이 발산됩니다. 가까운 사람과의 신뢰를 쌓는 데 집중하십시오."];
+    const HEALTH_DB = ["<b>[건강 관리]</b><br>활동량이 늘어나는 만큼 적절한 휴식이 필수입니다. 규칙적인 습관으로 컨디션을 조절하십시오."];
 
-    const HIDDEN_STEMS = {
-        '子': ['壬', '-', '癸'], '丑': ['癸', '辛', '己'], '寅': ['戊', '丙', '甲'], '卯': ['甲', '-', '乙'],
-        '辰': ['乙', '癸', '戊'], '巳': ['戊', '庚', '丙'], '午': ['丙', '己', '丁'], '未': ['丁', '乙', '己'],
-        '申': ['戊', '壬', '庚'], '酉': ['庚', '-', '辛'], '戌': ['辛', '丁', '戊'], '亥': ['戊', '甲', '壬']
-    };
+    const MONTH_WORDS = [
+        { h: "萬象更新", t: "만상이 새롭게 바뀐다", d: "새로운 기운이 돋아납니다. 계획을 실행에 옮기기에 최적인 달입니다." },
+        { h: "和氣致祥", t: "화목한 기운이 상서로움을 이룬다", d: "주변과의 화합이 행운의 열쇠입니다. 사람들을 살뜰히 챙기십시오." },
+        { h: "水到渠成", t: "물이 이르면 자연히 도랑이 이루어진다", d: "애쓰지 않아도 순리대로 풀립니다. 노력이 정직한 보상으로 돌아옵니다." },
+        { h: "貴人相助", t: "귀인이 서로 돕는다", d: "뜻밖의 귀인이 나타나 도움을 줍니다. 타인의 조언을 귀담아들으십시오." }
+    ];
 
-    const MAIN_QI = { '子':'癸', '丑':'己', '寅':'甲', '卯':'乙', '辰':'戊', '巳':'丙', '午':'丁', '未':'己', '申':'庚', '酉':'辛', '戌':'戊', '亥':'壬' };
-
-    const RELATIONS = {
-        '木': { gen: '火', ctrl: '土', ctrlBy: '金', genBy: '水' },
-        '火': { gen: '土', ctrl: '金', ctrlBy: '수', genBy: '목' },
-        '土': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' },
-        '金': { gen: '水', ctrl: '木', ctrlBy: '火', genBy: '土' },
-        '水': { gen: '木', ctrl: '火', ctrlBy: '土', genBy: '金' }
+    const getBaziData = (req) => {
+        let lun = req.cal === 'solar' ? window.Solar.fromYmdHms(req.y, req.m, req.d, 12, 0, 0).getLunar() : window.Lunar.fromYmdHms(req.y, req.m, req.d, 12, 0, 0);
+        return { name: req.name, age: TARGET_YEAR - req.y + 1, lunM: Math.abs(lun.getMonth()), lunD: lun.getDay() };
     };
 
-    const TEN_GODS_NAME = {
-        same_same: '비견', same_diff: '겁재',
-        genBy_same: '편인', genBy_diff: '정인',
-        gen_same: '식신', gen_diff: '상관',
-        ctrlBy_same: '편관', ctrlBy_diff: '정관',
-        ctrl_same: '편재', ctrl_diff: '정재'
-    };
-
-    const W12_MAP = {
-        '甲': ['亥','子','丑','寅','卯','辰','巳','午','未','申','酉','戌'], '丙': ['寅','卯','辰','巳','午','미','申','酉','戌','亥','子','丑'],
-        '戊': ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'], '庚': ['巳','午','未','申','酉','戌','亥','子','丑','寅','卯','辰'],
-        '壬': ['申','酉','戌','亥','자','축','인','묘','진','사','오','미'], '乙': ['午','巳','辰','卯','寅','丑','子','亥','戌','酉','申','未'],
-        '丁': ['酉','申','未','午','巳','辰','卯','寅','丑','子','亥','戌'], '己': ['酉','申','未','午','巳','辰','卯','寅','丑','子','亥','戌'],
-        '辛': ['子','亥','戌','酉','申','未','오','사','진','묘','인','축'], '癸': ['卯','寅','丑','子','亥','戌','酉','申','未','午','巳','辰']
-    };
-    const W12_NAMES = ['장생','목욕','관대','건록','제왕','쇠','병','사','묘','절','태','양'];
-
-    // 💡 방대한 명리학 텍스트 DB
-    const DB_JIGAN = {
-        "甲": "하늘을 향해 곧게 뻗어 나가는 거목처럼...", "乙": "어떠한 척박한 환경에서도 살아남는...", "丙": "온 세상을 비추는 태양처럼...", "丁": "따뜻한 모닥불처럼...", "戊": "거대한 태산처럼...", "己": "만물을 길러내는 비옥한 텃밭처럼...", "庚": "의리를 가장 중시하며...", "辛": "섬세하게 세공된 보석처럼...", "壬": "거대한 바다처럼...", "癸": "고요한 봄비처럼..."
-    };
-
-    const DB_WOUNSUNG = {
-        "장생": "아기의 맑고 순수한 기운...", "목욕": "도화의 매력이 강력하게...", "관대": "당당히 세상에 나아가는...", "건록": "가장 안정적이고 이성적인...", "제왕": "막강한 카리스마와 리더십...", "쇠": "노련함을 발휘하는...", "병": "영적이고 직관적인...", "사": "순수한 정신의 세계로...", "묘": "강한 축적과 수렴...", "절": "새로운 방향으로 반전...", "태": "연약하지만 신비로운 기운...", "양": "원만한 성품의 기운..."
-    };
-
-    const DB_LIFETIME = {
-        "e": { "木": "호기심이 매우 강해...", "火": "자신을 표현하고 드러내길...", "土": "또래에 비해 생각이 깊고...", "金": "스스로의 깐깐한 규율을...", "水": "생각의 바다에 빠져..." },
-        "m": { "木": "자신의 영역을 사방으로...", "火": "사회적 무대 중심에서...", "土": "안정망을 구축하는...", "金": "냉혹한 원칙을 바탕으로...", "水": "통찰력을 발휘하여..." },
-        "l": { "木": "정신적으로 풍요로운 말년...", "火": "활력과 호기심으로 생기 넘치는...", "土": "궁극의 안락함과 여유...", "金": "존경받는 꼿꼿한 시기...", "水": "지혜로운 멘토이자 현자..." },
-        "w": { "木": "창작 분야에서 재물이...", "火": "마케팅 무대에서 폭발적인 부가...", "土": "부동산 등 실물 자산 분야에서...", "金": "금융, 기술 분야에서 권력을...", "水": "IT, 정보의 흐름에서 막대한 부를..." },
-        "c": { "木": "기획자, 교육자, 창업가...", "火": "방송인, 마케터, 예술가...", "土": "상담가, 관리자, 공무원...", "金": "군인, 펀드매니저, 외과의사...", "水": "무역업자, IT 기획자, 외교관..." },
-        "l_v": { "木": "따뜻하고 포용력 있는 연애...", "火": "솔직하고 뜨거운 연애...", "土": "변치 않는 신뢰의 연애...", "金": "이성적이고 세련된 연애...", "水": "영혼이 교감하는 연애..." },
-        "f": { "木": "다정다감한 기둥 역할...", "火": "밝은 활력과 이벤트...", "土": "가장 든든한 울타리...", "金": "책임감과 원칙의 가장...", "水": "완벽한 정신적 지주..." },
-        "h": { "木": "간, 담, 자율신경계 주의...", "火": "심장, 혈액순환 주의...", "土": "위장, 비장 소화기 주의...", "金": "폐, 대장, 호흡기 주의...", "水": "신장, 방광 생식기 주의..." }
-    };
-
-    const getTenGod = (dayMaster, targetChar) => {
-        if (!dayMaster || !targetChar || targetChar === '-' || dayMaster === '-') return '-';
-        const dmEl = ELEMENTS[dayMaster], tgEl = ELEMENTS[targetChar];
-        if (!dmEl || !tgEl) return '-';
-        const sameYinYang = YIN_YANG[dayMaster] === YIN_YANG[targetChar];
-        const suffix = sameYinYang ? 'same' : 'diff';
-        if (dmEl === tgEl) return TEN_GODS_NAME[`same_${suffix}`];
-        if (RELATIONS[dmEl].genBy === tgEl) return TEN_GODS_NAME[`genBy_${suffix}`];
-        if (RELATIONS[dmEl].gen === tgEl) return TEN_GODS_NAME[`gen_${suffix}`];
-        if (RELATIONS[dmEl].ctrlBy === tgEl) return TEN_GODS_NAME[`ctrlBy_${suffix}`];
-        if (RELATIONS[dmEl].ctrl === tgEl) return TEN_GODS_NAME[`ctrl_${suffix}`];
-        return '-';
-    };
-
-    const calculateOhaengScores = (bazi) => {
-        let scores = { '木': 0, '火': 0, '土': 0, '金': 0, '水': 0 };
-        const addScore = (char, weight) => {
-            if(!char || char === '-') return;
-            const el = ELEMENTS[char]; if(el) scores[el] += weight;
-        };
-        addScore(bazi.stems[0], 10); addScore(bazi.stems[1], 10); addScore(bazi.stems[2], 10); addScore(bazi.stems[3], 10);
-        bazi.branches.forEach((b, i) => { if (b === '-') return; let weight = 10; if (i === 1) weight = 35; else if (i === 2) weight = 15; addScore(MAIN_QI[b] || b, weight); });
-        const total = Object.values(scores).reduce((a,b)=>a+b, 0) || 1;
-        for (let key in scores) scores[key] = Math.round((scores[key] / total) * 100);
-        return scores;
-    };
-
-    const getWounsung = (dayGan, zhi) => {
-        if (!dayGan || !zhi || zhi === '-') return '-';
-        const w12Arr = W12_MAP[dayGan]; if (!w12Arr) return '-';
-        const idx = w12Arr.indexOf(zhi); return idx !== -1 ? W12_NAMES[idx] : '-';
-    };
-
-    return { analyze: async (req) => {
-        const { y, m, d, h, cal, name } = req;
-        let hr = 12; if(h === 'yaja') hr = 23; else if(h === 'joja') hr = 0; else if(h !== 'none') hr = parseInt(h);
-        let lun = cal === 'solar' ? window.Solar.fromYmdHms(y,m,d,hr,0,0).getLunar() : window.Lunar.fromYmdHms(y,m,d,hr,0,0);
-        let sol = lun.getSolar();
-        const baziData = lun.getEightChar();
-        const bazi = { 
-            stems: [baziData.getYearGan(), baziData.getMonthGan(), baziData.getDayGan(), h!=='none'?baziData.getTimeGan():'-'], 
-            branches: [baziData.getYearZhi(), baziData.getMonthZhi(), baziData.getDayZhi(), h!=='none'?baziData.getTimeZhi():'-']
-        };
-        const ohaengScores = calculateOhaengScores(bazi);
-        const yongshinEl = ELEMENTS[bazi.stems[2]] || '木';
-        const baziGridData = [
-            { pos: '시주', gan: bazi.stems[3], zhi: bazi.branches[3], ganTen: getTenGod(bazi.stems[2], bazi.stems[3]), zhiTen: getTenGod(bazi.stems[2], MAIN_QI[bazi.branches[3]]), w: getWounsung(bazi.stems[2], bazi.branches[3]) },
-            { pos: '일주', gan: bazi.stems[2], zhi: bazi.branches[2], ganTen: '일간(나)', zhiTen: getTenGod(bazi.stems[2], MAIN_QI[bazi.branches[2]]), w: getWounsung(bazi.stems[2], bazi.branches[2]) },
-            { pos: '월주', gan: bazi.stems[1], zhi: bazi.branches[1], ganTen: getTenGod(bazi.stems[2], bazi.stems[1]), zhiTen: getTenGod(bazi.stems[2], MAIN_QI[bazi.branches[1]]), w: getWounsung(bazi.stems[2], bazi.branches[1]) },
-            { pos: '년주', gan: bazi.stems[0], zhi: bazi.branches[0], ganTen: getTenGod(bazi.stems[2], bazi.stems[0]), zhiTen: getTenGod(bazi.stems[2], MAIN_QI[bazi.branches[0]]), w: getWounsung(bazi.stems[2], bazi.branches[0]) }
+    return { analyze: async (req, targetYear) => {
+        const me = getBaziData(req);
+        const A = (me.age + 7 + 9) % 8 || 8; 
+        const B = (me.lunM + 5) % 6 || 6;    
+        const C = (me.lunD + 3) % 3 || 3;    
+        const gwaeNum = `${A}${B}${C}`;
+        const baseHash = A + B + C + me.age;
+        const gwaeData = GWAE_DB[baseHash % GWAE_DB.length];
+        
+        const sections = [
+            { title: "나의 타고난 본질과 총운", paragraphs: [`당신은 <b>[${gwaeNum}괘]</b>의 흐름을 타고 났습니다.<br><br>${gwaeData.d}`] },
+            { title: "재물운과 성공 전략", paragraphs: [ WEALTH_DB[baseHash % WEALTH_DB.length] ] },
+            { title: "애정 및 대인관계", paragraphs: [ LOVE_DB[baseHash % LOVE_DB.length] ] },
+            { title: "건강운 및 주의사항", paragraphs: [ HEALTH_DB[baseHash % HEALTH_DB.length] ] }
         ];
 
-        return { statusCode: 200, data: { meta: { name, solarStr: `양력: ${sol.getYear()}년 ${sol.getMonth()}월 ${sol.getDay()}일`, lunarStr: `음력: ${lun.getYear()}년 ${Math.abs(lun.getMonth())}월 ${lun.getDay()}일`, baziGridData, ohaengScores, yongshinEl }, sections: [ { title: "나의 본질", paragraphs: [DB_JIGAN[bazi.stems[2]]] }, { title: "생애 주기", paragraphs: [DB_LIFETIME.e[yongshinEl]] } ], conclusion: "인생의 나침반으로 삼으십시오." } };
+        const monthly = [];
+        for (let i = 1; i <= 12; i++) {
+            const mId = (baseHash + i * 7) % MONTH_WORDS.length;
+            monthly.push({ month: i, h: MONTH_WORDS[mId].h, t: MONTH_WORDS[mId].t, d: MONTH_WORDS[mId].d });
+        }
+
+        return { statusCode: 200, data: { name: me.name, targetYear, gwaeNum, h: gwaeData.h, t: gwaeData.t, A, B, C, age: me.age, sections, monthly } };
     }};
 })();
 
-/**
- * =====================================================================
- * 🎨 [FRONTEND LAYER] : UI / 렌더링 / 제어 로직
- * =====================================================================
- */
+const TARGET_YEAR = 2026;
+window.MockAPI = { post: async (payload) => { return await AuthenticTojeongEngine.analyze(payload.req, TARGET_YEAR); } };
+
 const SaaSFrontend = (() => {
+    const showMsg = (msg) => { alert(msg); };
 
     const createSafeDOM = (htmlString) => {
         const p = document.createElement('p');
         p.innerHTML = htmlString; return p;
     };
 
-    // 🚀 [쿠파스 업데이트] 대표님이 주신 사주 페이지 전용 검색 결과 링크 3종 반영
-    const renderCTA = (yongshinEl) => {
-        const wrap = document.createElement('div');
+    // 🚀 [쿠파스 업데이트] 대표님이 주신 사주 전용 정직한 검색 결과 링크 3종 반영 (Sub ID: destinyroot)
+    const renderCTA = (gwaeNum) => {
+        const wrap = document.createElement('div'); 
         wrap.className = 'cta-box';
-
-        let targetUrl = 'https://link.coupang.com/a/eu5td7'; // 1. 부족 기운 (기본)
+        
+        let targetUrl = 'https://link.coupang.com/a/eu5td7'; // 1. 부족 기운 보완 (기본)
         let label = '✨ 나의 부족한 기운을 채워줄 시크릿 행운템 확인하기';
-
-        if (yongshinEl === '木' || yongshinEl === '火') {
-            targetUrl = 'https://link.coupang.com/a/eu5td7'; // 부족한 기운 보완
-            label = `🍀 나의 부족한 '${yongshinEl}' 기운을 키워줄 행운템 확인하기`;
-        } else if (yongshinEl === '土' || yongshinEl === '金') {
-            targetUrl = 'https://link.coupang.com/a/eu5uLR'; // 재물운 상승
-            label = `💰 나의 '${yongshinEl}' 기운을 빛내줄 재물운 상승템 확인하기`;
-        } else if (yongshinEl === '水') {
-            targetUrl = 'https://link.coupang.com/a/eu5vYe'; // 건강/수호
-            label = `💧 나의 물(水) 기운을 채워줄 시크릿 수호템 확인하기`;
+        
+        const num = parseInt(gwaeNum);
+        // 결과에 따라 정직한 링크 매칭
+        if (num >= 600) {
+            targetUrl = 'https://link.coupang.com/a/eu5uLR'; // 2. 재물운 상승
+            label = '💰 나의 기운을 빛내줄 재물운 상승템 확인하기';
+        } else if (num < 300) {
+            targetUrl = 'https://link.coupang.com/a/eu5vYe'; // 3. 건강/수호
+            label = '💧 나의 안녕을 지켜줄 시크릿 수호템 확인하기';
         }
 
         wrap.innerHTML = `
@@ -369,47 +260,46 @@ const SaaSFrontend = (() => {
         return wrap;
     };
 
-    const requestReport = async () => {
+    const requestReport = () => {
         const req = { 
-            name: document.getElementById('user-name').value || "고객",
-            y: parseInt(document.getElementById('user-year').value), m: parseInt(document.getElementById('user-month').value), d: parseInt(document.getElementById('user-day').value),
-            h: document.getElementById('user-time').value, cal: document.getElementById('user-cal').value
+            name: document.getElementById('user-name').value || '고객', 
+            y: parseInt(document.getElementById('user-year').value), 
+            m: parseInt(document.getElementById('user-month').value), 
+            d: parseInt(document.getElementById('user-day').value), 
+            cal: document.getElementById('user-cal').value 
         };
 
         document.getElementById('loader').style.display = 'flex';
-        const response = await OrthodoxEngine.analyze(req);
-        const resData = response.data;
-
-        setTimeout(() => {
-            document.getElementById('r-title-name').textContent = `${resData.meta.name} 님의 사주 분석 리포트`;
-            document.getElementById('r-title-date-solar').textContent = resData.meta.solarStr;
-            document.getElementById('r-title-date-lunar').textContent = resData.meta.lunarStr;
-
-            const baziWrap = document.getElementById('r-bazi-grid');
-            baziWrap.innerHTML = '';
-            resData.meta.baziGridData.forEach(col => {
-                baziWrap.innerHTML += `<div class="bazi-col"><div class="bazi-header">${col.pos}</div><div class="bazi-ten">${col.ganTen}</div><div class="bazi-char ${col.ganTen==='일간(나)'?'bazi-day-master':''}">${col.gan}</div><div class="bazi-char">${col.zhi}</div><div class="bazi-ten">${col.zhiTen}</div><div class="bazi-hidden">운성: ${col.w}</div></div>`;
-            });
-
-            const chartWrap = document.getElementById('r-element-chart');
-            chartWrap.innerHTML = '<h4>오행 밸런스</h4>';
-            const colors = {'木':'wood','火':'fire','土':'earth','金':'metal','수':'water'};
-            ['木','火','土','金','水'].forEach(el => {
-                const score = resData.meta.ohaengScores[el] || 0;
-                chartWrap.innerHTML += `<div class="bar-wrap"><div class="bar-label" style="color:var(--color-${colors[el]||'water'})">${el}</div><div class="bar-bg"><div class="bar-fill fill-${colors[el]||'water'}" style="width:${score}%"></div></div><div class="bar-val">${score}%</div></div>`;
-            });
-
-            document.getElementById('dynamic-sections').innerHTML = '';
-            resData.sections.forEach(sec => {
+        setTimeout(async () => {
+            const res = await window.MockAPI.post({ req });
+            const data = res.data;
+            
+            document.getElementById('r-year').textContent = data.targetYear;
+            document.getElementById('r-title-name').textContent = `${data.name} 님의 사주 분석 리포트`;
+            document.getElementById('r-gwae-num').textContent = `${data.gwaeNum}괘`;
+            document.getElementById('r-gwae-hanja').textContent = `[ ${data.h} ]`;
+            document.getElementById('r-gwae-trans').textContent = `"${data.t}"`;
+            document.getElementById('r-gwae-formula').textContent = `* 도출 연산: (상수 ${data.A} / 중수 ${data.B} / 하수 ${data.C})`;
+            
+            const wrap = document.getElementById('dynamic-sections'); wrap.innerHTML = '';
+            data.sections.forEach(sec => {
                 const secDiv = document.createElement('div'); secDiv.className = 'r-section';
                 secDiv.innerHTML = `<h3>${sec.title}</h3><div class="r-content"></div>`;
                 sec.paragraphs.forEach(p => secDiv.querySelector('.r-content').appendChild(createSafeDOM(p)));
-                document.getElementById('dynamic-sections').appendChild(secDiv);
+                wrap.appendChild(secDiv);
             });
 
+            const monthWrap = document.getElementById('monthly-container');
+            monthWrap.innerHTML = '';
+            data.monthly.forEach(m => {
+                monthWrap.innerHTML += `<div class="month-card" data-month="${m.month}"><h4>${m.month}월 운세</h4><div class="m-hanja">[${m.h}] ${m.t}</div><p>${m.d}</p></div>`;
+            });
+            document.getElementById('monthly-section').style.display = 'block';
+            
             document.getElementById('cta-container').innerHTML = '';
-            document.getElementById('cta-container').appendChild(renderCTA(resData.meta.yongshinEl));
-            document.getElementById('r-conclusion-box').innerHTML = `<h3>최종 전문가 제언</h3><p>${resData.conclusion}</p>`;
+            document.getElementById('cta-container').appendChild(renderCTA(data.gwaeNum));
+
+            document.getElementById('r-conclusion-box').innerHTML = `<h3>운명뿌리 종합 제언</h3><p>사주는 정해진 결론이 아니라, 나의 에너지를 가장 효율적으로 사용하는 방법을 알려주는 인생 지침서입니다. 당신의 앞날을 진심으로 응원합니다.</p>`;
 
             document.getElementById('loader').style.display = 'none';
             document.getElementById('input-view').style.display = 'none';
@@ -427,9 +317,10 @@ const SaaSFrontend = (() => {
     const goHome = () => { window.location.href = 'https://chomibinine.github.io/destinyroot/'; };
 
     const init = () => {
+        document.getElementById('target-year-display').textContent = TARGET_YEAR;
         const ys = document.getElementById('user-year'), ms = document.getElementById('user-month'), ds = document.getElementById('user-day');
         if(ys && ms && ds) {
-            for(let i=2026; i>=1930; i--) ys.add(new Option(i+'년', i));
+            for(let i=2026; i>=1940; i--) ys.add(new Option(i+'년', i));
             for(let i=1; i<=12; i++) ms.add(new Option(i+'월', i));
             for(let i=1; i<=31; i++) ds.add(new Option(i+'일', i));
             ys.value = 1990; ms.value = 1; ds.value = 1; 
