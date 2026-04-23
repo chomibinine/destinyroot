@@ -425,7 +425,7 @@ const SaaSFrontend = (() => {
         
         let pData = score >= 85 ? { q: '커플 여행', label: '천생연분 시크릿템 확인', i: '✨' } 
                   : score >= 70 ? { q: '커플 심리테스트', label: '숨겨진 진심 확인하기', i: '💌' } 
-                  : { q: '스트레스 해소', label: '관계 회복 힐링템 확인', i: '🍀' };
+                  : { q: '힐링템', label: '관계 회복 힐링템 확인', i: '🍀' };
 
         wrap.innerHTML = `
             <a href="https://www.coupang.com/np/search?q=${encodeURIComponent(pData.q)}&utm_source=affiliate" target="_blank" class="btn-coupang">
