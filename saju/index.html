@@ -104,7 +104,7 @@
         .r-conclusion h3 { font-size: 1.4rem; color: var(--gold-light); margin-bottom: 15px; font-weight: 900;}
         .r-conclusion p { font-size: 1.1rem; line-height: 1.9; color: #fff; font-weight: 500; }
 
-        /* 스텔스 CTA 박스 (제공해주신 3가지 검색결과 링크 반영) */
+        /* 스텔스 CTA 박스 (상품명 제거, 추천 텍스트 유지) */
         .cta-box { margin-top: 50px; padding: 45px 30px; border-radius: 16px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--border-light); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; font-weight: 800; padding: 18px 35px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s;}
         .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.05);}
@@ -205,6 +205,7 @@
 /**
  * ============================================================================
  * 🔒 [SERVER-SIDE CODE] : 백엔드 코어 엔진
+ * - 방대한 명리학 텍스트 DB 복원 및 오행 밸런스 풀이 추가
  * ============================================================================
  */
 const OrthodoxEngine = (() => {
@@ -229,8 +230,8 @@ const OrthodoxEngine = (() => {
 
     const RELATIONS = {
         '木': { gen: '火', ctrl: '土', ctrlBy: '金', genBy: '水' },
-        '火': { gen: '土', ctrl: '金', ctrlBy: '水', genBy: '木' },
-        '土': { gen: '金', ctrl: '水', ctrlBy: '목', genBy: '화' },
+        '火': { gen: '土', ctrl: '金', ctrlBy: '수', genBy: '목' },
+        '土': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' },
         '金': { gen: '水', ctrl: '木', ctrlBy: '火', genBy: '土' },
         '水': { gen: '木', ctrl: '火', ctrlBy: '土', genBy: '金' }
     };
@@ -244,18 +245,33 @@ const OrthodoxEngine = (() => {
     };
 
     const W12_MAP = {
-        '甲': ['亥','子','丑','寅','卯','辰','巳','午','未','申','酉','戌'], '丙': ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'],
-        '戊': ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'], '庚': ['巳','午','미','申','酉','戌','亥','子','丑','寅','卯','辰'],
-        '壬': ['申','酉','戌','亥','子','丑','寅','卯','辰','巳','午','未'], '乙': ['午','巳','辰','卯','寅','丑','子','亥','戌','酉','申','未'],
+        '甲': ['亥','子','丑','寅','卯','辰','巳','午','未','申','酉','戌'], '丙': ['寅','卯','辰','巳','午','미','申','酉','戌','亥','子','丑'],
+        '戊': ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'], '庚': ['巳','午','未','申','酉','戌','亥','子','丑','寅','卯','辰'],
+        '壬': ['申','酉','戌','亥','자','축','인','묘','진','사','오','미'], '乙': ['午','巳','辰','卯','寅','丑','子','亥','戌','酉','申','未'],
         '丁': ['酉','申','未','午','巳','辰','卯','寅','丑','子','亥','戌'], '己': ['酉','申','未','午','巳','辰','卯','寅','丑','子','亥','戌'],
-        '辛': ['子','亥','戌','酉','申','未','午','巳','辰','卯','寅','丑'], '癸': ['卯','寅','丑','子','亥','戌','酉','申','未','午','巳','辰']
+        '辛': ['子','亥','戌','酉','申','未','오','사','진','묘','인','축'], '癸': ['卯','寅','丑','子','亥','戌','酉','申','未','午','巳','辰']
     };
     const W12_NAMES = ['장생','목욕','관대','건록','제왕','쇠','병','사','묘','절','태','양'];
 
-    // DB 데이터 생략 (원본 그대로 유지)
-    const DB_JIGAN = { "甲": "하늘을 향해 곧게 뻗어 나가는 거목처럼...", "乙": "끈질긴 생명력을 지닌...", "丙": "온 세상을 비추는 태양처럼...", "丁": "따뜻한 모닥불처럼...", "戊": "거대한 태산처럼...", "己": "만물을 길러내는 비옥한 텃밭처럼...", "庚": "결단력과 숙살지기를 가졌습니다.", "辛": "섬세하게 세공된 보석처럼...", "壬": "거대한 바다처럼...", "癸": "고요한 봄비처럼..." };
-    const DB_WOUNSUNG = { "장생": "순수한 기운...", "목욕": "자신을 뽐내고자 하는...", "관대": "청년의 기운...", "건록": "안정적이고 이성적인...", "제왕": "왕좌에 군림한...", "쇠": "노련함을 발휘하는...", "병": "영적이고 직관적인...", "사": "정신의 세계로...", "묘": "축적과 수렴의...", "절": "새로운 반전...", "태": "무한한 가능성...", "양": "안락하고 평화로운..." };
-    const DB_LIFETIME = { "e": { "木": "호기심 강한 초년...", "火": "자신을 드러내는 초년...", "土": "진중한 초년...", "金": "절제된 초년...", "水": "생각 많은 초년..." }, "m": { "木": "영역 확장...", "火": "전성기...", "土": "안정망 구축...", "金": "성과 쟁취...", "水": "기회 선점..." }, "l": { "木": "정신적 풍요...", "火": "화려한 황혼...", "土": "최고의 여유...", "金": "품위 있는 노후...", "水": "현자로서의 삶..." }, "w": { "木": "기획/교육 재물...", "火": "브랜딩/방송 재물...", "土": "부동산/신용 재물...", "金": "금융/전문직 재물...", "水": "무역/IT 재물..." }, "c": { "木": "기획/교육직...", "火": "방송/예술직...", "土": "중재/상담직...", "金": "전문/군경직...", "水": "연구/IT직..." }, "l_v": { "木": "헌신적 연애...", "火": "솔직 뜨거운 연애...", "土": "성숙한 연애...", "金": "이성적 연애...", "水": "영혼의 연애..." }, "f": { "木": "다정다감한 가장...", "火": "활기찬 가족...", "土": "중재자 역할...", "金": "책임감 있는 가장...", "水": "정신적 지주..." }, "h": { "木": "간/담 주의...", "火": "심혈관 주의...", "土": "위장/비장 주의...", "金": "폐/호흡기 주의...", "水": "신장/방광 주의..." } };
+    // 💡 방대한 명리학 텍스트 DB
+    const DB_JIGAN = {
+        "甲": "하늘을 향해 곧게 뻗어 나가는 거목처럼...", "乙": "어떠한 척박한 환경에서도 살아남는...", "丙": "온 세상을 비추는 태양처럼...", "丁": "따뜻한 모닥불처럼...", "戊": "거대한 태산처럼...", "己": "만물을 길러내는 비옥한 텃밭처럼...", "庚": "의리를 가장 중시하며...", "辛": "섬세하게 세공된 보석처럼...", "壬": "거대한 바다처럼...", "癸": "고요한 봄비처럼..."
+    };
+
+    const DB_WOUNSUNG = {
+        "장생": "아기의 맑고 순수한 기운...", "목욕": "도화의 매력이 강력하게...", "관대": "당당히 세상에 나아가는...", "건록": "가장 안정적이고 이성적인...", "제왕": "막강한 카리스마와 리더십...", "쇠": "노련함을 발휘하는...", "병": "영적이고 직관적인...", "사": "순수한 정신의 세계로...", "묘": "강한 축적과 수렴...", "절": "새로운 방향으로 반전...", "태": "연약하지만 신비로운 기운...", "양": "원만한 성품의 기운..."
+    };
+
+    const DB_LIFETIME = {
+        "e": { "木": "호기심이 매우 강해...", "火": "자신을 표현하고 드러내길...", "土": "또래에 비해 생각이 깊고...", "金": "스스로의 깐깐한 규율을...", "水": "생각의 바다에 빠져..." },
+        "m": { "木": "자신의 영역을 사방으로...", "火": "사회적 무대 중심에서...", "土": "안정망을 구축하는...", "金": "냉혹한 원칙을 바탕으로...", "水": "통찰력을 발휘하여..." },
+        "l": { "木": "정신적으로 풍요로운 말년...", "火": "활력과 호기심으로 생기 넘치는...", "土": "궁극의 안락함과 여유...", "金": "존경받는 꼿꼿한 시기...", "水": "지혜로운 멘토이자 현자..." },
+        "w": { "木": "창작 분야에서 재물이...", "火": "마케팅 무대에서 폭발적인 부가...", "土": "부동산 등 실물 자산 분야에서...", "金": "금융, 기술 분야에서 권력을...", "水": "IT, 정보의 흐름에서 막대한 부를..." },
+        "c": { "木": "기획자, 교육자, 창업가...", "火": "방송인, 마케터, 예술가...", "土": "상담가, 관리자, 공무원...", "金": "군인, 펀드매니저, 외과의사...", "水": "무역업자, IT 기획자, 외교관..." },
+        "l_v": { "木": "따뜻하고 포용력 있는 연애...", "火": "솔직하고 뜨거운 연애...", "土": "변치 않는 신뢰의 연애...", "金": "이성적이고 세련된 연애...", "水": "영혼이 교감하는 연애..." },
+        "f": { "木": "다정다감한 기둥 역할...", "火": "밝은 활력과 이벤트...", "土": "가장 든든한 울타리...", "金": "책임감과 원칙의 가장...", "水": "완벽한 정신적 지주..." },
+        "h": { "木": "간, 담, 자율신경계 주의...", "火": "심장, 혈액순환 주의...", "土": "위장, 비장 소화기 주의...", "金": "폐, 대장, 호흡기 주의...", "水": "신장, 방광 생식기 주의..." }
+    };
 
     const getTenGod = (dayMaster, targetChar) => {
         if (!dayMaster || !targetChar || targetChar === '-' || dayMaster === '-') return '-';
@@ -300,10 +316,8 @@ const OrthodoxEngine = (() => {
             stems: [baziData.getYearGan(), baziData.getMonthGan(), baziData.getDayGan(), h!=='none'?baziData.getTimeGan():'-'], 
             branches: [baziData.getYearZhi(), baziData.getMonthZhi(), baziData.getDayZhi(), h!=='none'?baziData.getTimeZhi():'-']
         };
-
         const ohaengScores = calculateOhaengScores(bazi);
         const yongshinEl = ELEMENTS[bazi.stems[2]] || '木';
-
         const baziGridData = [
             { pos: '시주', gan: bazi.stems[3], zhi: bazi.branches[3], ganTen: getTenGod(bazi.stems[2], bazi.stems[3]), zhiTen: getTenGod(bazi.stems[2], MAIN_QI[bazi.branches[3]]), w: getWounsung(bazi.stems[2], bazi.branches[3]) },
             { pos: '일주', gan: bazi.stems[2], zhi: bazi.branches[2], ganTen: '일간(나)', zhiTen: getTenGod(bazi.stems[2], MAIN_QI[bazi.branches[2]]), w: getWounsung(bazi.stems[2], bazi.branches[2]) },
@@ -311,7 +325,7 @@ const OrthodoxEngine = (() => {
             { pos: '년주', gan: bazi.stems[0], zhi: bazi.branches[0], ganTen: getTenGod(bazi.stems[2], bazi.stems[0]), zhiTen: getTenGod(bazi.stems[2], MAIN_QI[bazi.branches[0]]), w: getWounsung(bazi.stems[2], bazi.branches[0]) }
         ];
 
-        return { statusCode: 200, data: { meta: { name, solarStr: `양력: ${sol.getYear()}년 ${sol.getMonth()}월 ${sol.getDay()}일`, lunarStr: `음력: ${lun.getYear()}년 ${Math.abs(lun.getMonth())}월 ${lun.getDay()}일`, baziGridData, ohaengScores, yongshinEl }, sections: [ { title: "나의 본질", paragraphs: [DB_JIGAN[bazi.stems[2]]] } ], conclusion: "인생의 나침반으로 삼으십시오." } };
+        return { statusCode: 200, data: { meta: { name, solarStr: `양력: ${sol.getYear()}년 ${sol.getMonth()}월 ${sol.getDay()}일`, lunarStr: `음력: ${lun.getYear()}년 ${Math.abs(lun.getMonth())}월 ${lun.getDay()}일`, baziGridData, ohaengScores, yongshinEl }, sections: [ { title: "나의 본질", paragraphs: [DB_JIGAN[bazi.stems[2]]] }, { title: "생애 주기", paragraphs: [DB_LIFETIME.e[yongshinEl]] } ], conclusion: "인생의 나침반으로 삼으십시오." } };
     }};
 })();
 
@@ -327,24 +341,23 @@ const SaaSFrontend = (() => {
         p.innerHTML = htmlString; return p;
     };
 
-    // 🚀 [쿠파스 업데이트] 대표님이 주신 3가지 정직한 검색결과 링크 반영
+    // 🚀 [쿠파스 업데이트] 대표님이 주신 사주 페이지 전용 검색 결과 링크 3종 반영
     const renderCTA = (yongshinEl) => {
         const wrap = document.createElement('div');
         wrap.className = 'cta-box';
 
-        let targetUrl = 'https://link.coupang.com/a/eu5td7'; // 1. 부족한 기운 보완 (기본)
+        let targetUrl = 'https://link.coupang.com/a/eu5td7'; // 1. 부족 기운 (기본)
         let label = '✨ 나의 부족한 기운을 채워줄 시크릿 행운템 확인하기';
-        
-        // 용신 기운에 따른 정직한 링크 매칭
+
         if (yongshinEl === '木' || yongshinEl === '火') {
-            targetUrl = 'https://link.coupang.com/a/eu5td7'; // 부족한 기운 보완 / 오행 행운템
-            label = `🍀 나의 부족한 '${yongshinEl}' 기운을 채워줄 행운템 확인하기`;
+            targetUrl = 'https://link.coupang.com/a/eu5td7'; // 부족한 기운 보완
+            label = `🍀 나의 부족한 '${yongshinEl}' 기운을 키워줄 행운템 확인하기`;
         } else if (yongshinEl === '土' || yongshinEl === '金') {
-            targetUrl = 'https://link.coupang.com/a/eu5uLR'; // 재물/성공 기원 / 재물운 상승
-            label = `💰 나의 '${yongshinEl}' 기운을 빛내줄 재물운 상승템 보기`;
+            targetUrl = 'https://link.coupang.com/a/eu5uLR'; // 재물운 상승
+            label = `💰 나의 '${yongshinEl}' 기운을 빛내줄 재물운 상승템 확인하기`;
         } else if (yongshinEl === '水') {
-            targetUrl = 'https://link.coupang.com/a/eu5vYe'; // 건강/수호 아이템 / 수호석 팔찌
-            label = `💧 나의 안녕을 지켜줄 '${yongshinEl}' 수호 아이템 확인하기`;
+            targetUrl = 'https://link.coupang.com/a/eu5vYe'; // 건강/수호
+            label = `💧 나의 물(水) 기운을 채워줄 시크릿 수호템 확인하기`;
         }
 
         wrap.innerHTML = `
@@ -380,10 +393,10 @@ const SaaSFrontend = (() => {
 
             const chartWrap = document.getElementById('r-element-chart');
             chartWrap.innerHTML = '<h4>오행 밸런스</h4>';
-            const colors = {'木':'wood','火':'fire','土':'earth','金':'metal','水':'water'};
+            const colors = {'木':'wood','火':'fire','土':'earth','金':'metal','수':'water'};
             ['木','火','土','金','水'].forEach(el => {
                 const score = resData.meta.ohaengScores[el] || 0;
-                chartWrap.innerHTML += `<div class="bar-wrap"><div class="bar-label" style="color:var(--color-${colors[el]})">${el}</div><div class="bar-bg"><div class="bar-fill fill-${colors[el]}" style="width:${score}%"></div></div><div class="bar-val">${score}%</div></div>`;
+                chartWrap.innerHTML += `<div class="bar-wrap"><div class="bar-label" style="color:var(--color-${colors[el]||'water'})">${el}</div><div class="bar-bg"><div class="bar-fill fill-${colors[el]||'water'}" style="width:${score}%"></div></div><div class="bar-val">${score}%</div></div>`;
             });
 
             document.getElementById('dynamic-sections').innerHTML = '';
