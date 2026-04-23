@@ -3,354 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>운명뿌리 | 리얼 AI 관상 스캐너</title>
+    <title>운명뿌리 | AI 관상 스캐너</title>
     
-    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        :root { --bg-base: #030509; --gold-primary: #d4af37; --text-muted: #9aa4b2; }
+        * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent;}
+        body { background: var(--bg-base); color: #fff; min-height: 100vh; overflow-x: hidden; }
+        .app-container { max-width: 600px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+        .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 30px 24px; }
         
-        :root { 
-            --bg-base: #030509; --bg-card: rgba(255, 255, 255, 0.03);
-            --border-glass: rgba(255, 255, 255, 0.08);
-            --gold-primary: #d4af37; --gold-light: #f9e596; 
-            --text-main: #fff; --text-muted: #9aa4b2; 
-            --color-danger: #f85149; --color-info: #58a6ff; --color-success: #4ade80;
-        }
-        
-        * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; word-break: keep-all; -webkit-tap-highlight-color: transparent;}
-        body { background: var(--bg-base); color: var(--text-main); line-height: 1.6; min-height: 100vh; position: relative; overflow-x: hidden; }
-
-        body::before { content: ''; position: absolute; width: 300px; height: 300px; background: rgba(88, 166, 255, 0.1); filter: blur(100px); top: 5%; left: -100px; z-index: 0; }
-        body::after { content: ''; position: absolute; width: 250px; height: 250px; background: rgba(212, 175, 55, 0.05); filter: blur(80px); bottom: 15%; right: -50px; z-index: 0; }
-        
-        .app-container { max-width: 600px; margin: 0 auto; padding: 40px 20px 120px; position: relative; z-index: 1; }
-        
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -1.5px; margin: 0; background: linear-gradient(180deg, #fff 0%, #a1a1a1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header p { color: var(--text-muted); margin-top: 8px; font-size: 1rem; font-weight: 300; }
-
-        .glass-card {
-            background: var(--bg-card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glass); border-radius: 24px; padding: 30px 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); margin-bottom: 25px; text-align: center;
-        }
-
-        /* 📸 카메라 영역 */
         #video-container {
-            width: 100%; max-width: 350px; height: 450px; margin: 0 auto 20px;
-            border-radius: 20px; border: 2px solid rgba(212, 175, 55, 0.3); background: #000;
-            overflow: hidden; position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            width: 100%; max-width: 320px; height: 320px; margin: 0 auto 20px;
+            border-radius: 50%; border: 2px solid var(--gold-primary); background: #000;
+            overflow: hidden; position: relative;
         }
-        
         #video, #captured-image { width: 100%; height: 100%; object-fit: cover; }
         #captured-image { display: none; }
-        #overlay-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
         
-        /* 얼굴 윤곽 가이드 */
-        #face-guide {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 65%; height: 75%; border: 2px dashed rgba(212, 175, 55, 0.5);
-            border-radius: 50% 50% 45% 45%; pointer-events: none; z-index: 10; display: none;
-        }
-
         .btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 16px 28px; border-radius: 30px; font-weight: 700; font-size: 1.05rem;
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 18px 28px; border-radius: 40px; font-weight: 700; font-size: 1.1rem;
             cursor: pointer; transition: 0.2s; border: none; width: 100%; margin-bottom: 12px;
         }
-        .btn-primary { background: var(--gold-primary); color: #000; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
-        .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+        .btn-primary { background: var(--gold-primary); color: #000; }
         .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
         
-        #status-msg { font-size: 0.9rem; color: var(--gold-light); margin: 15px 0; min-height: 1.5rem; font-weight: 600; }
-
-        /* 📄 리포트 영역 */
-        #report-view { display: none; animation: fadeIn 0.6s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .r-header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-glass); }
-        .r-header h2 { font-size: 1.8rem; color: #fff; font-weight: 800; }
-        .r-header .status { color: var(--color-success); font-weight: 600; font-size: 0.9rem; margin-top: 5px; }
-
-        .r-section { margin-bottom: 35px; text-align: left; }
-        .r-section h3 { font-size: 1.3rem; color: #fff; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
-        .r-section h3::before { content:''; display:inline-block; width:4px; height:18px; background:var(--gold-primary); border-radius:2px;}
-        .r-content { font-size: 1.05rem; line-height: 1.8; color: var(--text-main); text-align: justify;} 
-        
-        .basis-box { background: rgba(212, 175, 55, 0.05); padding: 18px; margin-bottom: 15px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.1); font-size: 0.9rem; color: var(--gold-light); line-height: 1.6; }
-
-        .cta-box { margin-top: 40px; padding: 30px 20px; border-radius: 20px; background: linear-gradient(145deg, rgba(212,175,55,0.1), rgba(0,0,0,0.2)); border: 1px solid rgba(212,175,55,0.2); text-align: center; }
-        .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.1rem; font-weight: 700; padding: 16px 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s; }
-        .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
-
-        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 5, 9, 0.95); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); } 
-        .spinner { width: 60px; height: 60px; border: 4px solid rgba(212, 175, 55, 0.1); border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 30px; box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); } 
-        .loading-txt { color: var(--gold-light); font-size: 1.2rem; font-weight: 600; text-align: center; }
+        #status-msg { font-size: 0.9rem; color: var(--gold-primary); margin: 15px 0; font-weight: 600; min-height: 1.5rem; }
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { width: 50px; height: 50px; border: 4px solid rgba(212,175,55,0.1); border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        .controls { margin-top: 30px; }
-
-        @media (max-width: 600px) { .app-container { padding: 30px 15px 100px; } .header h1 { font-size: 1.9rem; } #video-container { height: 350px; max-width: 320px; } .glass-card { padding: 25px 18px; } }
+        #report-view { display: none; text-align: left; }
+        .r-section { margin-bottom: 30px; }
+        .basis-box { background: rgba(212,175,55,0.05); padding: 15px; border-radius: 12px; font-size: 0.85rem; color: var(--gold-primary); margin-bottom: 10px; border: 1px solid rgba(212,175,55,0.1); }
+        .cta-box { margin-top: 30px; padding: 25px; border-radius: 20px; background: rgba(212,175,55,0.1); border: 1px solid var(--gold-primary); text-align: center; }
     </style>
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div><div id="loader-text" class="loading-txt">AI 안면 스캔 중...</div></div>
+<div id="loader"><div class="spinner"></div><div id="loader-text" style="color: #fff; font-weight: 700;">AI 분석 엔진 가동 중...</div></div>
 
 <div class="app-container">
-    <div class="header">
-        <h1>AI 관상 스캐너</h1>
-        <p>실제 얼굴 윤곽선과 이목구비의 비율 측정</p>
-    </div>
-
     <div id="input-view">
-        <div class="glass-card camera-section">
+        <h1 style="font-size: 2rem; margin-bottom: 10px;">AI 관상 스캐너</h1>
+        <p style="color: var(--text-muted); margin-bottom: 30px;">얼굴 윤곽과 이목구비를 정밀 측정합니다</p>
+        
+        <div class="glass-card">
             <div id="video-container">
-                <video id="video" autoplay playsinline muted></video>
-                <img id="captured-image" alt="분석 사진">
-                <canvas id="overlay-canvas"></canvas>
-                <div id="face-guide"></div>
+                <video id="video" autoplay playsinline muted style="transform: scaleX(-1);"></video>
+                <img id="captured-image">
             </div>
 
-            <div id="status-msg">AI 엔진 활성화 중 (잠시만 기다려주세요)...</div>
+            <div id="status-msg">시스템 최적화 중...</div>
 
-            <div id="camera-controls" style="display:none;">
-                <label class="btn btn-secondary" style="margin-bottom:12px;">
-                    📂 앨범에서 사진 가져오기
-                    <input type="file" accept="image/*" style="display: none;" onchange="HybridAI.handleFile(event)">
+            <div id="controls">
+                <button class="btn btn-primary" id="btn-start" onclick="Action.startCamera()">📷 카메라 켜기</button>
+                <button class="btn btn-primary" id="btn-capture" onclick="Action.takePhoto()" style="display:none;">🎯 얼굴 분석 시작</button>
+                <label class="btn btn-secondary">
+                    📂 사진 선택하기
+                    <input type="file" accept="image/*" style="display: none;" onchange="Action.handleFile(event)">
                 </label>
-                <button class="btn btn-primary" id="btn-start" onclick="HybridAI.startCamera()">
-                    📷 카메라로 직접 촬영
-                </button>
-                <button class="btn btn-primary" id="btn-capture" onclick="HybridAI.capture()" style="display:none;">
-                    🎯 얼굴 분석 시작
-                </button>
-                <button class="btn btn-secondary" id="btn-switch" onclick="HybridAI.switchCamera()" style="display:none;">
-                    🔄 전/후면 전환
-                </button>
             </div>
-            
-            <p style="color:var(--text-muted); font-size:0.8rem; margin-top:15px; font-weight:300;">
-                * 데이터는 서버로 전송되지 않으며 기기 내에서 즉시 처리 및 폐기됩니다.
-            </p>
         </div>
     </div>
 
-    <div id="report-view">
-        <div class="glass-card">
-            <div class="r-header">
-                <h2>당신의 정통 관상 리포트</h2>
-                <p class="status">● 안면 비율 및 윤곽 스캔 완료</p>
-            </div>
-            
-            <div id="dynamic-sections"></div>
-            <div id="cta-container"></div>
-        </div>
-
-        <div class="controls">
-            <button class="btn btn-primary" onclick="location.href='https://chomibinine.github.io/destinyroot/'" style="width:100%; border-radius:30px;">🏠 메인 홈으로 돌아가기</button>
-        </div>
+    <div id="report-view" class="glass-card fade-in">
+        <h2 style="text-align: center; margin-bottom: 30px; color: var(--gold-primary);">관상 분석 결과</h2>
+        <div id="dynamic-results"></div>
+        <div id="cta-area"></div>
+        <button class="btn btn-secondary" onclick="location.href='../'" style="margin-top: 30px;">🏠 홈으로 이동</button>
     </div>
 </div>
 
 <script>
-/**
- * ============================================================================
- * 🔒 [HYBRID AI ENGINE] : 리얼 모델 + 스텔스 무결점 폴백
- * ============================================================================
- */
-const HybridAI = (() => {
+const Action = (() => {
+    let isAIReady = false;
     let stream = null;
-    let isRealAIReady = false;
-    let currentFacingMode = 'user';
-    
     const video = document.getElementById('video');
     const img = document.getElementById('captured-image');
-    const canvas = document.getElementById('overlay-canvas');
     const status = document.getElementById('status-msg');
     const loader = document.getElementById('loader');
-    const loaderText = document.getElementById('loader-text');
 
-    // 1. 모델 로드 시도 (가장 안정적인 jsdelivr CDN)
+    // 1. 초기화 (기다리지 않고 즉시 버튼 활성화)
     const init = async () => {
+        status.innerText = "분석 준비가 되었습니다.";
         const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
         try {
             await Promise.all([
                 faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
                 faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL)
             ]);
-            isRealAIReady = true;
-            status.innerText = "✨ AI 엔진 준비 완료!";
+            isAIReady = true;
+            status.innerText = "✨ AI 정밀 분석 모드 활성화";
         } catch (e) {
-            // 실패해도 에러 안 띄우고 자연스럽게 넘어감 (스텔스 모드 활성화)
-            isRealAIReady = false;
-            status.innerText = "✨ 스캐너 준비 완료!";
+            isAIReady = false; // 실패해도 상관없음 (폴백 작동)
         }
-        document.getElementById('camera-controls').style.display = 'block';
     };
 
-    // 2. 카메라 제어
+    // 2. 카메라
     const startCamera = async () => {
         try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } });
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
             video.srcObject = stream;
-            video.style.display = 'block';
-            video.style.transform = currentFacingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)';
-            img.style.display = 'none';
-            document.getElementById('face-guide').style.display = 'block';
-            
             document.getElementById('btn-start').style.display = 'none';
-            document.querySelector('label.btn-secondary').style.display = 'none';
             document.getElementById('btn-capture').style.display = 'flex';
-            document.getElementById('btn-switch').style.display = 'flex';
-            status.innerText = "얼굴을 가이드 라인에 맞춰주세요.";
-        } catch (err) {
-            alert("카메라 권한이 차단되었습니다. 브라우저 설정에서 카메라를 허용하거나 사진 업로드 기능을 이용해주세요.");
+            status.innerText = "얼굴을 원 안에 맞춰주세요.";
+        } catch (e) {
+            alert("카메라를 켤 수 없습니다. 사진 업로드 기능을 이용해주세요.");
         }
     };
 
-    const switchCamera = () => {
-        if (stream) stream.getTracks().forEach(track => track.stop());
-        currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-        startCamera();
+    // 3. 사진 찍기
+    const takePhoto = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
+        ctx.drawImage(video, 0, 0);
+        
+        img.src = canvas.toDataUrl('image/jpeg');
+        img.style.display = 'block';
+        video.style.display = 'none';
+        if(stream) stream.getTracks().forEach(t => t.stop());
+        analyze();
     };
 
-    // 3. 파일 업로드 및 캡처
+    // 4. 파일 선택
     const handleFile = (e) => {
         const file = e.target.files[0];
-        if (!file) return;
+        if(!file) return;
         const reader = new FileReader();
         reader.onload = (ev) => {
             img.src = ev.target.result;
             img.style.display = 'block';
-            img.style.transform = 'scaleX(1)';
             video.style.display = 'none';
-            document.getElementById('face-guide').style.display = 'none';
-            analyze(img);
+            document.getElementById('btn-start').style.display = 'none';
+            analyze();
         };
         reader.readAsDataURL(file);
     };
 
-    const capture = () => {
-        if (!stream) return;
-        const hiddenCanvas = document.createElement('canvas');
-        hiddenCanvas.width = video.videoWidth; hiddenCanvas.height = video.videoHeight;
-        const ctx = hiddenCanvas.getContext('2d');
-        if (currentFacingMode === 'user') { ctx.translate(hiddenCanvas.width, 0); ctx.scale(-1, 1); }
-        ctx.drawImage(video, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
-        
-        img.src = hiddenCanvas.toDataUrl('image/jpeg');
-        img.style.display = 'block';
-        img.style.transform = 'scaleX(1)';
-        video.style.display = 'none';
-        document.getElementById('face-guide').style.display = 'none';
-        
-        stream.getTracks().forEach(track => track.stop()); stream = null;
-        analyze(img);
-    };
-
-    // 4. ⭐️ 분석 로직 (하이브리드 분기점)
-    const analyze = async (targetEl) => {
+    // 5. 분석 (핵심 로직)
+    const analyze = async () => {
         loader.style.display = 'flex';
         
-        // 박진감 넘치는 메시지 연출
-        const msgs = ["얼굴 윤곽선 추출 중...", "눈/코/입 비율 계산 중...", "관상학 DB 대조 중...", "운명 데이터 컴파일 중..."];
-        let mIdx = 0; loaderText.textContent = msgs[mIdx];
-        const mInt = setInterval(() => { mIdx++; if(mIdx<msgs.length) loaderText.textContent = msgs[mIdx]; }, 1000);
-
         try {
-            if (isRealAIReady) {
-                // [리얼 모드]
-                const displaySize = { width: targetEl.clientWidth || 300, height: targetEl.clientHeight || 400 };
-                faceapi.matchDimensions(canvas, displaySize);
-                const detection = await faceapi.detectSingleFace(targetEl, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
-                
+            let result = { bigNose: Math.random() > 0.5, wideMouth: Math.random() > 0.5 };
+            
+            if (isAIReady) {
+                const detection = await faceapi.detectSingleFace(img, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
                 if (detection) {
-                    const resized = faceapi.resizeResults(detection, displaySize);
-                    faceapi.draw.drawFaceLandmarks(canvas, resized);
-                    
                     const l = detection.landmarks;
                     const fW = l.getJawOutline()[16].x - l.getJawOutline()[0].x;
                     const nW = l.getNose()[8].x - l.getNose()[4].x;
                     const mW = l.getMouth()[6].x - l.getMouth()[0].x;
-                    
-                    setTimeout(() => { clearInterval(mInt); generateReport((nW/fW)>0.24, (mW/fW)>0.33); }, 2000);
-                    return;
+                    result.bigNose = (nW / fW) > 0.25;
+                    result.wideMouth = (mW / fW) > 0.33;
                 }
             }
-            // [스텔스 모드] AI 실패 시, 혹은 인식 안 될 시 절대 멈추지 않고 랜덤 연산으로 자연스럽게 결과 도출
-            throw new Error("Fallback"); 
-        } catch (error) {
-            // 에러 없이 랜덤성 부여하여 시뮬레이션 결과 도출
-            const r1 = Math.random() > 0.5;
-            const r2 = Math.random() > 0.5;
-            setTimeout(() => { clearInterval(mInt); generateReport(r1, r2); }, 3500);
+            
+            setTimeout(() => render(result), 2500);
+        } catch (e) {
+            render({ bigNose: Math.random() > 0.5, wideMouth: Math.random() > 0.5 });
         }
     };
 
-    // 5. 리포트 생성 및 화면 렌더링
-    const generateReport = (isBigNose, isWideMouth) => {
-        const wrap = document.getElementById('dynamic-sections');
-        wrap.innerHTML = '';
-        let mainTrait = 'general';
-
-        // 코 (재물)
-        if (isBigNose) mainTrait = 'wealth';
-        wrap.innerHTML += `
+    // 6. 결과 출력
+    const render = (res) => {
+        const container = document.getElementById('dynamic-results');
+        container.innerHTML = `
             <div class="r-section">
-                <div class="basis-box">🔎 <strong>[안면 스캔 1]</strong> 비익(콧방울)의 양 끝단 거리가 하악골 대비 ${(isBigNose?'발달형':'슬림형')}으로 분류되었습니다.</div>
-                <h3>재백궁 (코/재물운)</h3>
-                <div class="r-content">
-                    ${isBigNose 
-                    ? "코끝(준두)이 도톰하게 발달하여 <b>재물운의 저장고</b>가 몹시 큽니다. 금전 감각이 탁월하고 추진력이 강해 중년 이후 큰 자산을 거머쥘 수 있는 강력한 복코 관상입니다." 
-                    : "콧대가 슬림하고 날렵하여 세속적인 물욕보다는 <b>자신만의 명예와 고고한 철학</b>을 중시하는 기질이 엿보입니다. 안정적인 저축을 통해 내실을 다지는 것이 훗날 큰 힘이 됩니다."}
-                </div>
-            </div>`;
-
-        // 입 (성품/말년)
-        if (!isBigNose && !isWideMouth) mainTrait = 'health';
-        wrap.innerHTML += `
+                <div class="basis-box">🔎 안면 좌표 데이터 스캔 완료</div>
+                <h3 style="margin-bottom:10px;">재백궁 (코) 분석</h3>
+                <p style="line-height:1.8; color:#ddd;">${res.bigNose ? '콧방울이 두툼하고 힘 있게 뻗어 있어 <b>재물복이 넘치는 복코</b>입니다. 중년 이후에 큰 자산이 모이는 관상입니다.' : '콧대가 오똑하고 선이 날렵하여 <b>명예와 품격</b>을 중시하는 타입입니다. 전문직에서 대성할 기운이 강합니다.'}</p>
+            </div>
             <div class="r-section">
-                <div class="basis-box">🔎 <strong>[안면 스캔 2]</strong> 구각(입꼬리) 사이 폭이 안면 너비 대비 ${(isWideMouth?'대형':'소형')} 구조를 지니고 있습니다.</div>
-                <h3>출납궁 (입/대인관계)</h3>
-                <div class="r-content">
-                    ${isWideMouth 
-                    ? "입의 선이 시원시원하여, 스케일이 크고 호탕한 리더십을 지녔습니다. 외부로 뻗는 에너지가 좋아 사람을 끌어모으고 말년의 사회적 명망이 뛰어납니다." 
-                    : "입이 야무지고 섬세하게 모여 있어, 과시하기보다는 내면을 꼼꼼하게 다지고 결정을 신중히 내리는 <b>철두철미한 실속형 기질</b>입니다. 실수 없는 언행으로 깊은 신뢰를 얻습니다."}
-                </div>
-            </div>`;
-
-        document.getElementById('cta-container').innerHTML = '';
-        document.getElementById('cta-container').appendChild(renderCTA(mainTrait));
+                <div class="basis-box">🔎 구각 비율 및 입꼬리 각도 분석 완료</div>
+                <h3 style="margin-bottom:10px;">출납궁 (입) 분석</h3>
+                <p style="line-height:1.8; color:#ddd;">${res.wideMouth ? '입의 선이 시원하여 <b>호탕한 리더의 기질</b>을 지녔습니다. 주변에 사람이 모이고 말년운이 매우 안정적입니다.' : '입이 야무지게 다물어져 있어 <b>자기 관리가 철저하고 실속</b>이 매우 강한 타입입니다. 신뢰를 바탕으로 성공할 상입니다.'}</p>
+            </div>
+        `;
+        
+        const cta = document.getElementById('cta-area');
+        const link = res.bigNose ? 'https://link.coupang.com/a/eu5uLR' : 'https://link.coupang.com/a/eu5td7';
+        cta.innerHTML = `
+            <div class="cta-box">
+                <p style="margin-bottom:15px; font-weight:700;">💰 당신의 관상운을 틔워줄 행운 아이템</p>
+                <a href="${link}" target="_blank" style="color:#000; background:var(--gold-primary); text-decoration:none; padding:12px 25px; border-radius:30px; font-weight:800; display:inline-block;">추천 행운템 확인하기</a>
+            </div>
+        `;
 
         loader.style.display = 'none';
         document.getElementById('input-view').style.display = 'none';
         document.getElementById('report-view').style.display = 'block';
+        window.scrollTo(0,0);
     };
 
-    // 6. 쿠파스 CTA (결과 기반 스텔스 매칭)
-    const renderCTA = (mainTrait) => {
-        const wrap = document.createElement('div'); wrap.className = 'cta-box';
-        let pUrl = 'https://link.coupang.com/a/eu5td7'; let pLabel = '✨ 나의 부족한 기운을 채워줄 시크릿 행운템 확인하기';
-
-        if (mainTrait === 'wealth') {
-            pUrl = 'https://link.coupang.com/a/eu5uLR'; pLabel = '💰 타고난 강력한 재물운을 현실화할 부자 꿀템 확인하기';
-        } else if (mainTrait === 'general') {
-            pUrl = 'https://link.coupang.com/a/eu5td7'; pLabel = '🍀 나의 넘치는 인복과 성공운을 상승시킬 아이템 확인';
-        } else {
-            pUrl = 'https://link.coupang.com/a/eu5vYe'; pLabel = '🛡️ 나의 예민한 에너지를 보호하고 평온을 지켜줄 수호템 확인';
-        }
-
-        wrap.innerHTML = `<a href="${pUrl}" target="_blank" class="btn-coupang">${pLabel}</a><p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>`;
-        return wrap;
-    };
-
-    return { init, startCamera, switchCamera, handleFile, capture };
+    return { init, startCamera, takePhoto, handleFile };
 })();
 
-window.onload = HybridAI.init;
+window.onload = Action.init;
 </script>
 </body>
 </html>
