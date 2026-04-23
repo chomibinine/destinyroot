@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>운명뿌리 | 정통 궁합 분석</title>
+    <title>운명뿌리 | 정통 심층 궁합 분석</title>
     
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.min.js"></script>
 
@@ -11,41 +11,28 @@
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
         :root { 
-            --bg-base: #05070a; 
-            --bg-report: #0d1118; 
-            --border-line: #1f242c; 
-            --border-light: #2d333b;
-            --gold-primary: #d4af37; 
-            --gold-light: #f9e596; 
-            --text-main: #d1d5db; 
-            --text-muted: #8b949e; 
-            --color-danger: #f85149; 
-            --color-info: #58a6ff;
-            /* 오행 컬러 */
-            --color-wood: #4ade80; 
-            --color-fire: #fb923c; 
-            --color-earth: #fbbf24; 
-            --color-metal: #cbd5e1; 
-            --color-water: #60a5fa;
-            /* 궁합 컬러 */
-            --color-me: #d4af37;
-            --color-partner: #64748b;
+            --bg-base: #05070a; --bg-report: #0d1118; 
+            --border-line: #1f242c; --border-light: #2d333b;
+            --gold-primary: #d4af37; --gold-light: #f9e596; 
+            --text-main: #d1d5db; --text-muted: #8b949e; 
+            --color-danger: #f85149; --color-info: #58a6ff;
+            --color-wood: #4ade80; --color-fire: #fb923c; 
+            --color-earth: #fbbf24; --color-metal: #cbd5e1; --color-water: #60a5fa;
+            --color-me: #d4af37; --color-partner: #64748b;
         }
         
         * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; word-break: keep-all; -webkit-tap-highlight-color: transparent;}
         body { background: radial-gradient(circle at top, #0b0f17, #05070a); color: var(--text-main); line-height: 1.75; font-size: 16px; overflow-x: hidden; min-height: 100vh;}
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .animate-fade { animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
         .app-container { max-width: 900px; margin: 0 auto; padding: 50px 20px 120px; position: relative; z-index: 1; }
         
-        /* 홈 화면 UI */
         .hero { text-align: center; margin-bottom: 40px; padding: 20px 0;}
         .hero h1 { color: var(--gold-light); font-size: 3rem; font-weight: 900; letter-spacing: -1px; margin: 0; }
         .hero p { color: var(--text-muted); margin-top: 10px; font-size: 1.1rem;}
         
-        /* 듀얼 입력 폼 */
         .dual-input-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 35px; }
         .input-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-line); border-radius: 16px; padding: 35px 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .input-card h2 { font-size: 1.4rem; color: #fff; margin-bottom: 25px; text-align: center; border-bottom: 1px solid var(--border-light); padding-bottom: 15px;}
@@ -60,13 +47,10 @@
         .btn-submit { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--gold-primary), #b58d22); color: #000; padding: 20px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; font-size: 1.25rem; transition: 0.2s; box-shadow: 0 5px 20px rgba(212,175,55,0.2); }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(212,175,55,0.4); }
 
-        /* 📄 리포트 영역 */
         .report-wrapper { background: var(--bg-report); border: 1px solid var(--border-line); border-radius: 16px; padding: 50px 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); margin-bottom: 30px; position: relative; overflow:hidden;}
-        
         .r-header { text-align: center; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--border-line); }
         .r-header h2 { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: -1px; margin-bottom: 15px;}
         
-        /* 듀얼 명식 테이블 */
         .dual-bazi-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px;}
         .bazi-wrap h4 { text-align: center; color: var(--text-main); margin-bottom: 10px; font-weight: 800;}
         .bazi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: rgba(0,0,0,0.3); padding: 15px 8px; border-radius: 12px; border: 1px solid var(--border-line); }
@@ -75,7 +59,6 @@
         .bazi-char { font-size: 1.6rem; font-weight: 900; color: #fff; padding: 8px 0; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--border-light); }
         .bazi-day-master { border-color: var(--gold-primary) !important; background: rgba(212,175,55,0.1) !important; color: var(--gold-light) !important; }
 
-        /* 비교 오행 그래프 */
         .element-chart-container { margin: 40px 0; padding: 35px 30px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--border-line); }
         .element-chart-container h4 { color: #fff; font-size: 1.25rem; margin-bottom: 10px; text-align: center; font-weight: 800;}
         .chart-legend { text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px;}
@@ -85,29 +68,25 @@
         .bar-me { height: 100%; background: var(--color-me); transition: width 1.5s ease-out; }
         .bar-partner { height: 100%; background: var(--color-partner); transition: width 1.5s ease-out; }
 
-        /* 섹션 공통 */
-        .r-section { margin-bottom: 55px; }
+        .r-section { margin-bottom: 60px; }
         .r-section h3 { font-size: 1.4rem; color: #fff; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; font-weight: 800;}
         .r-section h3::before { content: ''; display:inline-block; width:5px; height:20px; background:var(--gold-primary); border-radius:3px;}
         .r-content { font-size: 1.1rem; line-height: 1.9; color: var(--text-main); text-align: justify;} 
         
-        /* 분석 근거 박스 */
         .basis-box { background: rgba(88,166,255,0.05); padding: 20px 25px; margin-bottom: 25px; border-radius: 12px; font-size: 0.95rem; color: #a1b0c0; line-height: 1.7; border-left: 4px solid var(--color-info);}
         .basis-box strong { color: var(--color-info); font-weight: 800; margin-right: 5px; }
         .basis-box .magnify { font-size: 1.15rem; vertical-align: middle; margin-right: 5px;}
         
         .r-content strong { color: #fff; font-weight: 800; }
-        .highlight { color: var(--gold-light); font-weight: 800; }
+        .r-content b { color: var(--gold-light); font-weight: 800; }
         
         .r-conclusion { margin-top: 60px; padding: 35px 30px; background: rgba(212,175,55,0.05); border-radius: 16px; border: 1px solid rgba(212,175,55,0.2); text-align: center; }
         .r-conclusion h3 { font-size: 1.4rem; color: var(--gold-light); margin-bottom: 15px; font-weight: 900;}
 
-        /* 스텔스 CTA 박스 (쿠파스) */
         .cta-box { margin-top: 50px; padding: 45px 30px; border-radius: 16px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--border-light); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; font-weight: 800; padding: 18px 35px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s;}
         .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.05);}
 
-        /* 하단 제어 버튼 (공유, 홈 등) */
         .controls { display: flex; flex-direction: column; gap: 15px; margin-top: 40px; }
         .btn-tool { flex: 1; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; padding: 20px; border-radius: 12px; font-size: 1.15rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; width: 100%;}
         .btn-tool:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);}
@@ -115,13 +94,10 @@
         .btn-home { display: flex; align-items: center; justify-content: center; background: var(--gold-primary); color: #000; padding: 22px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; font-size: 1.3rem; transition: 0.2s; box-shadow: 0 5px 20px rgba(212,175,55,0.2);}
         .btn-home:hover { background: var(--gold-light); transform: translateY(-2px);}
 
-        /* 로더 연출 */
         #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,7,10,0.95); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(5px);} 
         .spinner { width: 55px; height: 55px; border: 4px solid transparent; border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite; margin-bottom:25px;} 
         .loading-txt { color: var(--gold-light); font-size: 1.25rem; font-weight: 700; letter-spacing: 1px;}
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .modal { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #161b22; color: #fff; padding: 20px 25px; border-radius: 12px; z-index: 100001; text-align: center; width: 90%; max-width: 320px; border: 1px solid var(--border-line); box-shadow: 0 10px 30px rgba(0,0,0,0.8);}
         
         @media (max-width: 768px) { 
             .dual-input-container, .dual-bazi-container { grid-template-columns: 1fr; }
@@ -131,19 +107,13 @@
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div><div id="loader-text" class="loading-txt">운명 교차점 스캔 중...</div></div>
-
-<div id="custom-modal" class="modal">
-    <h3 id="modal-title" style="margin-bottom:8px; font-size:1.05rem; color:var(--color-danger);">System</h3>
-    <p id="modal-msg" style="margin-bottom:15px; font-size:0.95rem; color:var(--text-muted);"></p>
-    <button onclick="document.getElementById('custom-modal').style.display='none'" style="background:#fff; color:#000; border:none; padding:8px 20px; border-radius:8px; font-weight:600; cursor:pointer;">확인</button>
-</div>
+<div id="loader"><div class="spinner"></div><div id="loader-text" class="loading-txt">철학관 수준 심층 교차 연산 중...</div></div>
 
 <div class="app-container">
     <div id="input-view">
         <div class="hero">
-            <h1>궁합 분석</h1>
-            <p>두 사람의 생년월일시를 교차 연산합니다</p>
+            <h1>심층 궁합 분석</h1>
+            <p>겉궁합부터 속궁합, 결혼 후 현실까지 완벽 해부</p>
         </div>
         
         <div class="dual-input-container">
@@ -154,15 +124,19 @@
                     <div class="grid-row"><select id="me-year" class="form-control"></select><select id="me-month" class="form-control"></select><select id="me-day" class="form-control"></select></div>
                 </div>
                 <div class="form-group grid-half">
-                    <div><label>성별</label><select id="me-gender" class="form-control"><option value="male">남성</option><option value="female">여성</option></select></div>
+                    <div><label>성별</label><select id="me-gender" class="form-control"><option value="M">남성</option><option value="F">여성</option></select></div>
                     <div><label>역법</label><select id="me-cal" class="form-control"><option value="solar">양력</option><option value="lunar">음력</option></select></div>
                 </div>
                 <div class="form-group">
-                    <label>태어난 시각</label>
+                    <label>태어난 시각 <span style="color:var(--gold-primary); font-size:0.8rem;">(말년운/자녀운 필수)</span></label>
                     <select id="me-time" class="form-control">
                         <option value="none">모름 (3주 6자로 분석)</option>
-                        <option value="2">축시 (01:30~)</option><option value="4">인시 (03:30~)</option><option value="12">오시 (11:30~)</option>
-                        </select>
+                        <option value="yaja">야자시 (23:30~)</option><option value="joja">조자시 (~01:29)</option>
+                        <option value="2">축시 (01:30~)</option><option value="4">인시 (03:30~)</option><option value="6">묘시 (05:30~)</option>
+                        <option value="8">진시 (07:30~)</option><option value="10">사시 (09:30~)</option><option value="12">오시 (11:30~)</option>
+                        <option value="14">미시 (13:30~)</option><option value="16">신시 (15:30~)</option><option value="18">유시 (17:30~)</option>
+                        <option value="20">술시 (19:30~)</option><option value="22">해시 (21:30~)</option>
+                    </select>
                 </div>
             </div>
 
@@ -173,36 +147,37 @@
                     <div class="grid-row"><select id="p-year" class="form-control"></select><select id="p-month" class="form-control"></select><select id="p-day" class="form-control"></select></div>
                 </div>
                 <div class="form-group grid-half">
-                    <div><label>성별</label><select id="p-gender" class="form-control"><option value="female">여성</option><option value="male">남성</option></select></div>
+                    <div><label>성별</label><select id="p-gender" class="form-control"><option value="F">여성</option><option value="M">남성</option></select></div>
                     <div><label>역법</label><select id="p-cal" class="form-control"><option value="solar">양력</option><option value="lunar">음력</option></select></div>
                 </div>
                 <div class="form-group">
-                    <label>태어난 시각</label>
+                    <label>태어난 시각 <span style="color:var(--gold-primary); font-size:0.8rem;">(말년운/자녀운 필수)</span></label>
                     <select id="p-time" class="form-control">
                         <option value="none">모름 (3주 6자로 분석)</option>
-                        <option value="2">축시 (01:30~)</option><option value="4">인시 (03:30~)</option><option value="12">오시 (11:30~)</option>
+                        <option value="yaja">야자시 (23:30~)</option><option value="joja">조자시 (~01:29)</option>
+                        <option value="2">축시 (01:30~)</option><option value="4">인시 (03:30~)</option><option value="6">묘시 (05:30~)</option>
+                        <option value="8">진시 (07:30~)</option><option value="10">사시 (09:30~)</option><option value="12">오시 (11:30~)</option>
+                        <option value="14">미시 (13:30~)</option><option value="16">신시 (15:30~)</option><option value="18">유시 (17:30~)</option>
+                        <option value="20">술시 (19:30~)</option><option value="22">해시 (21:30~)</option>
                     </select>
                 </div>
             </div>
         </div>
-        <button class="btn-submit" onclick="SaaSFrontend.requestReport()">운명 교차점 분석 시작</button>
+        <button class="btn-submit" onclick="SaaSFrontend.requestReport()">명리학 심층 궁합 풀이 보기</button>
     </div>
 
     <div id="report-view" style="display:none;">
         <div class="report-wrapper" id="capture-target">
             <div class="r-header">
-                <h2 id="r-title-name">운명 교차점 리포트</h2>
-                <p style="color:var(--gold-primary); font-size:1.1rem; font-weight:700;">종합 궁합 지수: <span id="r-score" style="font-size:1.5rem;"></span>점</p>
+                <h2 id="r-title-name">심층 운명 교차점 리포트</h2>
+                <p style="color:var(--gold-primary); font-size:1.15rem; font-weight:800;">철학관 종합 궁합 지수: <span id="r-score" style="font-size:1.8rem; font-weight:900;"></span>점</p>
             </div>
 
             <div class="dual-bazi-container" id="r-dual-bazi"></div>
-
             <div class="element-chart-container" id="r-element-chart"></div>
             
             <div id="dynamic-sections"></div>
-
             <div id="cta-container"></div>
-
             <div class="r-conclusion" id="r-conclusion-box"></div>
         </div>
         
@@ -217,7 +192,7 @@
 <script>
 /**
  * ============================================================================
- * 🔒 [SERVER-SIDE CODE] : 궁합 전문 코어 엔진 
+ * 🔒 [SERVER-SIDE CODE] : 정통 심층 궁합 코어 엔진 (철학관 수준)
  * ============================================================================
  */
 const CompatibilityEngine = (() => {
@@ -227,10 +202,8 @@ const CompatibilityEngine = (() => {
     };
 
     const RELATIONS = {
-        '木': { gen: '火', ctrl: '土', ctrlBy: '金', genBy: '水' },
-        '火': { gen: '土', ctrl: '金', ctrlBy: '水', genBy: '木' },
-        '土': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' },
-        '金': { gen: '水', ctrl: '木', ctrlBy: '火', genBy: '土' },
+        '木': { gen: '火', ctrl: '土', ctrlBy: '金', genBy: '水' }, '火': { gen: '土', ctrl: '金', ctrlBy: '水', genBy: '木' },
+        '土': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' }, '金': { gen: '水', ctrl: '木', ctrlBy: '火', genBy: '土' },
         '水': { gen: '木', ctrl: '火', ctrlBy: '土', genBy: '金' }
     };
 
@@ -239,12 +212,12 @@ const CompatibilityEngine = (() => {
     const ZHI_WONJIN = ['子未','丑午','寅酉','卯申','辰亥','巳戌','未子','午丑','酉寅','申卯','亥辰','戌巳'];
 
     const getBaziData = (req) => {
-        let hr = req.h !== 'none' ? parseInt(req.h) : 12;
+        let hr = 12; if(req.h === 'yaja') hr = 23; else if(req.h === 'joja') hr = 0; else if(req.h !== 'none') hr = parseInt(req.h);
         let lun = req.cal === 'solar' ? window.Solar.fromYmdHms(req.y, req.m, req.d, hr, 0, 0).getLunar() : window.Lunar.fromYmdHms(req.y, req.m, req.d, hr, 0, 0);
         const b = lun.getEightChar();
         return {
-            name: req.name,
-            dayGan: b.getDayGan(), dayZhi: b.getDayZhi(),
+            name: req.name, gender: req.gender,
+            dayGan: b.getDayGan(), dayZhi: b.getDayZhi(), monthZhi: b.getMonthZhi(), yearZhi: b.getYearZhi(),
             stems: [b.getYearGan(), b.getMonthGan(), b.getDayGan(), req.h!=='none'?b.getTimeGan():'-'],
             branches: [b.getYearZhi(), b.getMonthZhi(), b.getDayZhi(), req.h!=='none'?b.getTimeZhi():'-']
         };
@@ -256,63 +229,143 @@ const CompatibilityEngine = (() => {
         return scores;
     };
 
+    const getExtremes = (scores) => {
+        let maxE = '木', minE = '木', maxV = -1, minV = 999;
+        for (const [k, v] of Object.entries(scores)) {
+            if(v > maxV) { maxV = v; maxE = k; }
+            if(v < minV) { minV = v; minE = k; }
+        }
+        return { max: maxE, min: minE, maxV, minV };
+    };
+
     return { analyze: async (meReq, partnerReq) => {
         const me = getBaziData(meReq);
         const p = getBaziData(partnerReq);
-        const meEl = calcElements(me);
-        const pEl = calcElements(p);
+        const meEl = calcElements(me); const pEl = calcElements(p);
+        const mExt = getExtremes(meEl); const pExt = getExtremes(pEl);
         
-        const meCore = ELEMENTS[me.dayGan];
-        const pCore = ELEMENTS[p.dayGan];
-        let coreDesc = "", coreTitle = "";
         let totalScore = 70; 
+        const sections = [];
 
-        if (meCore === pCore) {
-            coreTitle = "비견 (어깨를 나란히 하는 친구)";
-            coreDesc = `두 사람 모두 <b>${meCore}</b>의 기운을 코어로 삼고 있습니다. 가치관과 행동 패턴이 비슷하여 말이 잘 통하는 베스트 프렌드 같은 연애를 합니다. 하지만 의견 충돌 시 서로 굽히지 않아 평행선을 달릴 수 있습니다.`;
-            totalScore += 5;
-        } else if (RELATIONS[meCore].gen === pCore) {
-            coreTitle = "상생 (내가 기운을 주는 관계)";
-            coreDesc = `나의 <b>${meCore}</b> 기운이 상대방의 <b>${pCore}</b> 기운을 조건 없이 생(生)해주는 헌신적인 구조입니다. 내가 상대를 더 많이 챙기고 보듬어주며 큰 보람을 느낍니다.`;
-            totalScore += 15;
-        } else if (RELATIONS[meCore].genBy === pCore) {
-            coreTitle = "상생 (내가 보호받는 관계)";
-            coreDesc = `상대방의 <b>${pCore}</b> 기운이 나의 <b>${meCore}</b> 기운을 끊임없이 지원하고 생(生)해줍니다. 상대방의 넓은 품에서 심리적 안정과 큰 사랑을 받게 되는 아주 좋은 궁합입니다.`;
-            totalScore += 15;
-        } else if (RELATIONS[meCore].ctrl === pCore || RELATIONS[meCore].ctrlBy === pCore) {
-            coreTitle = "상극 (강한 끌림과 통제)";
-            coreDesc = `<b>${meCore}</b>와 <b>${pCore}</b>는 명리학적으로 서로를 제어하는 상극(相剋) 관계입니다. 자신에게 없는 낯선 매력에 초기에는 강렬하게 이끌리지만, 서로를 통제하려는 성향 탓에 잦은 주도권 싸움이 발생할 수 있습니다.`;
-            totalScore -= 5;
-        }
+        // --- 1. 천생연분 지수 (일간 겉궁합) ---
+        const mCore = ELEMENTS[me.dayGan], pCore = ELEMENTS[p.dayGan];
+        let sec1Desc = "";
+        if (mCore === pCore) { sec1Desc = `두 사람은 <b>${mCore}</b>라는 같은 본질을 공유하는 '거울 같은 관계'입니다. 친구처럼 편안하고 취향이 잘 맞아 연애 초기부터 급속도로 가까워집니다. 다만 자존심 싸움이 시작되면 서로 절대 굽히지 않아 냉전이 길어질 수 있습니다.`; totalScore += 5; } 
+        else if (RELATIONS[mCore].gen === pCore) { sec1Desc = `나의 <b>${mCore}</b> 기운이 상대의 <b>${pCore}</b> 기운을 조건 없이 생(生)해주는 헌신적인 궁합입니다. 내가 상대를 리드하고 챙겨주며 모성애/부성애적 사랑을 베풀게 되는 따뜻한 관계입니다.`; totalScore += 15; } 
+        else if (RELATIONS[mCore].genBy === pCore) { sec1Desc = `상대방의 <b>${pCore}</b> 기운이 나의 <b>${mCore}</b>를 든든하게 받쳐주는 '보호받는 궁합'입니다. 상대방의 넓은 이해심 덕분에 심리적인 안정감을 크게 느끼며 사랑받는 연애를 하게 됩니다.`; totalScore += 15; } 
+        else { sec1Desc = `서로를 제어하고 자극하는 상극(相剋)의 궁합입니다. 나와 정반대의 매력에 강렬한 스파크를 느끼며 끌리게 되지만, 관계가 깊어질수록 상대를 내 마음대로 통제하려다 잦은 마찰이 발생할 수 있습니다. <b>다름을 인정하는 것</b>이 교제의 핵심 키워드입니다.`; totalScore -= 5; }
 
-        const dayZhiPair = me.dayZhi + p.dayZhi;
-        let zhiDesc = "", zhiTitle = "무난한 배우자궁";
-        if (ZHI_HAP.includes(dayZhiPair)) {
-            zhiTitle = "지장간의 완벽한 결합 (합)"; zhiDesc = `두 사람의 배우자 자리가 자석처럼 강하게 끌어당기는 합(合)의 관계입니다. 육체적, 정신적 유대감이 몹시 깊고 떨어져 있기 힘든 끈끈한 결속력을 자랑합니다.`; totalScore += 15;
-        } else if (ZHI_CHONG.includes(dayZhiPair)) {
-            zhiTitle = "강렬한 부딪힘 (충)"; zhiDesc = `배우자 자리가 정면으로 충돌하는 충(沖)의 관계입니다. 스파크가 강하게 튀어 연애 초기 발전 속도는 빠르나, 다툼이 잦고 이별수가 내재되어 있어 서로의 선을 지키는 쿨한 관계가 요구됩니다.`; totalScore -= 10;
-        } else if (ZHI_WONJIN.includes(dayZhiPair)) {
-            zhiTitle = "이유 없는 서운함 (원진)"; zhiDesc = `배우자 자리에 원진살(怨嗔)이 끼어 있습니다. 뚜렷한 이유 없이 서로가 밉거나 서운함이 축적되기 쉬우니, 감정이 상했을 때는 즉각적으로 솔직하게 대화로 풀어내는 훈련이 절대적입니다.`; totalScore -= 10;
+        sections.push({
+            title: "1. 겉궁합과 첫 끌림 (코어 에너지 교차)",
+            paragraphs: [
+                `<div class="basis-box"><span class="magnify">🔍</span><strong>[명리 근거]</strong> 두 사람의 자아를 상징하는 일간(日干) <b>${me.dayGan}</b>과 <b>${p.dayGan}</b>의 생극제화(生剋制化)를 분석했습니다.</div>`,
+                sec1Desc
+            ]
+        });
+
+        // --- 2. 오행 조후 융합 (상호 보완) ---
+        let sec2Desc = "";
+        if (mExt.min === pExt.max && pExt.min === mExt.max) {
+            sec2Desc = `<b>[완벽한 톱니바퀴 융합]</b><br>놀랍게도 내가 가장 부족한 <b>${mExt.min}</b> 기운을 상대방이 넘치도록 가지고 있고, 상대에게 없는 <b>${pExt.min}</b> 기운을 내가 완벽히 채워주는 <b>천생연분 조후(調候) 궁합</b>입니다. 각자의 단점이 상대방을 만나 완벽한 장점으로 덮어지며, 결혼 후 재물과 안정이 크게 상승하는 이상적인 결합입니다.`;
+            totalScore += 20;
+        } else if (mExt.min === pExt.max || pExt.min === mExt.max) {
+            let giver = mExt.min === pExt.max ? p.name : me.name;
+            let taker = mExt.min === pExt.max ? me.name : p.name;
+            let energy = mExt.min === pExt.max ? mExt.min : pExt.min;
+            sec2Desc = `<b>[구원자적 결합]</b><br>한쪽의 강력한 결핍을 다른 한쪽이 채워주는 훌륭한 융합입니다. ${taker} 님에게 반드시 필요한 <b>${energy}</b> 기운을 ${giver} 님이 듬뿍 제공하고 있어, ${taker} 님은 이 관계를 통해 큰 위안과 운의 상승을 경험하게 됩니다.`;
+            totalScore += 10;
+        } else if (mExt.max === pExt.max) {
+            sec2Desc = `<b>[에너지 과잉 쏠림 현상]</b><br>두 사람 모두 <b>${mExt.max}</b> 기운이 너무 강하게 편중되어 있습니다. 좋을 때는 폭발적인 시너지를 내지만, 특정 운로가 막힐 때 두 사람이 동시에 힘들어질 수 있는 리스크가 있습니다. 경제적, 심리적 포트폴리오를 분산시키는 지혜가 반드시 필요합니다.`;
+            totalScore -= 10;
         } else {
-            zhiDesc = `두 사람의 배우자 자리는 특별한 부딪힘이나 얽힘 없이 독립적이고 평온한 상태를 유지합니다. 각자의 사생활을 존중하며 잔잔하게 관계를 이어갈 수 있습니다.`;
+            sec2Desc = `<b>[독립적 평행 관계]</b><br>서로의 기운이 특별히 보완되거나 크게 충돌하지 않는 평온하고 무난한 오행 밸런스입니다. 서로에게 집착하기보다는 각자의 일과 취미를 존중할 때 롱런할 수 있습니다.`;
         }
 
-        let sections = [
-            {
-                title: "1. 코어 에너지 교차 (일간 궁합)",
-                paragraphs: [
-                    `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 나의 본질인 일간 <b>${me.dayGan}(${meCore})</b>과 상대의 본질인 <b>${p.dayGan}(${pCore})</b>의 상호작용을 계산했습니다.</div>`,
-                    `<b>[결과: ${coreTitle}]</b><br>${coreDesc}`
-                ]
-            },
-            {
-                title: "2. 배우자궁 결속력 (일지 궁합)",
-                paragraphs: [
-                    `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 두 사람의 안방과 속궁합을 의미하는 일지 <b>${me.dayZhi}</b>와 <b>${p.dayZhi}</b>의 형충회합(刑沖會合)을 정밀 판독했습니다.</div>`,
-                    `<b>[결과: ${zhiTitle}]</b><br>${zhiDesc}`
-                ]
-            }
-        ];
+        sections.push({
+            title: "2. 조후/억부 시너지 (서로의 귀인이 되는가?)",
+            paragraphs: [
+                `<div class="basis-box"><span class="magnify">🔍</span><strong>[명리 근거]</strong> 명식의 습하고 건조함(조습), 뜨겁고 차가움(한난)을 결정하는 <b>오행의 극단적 편중과 결핍</b>이 상대방을 통해 어떻게 보완되는지 계산했습니다.</div>`,
+                sec2Desc
+            ]
+        });
+
+        // --- 3. 연애 스타일과 속궁합 (일지 분석) ---
+        const dayZhiPair = me.dayZhi + p.dayZhi;
+        let sec3Desc = "";
+        if (ZHI_HAP.includes(dayZhiPair)) {
+            sec3Desc = `<b>[자석 같은 끌림과 최고의 속궁합]</b><br>두 사람의 침실과 배우자 자리가 완벽하게 끌어안는 <b>지합(地合)</b>을 이루고 있습니다. 눈빛만 봐도 서로의 감정을 읽어내며, 육체적/정신적 스킨십의 주파수가 소름 돋게 일치합니다. 한 번 맺어지면 어지간한 다툼에도 쉽게 헤어지지 못하는 강력한 애착 관계를 형성합니다.`;
+            totalScore += 15;
+        } else if (ZHI_CHONG.includes(dayZhiPair)) {
+            sec3Desc = `<b>[롤러코스터 같은 강렬함]</b><br>배우자 자리가 정면으로 강하게 부딪히는 <b>일지충(日支沖)</b>입니다. 강한 자극과 호기심으로 불같이 타오르지만, 연애 기간이 길어질수록 잦은 의견 대립과 감정 소모가 발생할 수 있습니다. 각자의 혼자만의 시간을 철저히 보장해주고 약간의 거리를 두는 '쿨한 연애'를 지향해야 오래갑니다.`;
+            totalScore -= 10;
+        } else if (ZHI_WONJIN.includes(dayZhiPair)) {
+            sec3Desc = `<b>[사랑과 전쟁, 미운 정 고운 정]</b><br>배우자 궁에 <b>원진살(怨嗔殺)</b>이 발생하여, 뚜렷한 잘못이 없어도 묘하게 서운함이 쌓이거나 오해가 생기기 쉽습니다. "말 안 해도 알겠지"라는 생각은 절대 금물입니다. 서운한 점은 그날그날 즉각적으로 말로 표현하고 털어내는 대화 습관만이 액운을 막는 비방입니다.`;
+            totalScore -= 10;
+        } else {
+            sec3Desc = `<b>[잔잔하고 평화로운 호수]</b><br>속궁합과 내면의 결속력이 아주 평온한 상태를 유지합니다. 불같은 격정보다는, 오래 만난 친구처럼 편안하고 안정적인 신뢰를 바탕으로 조용히 사랑을 키워나가는 성숙한 연애 스타일입니다.`;
+        }
+
+        sections.push({
+            title: "3. 연애 스타일과 속궁합 (가장 은밀한 결속력)",
+            paragraphs: [
+                `<div class="basis-box"><span class="magnify">🔍</span><strong>[명리 근거]</strong> 두 사람의 가장 은밀한 사생활과 배우자 자리를 의미하는 <b>일지(日支) ${me.dayZhi}와 ${p.dayZhi}</b>의 형충회합(刑沖會合) 및 원진 여부를 딥 스캔했습니다.</div>`,
+                sec3Desc
+            ]
+        });
+
+        // --- 4. 결혼 후 현실 생활 및 경제권 (월지/십신 분석) ---
+        // 철학관 단골 멘트: 누가 주도권을 잡는가?
+        let sec4Desc = "";
+        let controller = "";
+        if (RELATIONS[mCore].ctrl === pCore) controller = me.name;
+        else if (RELATIONS[pCore].ctrl === mCore) controller = p.name;
+        
+        if (controller) {
+            sec4Desc = `결혼 후 가정의 <b>실질적인 주도권과 경제권은 ${controller} 님</b>이 쥐고 가는 것이 가정의 평화와 재산 증식에 압도적으로 유리합니다. ${controller} 님의 결단력에 상대방이 부드럽게 맞춰주는 룰을 정립하십시오.<br><br>`;
+        } else {
+            sec4Desc = `어느 한쪽이 일방적으로 군림하기보다는 경제권과 가사 분담을 철저히 5:5로 분리하는 매우 현대적이고 평등한 부부 관계가 어울립니다.<br><br>`;
+        }
+
+        const monthZhiPair = me.monthZhi + p.monthZhi;
+        if (ZHI_HAP.includes(monthZhiPair)) {
+            sec4Desc += `또한 두 사람의 사회적 환경과 직업관을 상징하는 <b>월지(月支)가 합(合)</b>을 이루어, 결혼 후 함께 공동 목표를 향해 나아가거나 맞벌이를 할 때 재산이 무섭게 불어나는 강력한 부부 시너지를 발휘합니다.`;
+        } else if (ZHI_CHONG.includes(monthZhiPair)) {
+            sec4Desc += `다만 직업관을 의미하는 <b>월지(月支)에 충(沖)</b>이 있어, 돈을 쓰고 모으는 경제 관념이나 라이프스타일에서 큰 차이를 보일 수 있습니다. 결혼 전 반드시 명확한 재무 규칙과 각자의 용돈 선을 타협해 두어야만 현실적인 마찰을 피할 수 있습니다.`;
+        } else {
+            sec4Desc += `서로의 사회 생활과 커리어를 철저히 존중하며, 외부의 스트레스를 가정으로 끌고 오지 않는 성숙한 태도를 보인다면 매우 안정적인 가정을 꾸릴 수 있습니다.`;
+        }
+
+        sections.push({
+            title: "4. 결혼 후 현실 생활과 경제권 (월지 주도권)",
+            paragraphs: [
+                `<div class="basis-box"><span class="magnify">🔍</span><strong>[명리 근거]</strong> 생존의 터전이자 가치관을 상징하는 <b>월지(月支) ${me.monthZhi}와 ${p.monthZhi}</b>의 조화, 그리고 일간의 상극 밸런스를 통해 결혼 후 현실적인 라이프스타일을 도출했습니다.</div>`,
+                sec4Desc
+            ]
+        });
+
+        // --- 5. 시댁/처가 및 주변 환경 (년지/월지 분석) ---
+        const yearZhiPair = me.yearZhi + p.yearZhi;
+        let sec5Desc = "";
+        if (ZHI_HAP.includes(yearZhiPair)) {
+            sec5Desc = `양가 집안의 뿌리를 상징하는 <b>년지(年支)가 완벽한 합(合)</b>을 이룹니다. 이는 개인의 사랑을 넘어 양가 어른들의 적극적인 축복과 지원을 받으며 순탄하게 맺어지는 '천생연분의 가문 결합'을 의미합니다. 명절이나 집안 대소사에서도 잡음 없이 화목함을 유지합니다.`;
+        } else if (ZHI_CHONG.includes(yearZhiPair) || ZHI_WONJIN.includes(yearZhiPair)) {
+            sec5Desc = `조상궁을 상징하는 <b>년지(年支)에 부딪힘(충/원진)</b>이 발생했습니다. 두 분의 사랑은 굳건하나, 결혼 준비 과정이나 명절 등에서 양가 집안의 문화 차이, 혹은 어른들의 과도한 개입으로 인해 피곤한 갈등이 발생할 소지가 다분합니다. <b>효도는 철저히 각자(셀프 효도)</b> 책임진다는 쿨한 원칙을 세우고, 부부만의 독립적인 울타리를 견고하게 쳐야 합니다.`;
+            totalScore -= 5;
+        } else {
+            sec5Desc = `양가 집안의 개입이나 마찰이 크게 발생하지 않는 매우 독립적이고 깔끔한 구조입니다. 부모님의 간섭에서 벗어나 두 사람만의 자유로운 가정을 꾸려나가기에 최적의 환경이 조성되어 있습니다.`;
+        }
+
+        sections.push({
+            title: "5. 양가(시댁/처가) 환경 및 대인 관계 (년지 스캔)",
+            paragraphs: [
+                `<div class="basis-box"><span class="magnify">🔍</span><strong>[명리 근거]</strong> 부모와 조상궁, 가문의 환경을 관장하는 <b>년지(年支) ${me.yearZhi}와 ${p.yearZhi}</b>의 교차 연산을 통해 외부 환경의 개입도를 스캔했습니다.</div>`,
+                sec5Desc
+            ]
+        });
+
+        // 점수 보정
+        if (totalScore > 98) totalScore = 98;
+        if (totalScore < 45) totalScore = 45 + Math.floor(Math.random() * 10); // 너무 낮은 점수 방어
 
         return { statusCode: 200, data: { me, partner: p, meEl, pEl, totalScore, sections } };
     }};
@@ -320,7 +373,7 @@ const CompatibilityEngine = (() => {
 
 /**
  * =====================================================================
- * 🎨 [FRONTEND LAYER] : UI / 렌더링 / 제어 (벤치마킹 반영)
+ * 🎨 [FRONTEND LAYER] : UI / 렌더링 / 제어 로직 
  * =====================================================================
  */
 window.MockAPI = { post: async (payload) => { return await CompatibilityEngine.analyze(payload.me, payload.partner); } };
@@ -345,7 +398,7 @@ const SaaSFrontend = (() => {
                 const div = document.createElement('div'); div.className = 'basis-box';
                 div.innerHTML = part.slice(23, -6).replace(/<br\s*\/?>/gi, '<br>'); p.appendChild(div);
             }
-            else if (lower.startsWith('<b>')) { const b = document.createElement('strong'); b.innerHTML = part.slice(3, -4); p.appendChild(b); }
+            else if (lower.startsWith('<b>')) { const b = document.createElement('b'); b.innerHTML = part.slice(3, -4); p.appendChild(b); }
             else p.appendChild(document.createTextNode(part));
         });
         return p;
@@ -365,55 +418,49 @@ const SaaSFrontend = (() => {
         `;
     };
 
-    // 🚀 스텔스 쿠파스 (궁합 점수 기반 맞춤형 추천)
     const renderCTA = (score) => {
-        const wrap = document.createElement('div');
-        wrap.className = 'cta-box';
-        
-        let pData = {};
-        if (score >= 85) {
-            pData = { q: '커플 여행지 숙소', label: '함께 떠나는 힐링 여행 아이템 찾기', i: '✈️' };
-        } else if (score >= 70) {
-            pData = { q: '커플 문답북', label: '서로의 진심을 알아가는 문답북 찾기', i: '📖' };
-        } else {
-            pData = { q: '아로마 캔들 디퓨저', label: '마음을 차분하게 해주는 힐링템 찾기', i: '🕯️' };
-        }
+        const wrap = document.createElement('div'); wrap.className = 'cta-box';
+        let pData = score >= 85 ? { q: '커플 호캉스', label: '최고의 궁합을 기념하는 커플 여행템', i: '✈️' } 
+                  : score >= 70 ? { q: '커플 백문백답', label: '서로의 진심을 알아보는 커플 문답북', i: '📖' } 
+                  : { q: '스트레스 해소 차', label: '관계 회복을 돕는 힐링 아로마/티 세트', i: '☕' };
 
-        wrap.innerHTML = `
-            <a href="https://www.coupang.com/np/search?q=${encodeURIComponent(pData.q)}&utm_source=affiliate" target="_blank" class="btn-coupang">
-                ${pData.i} ${pData.label}
-            </a>
-            <p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
-        `;
+        wrap.innerHTML = `<a href="https://www.coupang.com/np/search?q=${encodeURIComponent(pData.q)}&utm_source=affiliate" target="_blank" class="btn-coupang">${pData.i} ${pData.label}</a><p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>`;
         return wrap;
     };
 
     const requestReport = () => {
         const payload = {
-            me: { name: document.getElementById('me-name').value || '나', y: parseInt(document.getElementById('me-year').value), m: parseInt(document.getElementById('me-month').value), d: parseInt(document.getElementById('me-day').value), h: document.getElementById('me-time').value, cal: document.getElementById('me-cal').value },
-            partner: { name: document.getElementById('partner-name').value || '상대', y: parseInt(document.getElementById('p-year').value), m: parseInt(document.getElementById('p-month').value), d: parseInt(document.getElementById('p-day').value), h: document.getElementById('p-time').value, cal: document.getElementById('p-cal').value }
+            me: { name: document.getElementById('me-name').value || '나', gender: document.getElementById('me-gender').value, y: parseInt(document.getElementById('me-year').value), m: parseInt(document.getElementById('me-month').value), d: parseInt(document.getElementById('me-day').value), h: document.getElementById('me-time').value, cal: document.getElementById('me-cal').value },
+            partner: { name: document.getElementById('partner-name').value || '상대방', gender: document.getElementById('p-gender').value, y: parseInt(document.getElementById('p-year').value), m: parseInt(document.getElementById('p-month').value), d: parseInt(document.getElementById('p-day').value), h: document.getElementById('p-time').value, cal: document.getElementById('p-cal').value }
         };
 
-        if(typeof window.Lunar === 'undefined') { showMsg("명리 코어 모듈을 불러오지 못했습니다. 새로고침 해주세요.", true); return; }
+        if(typeof window.Lunar === 'undefined') { showMsg("명리 엔진 로드 실패. 새로고침 해주세요.", true); return; }
 
         document.getElementById('loader').style.display = 'flex';
         const loaderText = document.querySelector('.loading-txt');
-        const msgs = ["일간 교차 연산 중...", "배우자궁 형충회합 스캔...", "오행 밸런스 매칭 중..."];
-        let mIdx = 0; setInterval(() => { mIdx = (mIdx+1)%msgs.length; loaderText.textContent = msgs[mIdx]; }, 800);
+        const msgs = ["일간 교차 연산 중...", "조후 밸런스 정밀 융합...", "결혼 후 경제권 주도권 스캔...", "양가 집안 마찰 지수 계산 중...", "철학관 심층 리포트 생성 중..."];
+        let mIdx = 0; const msgInt = setInterval(() => { mIdx = (mIdx+1)%msgs.length; loaderText.textContent = msgs[mIdx]; }, 800);
 
         setTimeout(async () => {
             const res = await window.MockAPI.post(payload);
             const data = res.data;
             
-            document.getElementById('r-title-name').textContent = `${data.me.name} 님과 ${data.partner.name} 님의 궁합`;
-            document.getElementById('r-score').textContent = data.totalScore;
+            document.getElementById('r-title-name').textContent = `${data.me.name} 님과 ${data.partner.name} 님의 심층 리포트`;
             
-            document.getElementById('r-dual-bazi').innerHTML = renderBaziHTML(data.me, `나 (${data.me.name})`) + renderBaziHTML(data.partner, `상대방 (${data.partner.name})`);
+            // 점수 카운트업 연출
+            let currentScore = 0; const targetScore = data.totalScore;
+            const scoreEl = document.getElementById('r-score');
+            const scoreInt = setInterval(() => {
+                currentScore += 2;
+                if(currentScore >= targetScore) { currentScore = targetScore; clearInterval(scoreInt); }
+                scoreEl.textContent = currentScore;
+            }, 20);
             
-            let chartHTML = `<div class="chart-legend"><span style="color:var(--color-me)">■ 나의 기운</span> / <span style="color:var(--color-partner)">■ 상대 기운</span></div>`;
+            document.getElementById('r-dual-bazi').innerHTML = renderBaziHTML(data.me, `나 (${data.me.name})`) + renderBaziHTML(data.partner, `상대 (${data.partner.name})`);
+            
+            let chartHTML = `<div class="chart-legend"><span style="color:var(--color-me)">■ 나의 기운</span> / <span style="color:var(--color-partner)">■ 상대방 기운</span></div>`;
             ['木','火','土','金','水'].forEach(el => {
-                let m = data.meEl[el] || 0, p = data.pEl[el] || 0;
-                let total = (m+p) || 1;
+                let m = data.meEl[el] || 0, p = data.pEl[el] || 0; let total = (m+p) || 1;
                 chartHTML += `<div class="bar-wrap"><div class="bar-label"><span>${el}</span></div><div class="bar-bg"><div class="bar-me" style="width:${(m/total)*100}%"></div><div class="bar-partner" style="width:${(p/total)*100}%"></div></div></div>`;
             });
             document.getElementById('r-element-chart').innerHTML = '<h4>오행 융합 지표</h4>' + chartHTML;
@@ -427,34 +474,23 @@ const SaaSFrontend = (() => {
                 secDiv.appendChild(content); wrap.appendChild(secDiv);
             });
             
-            // CTA 렌더링 추가
             const ctaContainer = document.getElementById('cta-container');
-            if(ctaContainer) {
-                ctaContainer.innerHTML = '';
-                ctaContainer.appendChild(renderCTA(data.totalScore));
-            }
+            if(ctaContainer) { ctaContainer.innerHTML = ''; ctaContainer.appendChild(renderCTA(data.totalScore)); }
 
-            document.getElementById('r-conclusion-box').innerHTML = `<h3>운명뿌리 종합 제언</h3><p>궁합은 정해진 결론이 아닙니다. 서로 다름을 시각적으로 인지하고, 부족한 오행을 상대방에게서 발견하며 채워나가는 '이해의 과정'입니다. 두 분의 관계를 더욱 아름답게 가꾸어 나가시길 바랍니다.</p>`;
+            document.getElementById('r-conclusion-box').innerHTML = `<h3>운명뿌리 종합 제언</h3><p>세상에 100점짜리 완벽한 궁합은 존재하지 않습니다. 궁합을 보는 진짜 목적은 "헤어져야 하나?"를 묻는 것이 아니라, <b>"서로의 뾰족한 부분을 어떻게 부드럽게 감싸고, 부족한 에너지를 어떻게 채워줄 것인가?"</b>라는 인생의 해답을 찾기 위함입니다. 위 심층 리포트를 거울삼아 두 분만의 아름다운 궤도를 그려나가시길 바랍니다.</p>`;
 
+            clearInterval(msgInt);
             document.getElementById('loader').style.display = 'none';
             document.getElementById('input-view').style.display = 'none';
             document.getElementById('report-view').style.display = 'block';
             window.scrollTo(0,0);
-        }, 3000);
+        }, 3500);
     };
 
-    // 🚀 앱 띄우기 방식 공유 (Web Share API)
     const shareLink = async () => {
         const url = 'https://chomibinine.github.io/destinyroot/compatibility/';
-        const shareData = { title: '운명뿌리 - 정통 궁합 분석', text: '우리 두 사람의 숨겨진 에너지 교차점을 데이터 기반으로 확인해보세요.', url: url };
-        
-        if (navigator.share) {
-            try { await navigator.share(shareData); } catch (err) { console.error("Share canceled.", err); }
-        } else {
-            const dummy = document.createElement('input'); document.body.appendChild(dummy);
-            dummy.value = url; dummy.select(); document.execCommand('copy'); document.body.removeChild(dummy);
-            showMsg('궁합 사이트 주소가 복사되었습니다.');
-        }
+        if (navigator.share) { try { await navigator.share({ title: '정통 심층 궁합', text: '결혼부터 속궁합까지, 철학관 수준의 궁합 결과를 확인하세요.', url }); } catch (err) {} } 
+        else { const d = document.createElement('input'); document.body.appendChild(d); d.value = url; d.select(); document.execCommand('copy'); document.body.removeChild(d); showMsg('주소가 복사되었습니다.'); }
     };
 
     const goHome = () => { window.location.href = 'https://chomibinine.github.io/destinyroot/'; };
