@@ -91,7 +91,7 @@
         .r-section h3::before { content: ''; display:inline-block; width:5px; height:20px; background:var(--gold-primary); border-radius:3px;}
         .r-content { font-size: 1.1rem; line-height: 1.9; color: var(--text-main); text-align: justify;} 
         
-        /* 분석 근거 박스 (벤치마킹 핵심) */
+        /* 분석 근거 박스 */
         .basis-box { background: rgba(88,166,255,0.05); padding: 20px 25px; margin-bottom: 25px; border-radius: 12px; font-size: 0.95rem; color: #a1b0c0; line-height: 1.7; border-left: 4px solid var(--color-info);}
         .basis-box strong { color: var(--color-info); font-weight: 800; margin-right: 5px; }
         .basis-box .magnify { font-size: 1.15rem; vertical-align: middle; margin-right: 5px;}
@@ -101,6 +101,19 @@
         
         .r-conclusion { margin-top: 60px; padding: 35px 30px; background: rgba(212,175,55,0.05); border-radius: 16px; border: 1px solid rgba(212,175,55,0.2); text-align: center; }
         .r-conclusion h3 { font-size: 1.4rem; color: var(--gold-light); margin-bottom: 15px; font-weight: 900;}
+
+        /* 스텔스 CTA 박스 (쿠파스) */
+        .cta-box { margin-top: 50px; padding: 45px 30px; border-radius: 16px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--border-light); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; font-weight: 800; padding: 18px 35px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s;}
+        .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.05);}
+
+        /* 하단 제어 버튼 (공유, 홈 등) */
+        .controls { display: flex; flex-direction: column; gap: 15px; margin-top: 40px; }
+        .btn-tool { flex: 1; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; padding: 20px; border-radius: 12px; font-size: 1.15rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; width: 100%;}
+        .btn-tool:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);}
+        
+        .btn-home { display: flex; align-items: center; justify-content: center; background: var(--gold-primary); color: #000; padding: 22px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; font-size: 1.3rem; transition: 0.2s; box-shadow: 0 5px 20px rgba(212,175,55,0.2);}
+        .btn-home:hover { background: var(--gold-light); transform: translateY(-2px);}
 
         /* 로더 연출 */
         #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,7,10,0.95); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(5px);} 
@@ -188,17 +201,23 @@
             
             <div id="dynamic-sections"></div>
 
+            <div id="cta-container"></div>
+
             <div class="r-conclusion" id="r-conclusion-box"></div>
         </div>
         
-        <button class="btn-submit" onclick="location.reload()" style="background:var(--border-light); color:#fff; margin-top:20px;">다시 분석하기</button>
+        <div class="controls animate-fade">
+            <button class="btn-tool" onclick="SaaSFrontend.shareLink()">🔗 궁합 결과 링크 공유하기</button>
+            <button class="btn-tool" onclick="location.reload()">🔄 다른 사람과 궁합 보기</button>
+            <button class="btn-home" onclick="SaaSFrontend.goHome()">🏠 메인 홈으로 돌아가기</button>
+        </div>
     </div>
 </div>
 
 <script>
 /**
  * ============================================================================
- * 🔒 [SERVER-SIDE CODE] : 궁합 전문 코어 엔진 (벤치마킹)
+ * 🔒 [SERVER-SIDE CODE] : 궁합 전문 코어 엔진 
  * ============================================================================
  */
 const CompatibilityEngine = (() => {
@@ -215,7 +234,6 @@ const CompatibilityEngine = (() => {
         '水': { gen: '木', ctrl: '火', ctrlBy: '土', genBy: '金' }
     };
 
-    // 지지 충/합/원진 판별기
     const ZHI_CHONG = ['子午','丑未','寅申','卯酉','辰戌','巳亥','午子','未丑','申寅','酉卯','戌辰','亥巳'];
     const ZHI_HAP = ['子丑','寅亥','卯戌','辰酉','巳申','午未','丑子','亥寅','戌卯','酉辰','申巳','未午'];
     const ZHI_WONJIN = ['子未','丑午','寅酉','卯申','辰亥','巳戌','未子','午丑','酉寅','申卯','亥辰','戌巳'];
@@ -244,11 +262,10 @@ const CompatibilityEngine = (() => {
         const meEl = calcElements(me);
         const pEl = calcElements(p);
         
-        // 1. 일간 궁합 (나의 본질 vs 상대의 본질)
         const meCore = ELEMENTS[me.dayGan];
         const pCore = ELEMENTS[p.dayGan];
         let coreDesc = "", coreTitle = "";
-        let totalScore = 70; // 기본 점수
+        let totalScore = 70; 
 
         if (meCore === pCore) {
             coreTitle = "비견 (어깨를 나란히 하는 친구)";
@@ -268,7 +285,6 @@ const CompatibilityEngine = (() => {
             totalScore -= 5;
         }
 
-        // 2. 일지 궁합 (배우자궁의 결합)
         const dayZhiPair = me.dayZhi + p.dayZhi;
         let zhiDesc = "", zhiTitle = "무난한 배우자궁";
         if (ZHI_HAP.includes(dayZhiPair)) {
@@ -315,6 +331,7 @@ const SaaSFrontend = (() => {
         const msgEl = document.getElementById('modal-msg');
         if(msgEl) msgEl.textContent = msg;
         modal.style.display = 'block';
+        if(!isError) setTimeout(()=>modal.style.display='none', 3000);
     };
 
     const createSafeDOM = (htmlString) => {
@@ -348,11 +365,36 @@ const SaaSFrontend = (() => {
         `;
     };
 
+    // 🚀 스텔스 쿠파스 (궁합 점수 기반 맞춤형 추천)
+    const renderCTA = (score) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'cta-box';
+        
+        let pData = {};
+        if (score >= 85) {
+            pData = { q: '커플 여행지 숙소', label: '함께 떠나는 힐링 여행 아이템 찾기', i: '✈️' };
+        } else if (score >= 70) {
+            pData = { q: '커플 문답북', label: '서로의 진심을 알아가는 문답북 찾기', i: '📖' };
+        } else {
+            pData = { q: '아로마 캔들 디퓨저', label: '마음을 차분하게 해주는 힐링템 찾기', i: '🕯️' };
+        }
+
+        wrap.innerHTML = `
+            <a href="https://www.coupang.com/np/search?q=${encodeURIComponent(pData.q)}&utm_source=affiliate" target="_blank" class="btn-coupang">
+                ${pData.i} ${pData.label}
+            </a>
+            <p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
+        `;
+        return wrap;
+    };
+
     const requestReport = () => {
         const payload = {
             me: { name: document.getElementById('me-name').value || '나', y: parseInt(document.getElementById('me-year').value), m: parseInt(document.getElementById('me-month').value), d: parseInt(document.getElementById('me-day').value), h: document.getElementById('me-time').value, cal: document.getElementById('me-cal').value },
             partner: { name: document.getElementById('partner-name').value || '상대', y: parseInt(document.getElementById('p-year').value), m: parseInt(document.getElementById('p-month').value), d: parseInt(document.getElementById('p-day').value), h: document.getElementById('p-time').value, cal: document.getElementById('p-cal').value }
         };
+
+        if(typeof window.Lunar === 'undefined') { showMsg("명리 코어 모듈을 불러오지 못했습니다. 새로고침 해주세요.", true); return; }
 
         document.getElementById('loader').style.display = 'flex';
         const loaderText = document.querySelector('.loading-txt');
@@ -384,6 +426,13 @@ const SaaSFrontend = (() => {
                 sec.paragraphs.forEach(p => content.appendChild(createSafeDOM(p)));
                 secDiv.appendChild(content); wrap.appendChild(secDiv);
             });
+            
+            // CTA 렌더링 추가
+            const ctaContainer = document.getElementById('cta-container');
+            if(ctaContainer) {
+                ctaContainer.innerHTML = '';
+                ctaContainer.appendChild(renderCTA(data.totalScore));
+            }
 
             document.getElementById('r-conclusion-box').innerHTML = `<h3>운명뿌리 종합 제언</h3><p>궁합은 정해진 결론이 아닙니다. 서로 다름을 시각적으로 인지하고, 부족한 오행을 상대방에게서 발견하며 채워나가는 '이해의 과정'입니다. 두 분의 관계를 더욱 아름답게 가꾸어 나가시길 바랍니다.</p>`;
 
@@ -393,6 +442,22 @@ const SaaSFrontend = (() => {
             window.scrollTo(0,0);
         }, 3000);
     };
+
+    // 🚀 앱 띄우기 방식 공유 (Web Share API)
+    const shareLink = async () => {
+        const url = 'https://chomibinine.github.io/destinyroot/compatibility/';
+        const shareData = { title: '운명뿌리 - 정통 궁합 분석', text: '우리 두 사람의 숨겨진 에너지 교차점을 데이터 기반으로 확인해보세요.', url: url };
+        
+        if (navigator.share) {
+            try { await navigator.share(shareData); } catch (err) { console.error("Share canceled.", err); }
+        } else {
+            const dummy = document.createElement('input'); document.body.appendChild(dummy);
+            dummy.value = url; dummy.select(); document.execCommand('copy'); document.body.removeChild(dummy);
+            showMsg('궁합 사이트 주소가 복사되었습니다.');
+        }
+    };
+
+    const goHome = () => { window.location.href = 'https://chomibinine.github.io/destinyroot/'; };
 
     const init = () => {
         ['me-', 'p-'].forEach(prefix => {
@@ -406,7 +471,7 @@ const SaaSFrontend = (() => {
         });
     };
 
-    return { init, requestReport };
+    return { init, requestReport, shareLink, goHome };
 })();
 
 window.onload = SaaSFrontend.init;
