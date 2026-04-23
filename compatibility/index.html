@@ -418,13 +418,21 @@ const SaaSFrontend = (() => {
         `;
     };
 
+        // 🚀 스텔스 쿠파스 (초단기 텍스트 버전)
     const renderCTA = (score) => {
-        const wrap = document.createElement('div'); wrap.className = 'cta-box';
-        let pData = score >= 85 ? { q: '커플 호캉스', label: '최고의 궁합을 기념하는 커플 여행템', i: '✈️' } 
-                  : score >= 70 ? { q: '커플 백문백답', label: '서로의 진심을 알아보는 커플 문답북', i: '📖' } 
-                  : { q: '스트레스 해소 차', label: '관계 회복을 돕는 힐링 아로마/티 세트', i: '☕' };
+        const wrap = document.createElement('div'); 
+        wrap.className = 'cta-box';
+        
+        let pData = score >= 85 ? { q: '커플 여행', label: '천생연분 시크릿템 확인', i: '✨' } 
+                  : score >= 70 ? { q: '커플 심리테스트', label: '숨겨진 진심 확인하기', i: '💌' } 
+                  : { q: '스트레스 해소', label: '관계 회복 힐링템 확인', i: '🍀' };
 
-        wrap.innerHTML = `<a href="https://www.coupang.com/np/search?q=${encodeURIComponent(pData.q)}&utm_source=affiliate" target="_blank" class="btn-coupang">${pData.i} ${pData.label}</a><p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>`;
+        wrap.innerHTML = `
+            <a href="https://www.coupang.com/np/search?q=${encodeURIComponent(pData.q)}&utm_source=affiliate" target="_blank" class="btn-coupang">
+                ${pData.i} ${pData.label}
+            </a>
+            <p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
+        `;
         return wrap;
     };
 
