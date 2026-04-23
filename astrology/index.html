@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>운명뿌리 | 점성술 천궁도 분석</title>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         :root { --bg-base: #030509; --gold-primary: #d4af37; --gold-light: #f9e596; --text-muted: #9aa4b2; --border-glass: rgba(255, 255, 255, 0.08); }
@@ -11,44 +15,51 @@
         body { background: var(--bg-base); color: #fff; line-height: 1.6; min-height: 100vh; position: relative; overflow-x: hidden; }
         body::before { content: ''; position: absolute; width: 350px; height: 350px; background: rgba(162, 155, 254, 0.12); filter: blur(120px); top: 5%; left: -100px; z-index: 0; }
         body::after { content: ''; position: absolute; width: 300px; height: 300px; background: rgba(212, 175, 55, 0.06); filter: blur(100px); bottom: 10%; right: -50px; z-index: 0; }
-        .app-container { max-width: 700px; margin: 0 auto; padding: 50px 20px 100px; position: relative; z-index: 1; }
+        .app-container { max-width: 750px; margin: 0 auto; padding: 50px 20px 100px; position: relative; z-index: 1; }
         .header { text-align: center; margin-bottom: 40px; }
         .header h1 { font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px; margin: 0; background: linear-gradient(180deg, #fff 0%, #a1a1a1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 24px; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); margin-bottom: 25px; }
         .form-group { margin-bottom: 22px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-muted); font-size: 0.9rem; }
-        .form-control { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4); color: #fff; font-size: 1rem; outline: none; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-muted); font-size: 0.95rem; }
+        .form-control { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4); color: #fff; font-size: 1.05rem; outline: none; }
         .grid-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
         .grid-half { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 18px; border-radius: 30px; font-weight: 800; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 18px; border-radius: 30px; font-weight: 800; font-size: 1.15rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
         .btn-primary { background: var(--gold-primary); color: #000; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); }
         #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3,5,9,0.98); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; }
         .orbit { width: 60px; height: 60px; border: 2px solid var(--gold-primary); border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         #report-view { display: none; }
         
-        /* 💡 신뢰도 상승을 위한 산출 근거 로그 UI */
-        .log-box { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 35px; font-family: monospace; font-size: 0.85rem; color: #a1b0c0; line-height: 1.7; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); }
-        .log-box h4 { color: var(--color-info); margin-bottom: 10px; font-size: 1rem; border-bottom: 1px dashed rgba(88, 166, 255, 0.3); padding-bottom: 8px; display: flex; justify-content: space-between;}
-        .log-box .highlight { color: #4ade80; font-weight: bold; }
-        .log-box .math { color: var(--gold-light); }
+        /* 💡 천문학 로그 박스 디자인 업그레이드 */
+        .log-box { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 16px; padding: 25px; margin-bottom: 40px; font-size: 0.95rem; color: #a1b0c0; line-height: 1.8; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        .log-box h4 { color: var(--color-info); margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px dashed rgba(88, 166, 255, 0.3); padding-bottom: 10px; font-weight: 800; }
+        .log-item { margin-bottom: 15px; }
+        .log-item:last-child { margin-bottom: 0; }
+        .log-title { color: #fff; font-weight: 700; display: block; margin-bottom: 4px; }
+        .log-formula { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-top: 5px; font-family: monospace; overflow-x: auto;}
 
-        .big3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 35px; }
-        .big3-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 16px; padding: 20px 10px; text-align: center; }
-        .r-section { margin-bottom: 40px; text-align: left; }
-        .r-section h3 { font-size: 1.35rem; margin-bottom: 15px; border-left: 4px solid var(--gold-primary); padding-left: 12px; font-weight: 800; }
-        .basis-box { background: rgba(88,166,255,0.05); padding: 18px; border-radius: 12px; font-size: 0.85rem; color: #a1b0c0; margin-bottom: 15px; border-left: 3px solid #58a6ff; }
-        .cta-box { margin-top: 40px; padding: 30px 20px; border-radius: 20px; background: rgba(212,175,55,0.08); border: 1px solid var(--gold-primary); text-align: center; }
-        @media (max-width: 600px) { .grid-half { grid-template-columns: 1fr; } .big3-grid { grid-template-columns: 1fr; } .big3-card { display: flex; align-items: center; justify-content: space-around; padding: 15px; } }
+        .big3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 45px; }
+        .big3-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 16px; padding: 25px 15px; text-align: center; }
+        .r-section { margin-bottom: 50px; text-align: left; }
+        .r-section h3 { font-size: 1.5rem; margin-bottom: 20px; border-left: 4px solid var(--gold-primary); padding-left: 15px; font-weight: 900; color: #fff; }
+        
+        /* 해설 박스 업그레이드 */
+        .theory-box { background: rgba(212,175,55,0.05); padding: 20px; border-radius: 12px; font-size: 0.95rem; color: var(--gold-light); margin-bottom: 20px; border-left: 3px solid var(--gold-primary); line-height: 1.7; font-weight: 300;}
+        .theory-box strong { font-weight: 800; color: #fff; }
+        .result-content { font-size: 1.1rem; line-height: 1.9; color: #d1d5db; text-align: justify; padding: 0 10px;}
+        
+        .cta-box { margin-top: 50px; padding: 40px 25px; border-radius: 20px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--gold-primary); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        @media (max-width: 600px) { .grid-half { grid-template-columns: 1fr; } .big3-grid { grid-template-columns: 1fr; gap: 12px; } .big3-card { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; text-align: left; } }
     </style>
 </head>
 <body>
-<div id="loader"><div class="orbit"></div><div style="color:var(--gold-light); font-weight:700;">실시간 행성 궤도 산출 중...</div></div>
+<div id="loader"><div class="orbit"></div><div style="color:var(--gold-light); font-weight:700; font-size:1.2rem;">천체 역학 궤도 산출 중...</div></div>
 <div class="app-container">
     <div id="input-view">
-        <div class="header"><h1>점성술 천궁도</h1><p>물리적 행성 위치를 추적하는 정밀 분석 시스템</p></div>
+        <div class="header"><h1>점성술 천궁도</h1><p>스위스 천문력(Ephemeris) 기반 정밀 운명 스캔</p></div>
         <div class="glass-card">
-            <div class="form-group"><label>이름</label><input type="text" id="u-name" class="form-control" placeholder="운명뿌리"></div>
+            <div class="form-group"><label>이름</label><input type="text" id="u-name" class="form-control" placeholder="홍길동"></div>
             <div class="form-group"><label>태어난 날짜 (양력)</label>
                 <div class="grid-row"><select id="u-year" class="form-control"></select><select id="u-month" class="form-control"></select><select id="u-day" class="form-control"></select></div>
             </div>
@@ -56,17 +67,17 @@
                 <div><label>현지 태어난 시간 (24H)</label><select id="u-time" class="form-control">
                     <script>for(let i=0; i<24; i++) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}:00</option>`);</script>
                 </select></div>
-                <div><label>태어난 지역 <span style="color:var(--color-info); font-size:0.8rem;">(시차/위경도 자동계산)</span></label>
+                <div><label>태어난 지역</label>
                 <select id="u-location" class="form-control"></select></div>
             </div>
-            <button class="btn btn-primary" onclick="Core.run()">리얼 천궁도 데이터 추출</button>
+            <button class="btn btn-primary" onclick="Core.run()">리얼 천궁도 추출 시작</button>
         </div>
     </div>
     
     <div id="report-view" class="glass-card">
-        <div id="r-header" style="text-align:center; margin-bottom:30px;">
-            <h2 id="r-name" style="font-weight:900;">리포트</h2>
-            <p id="r-info" style="color:var(--gold-light); font-size:0.9rem; margin-top:5px;"></p>
+        <div id="r-header" style="text-align:center; margin-bottom:35px;">
+            <h2 id="r-name" style="font-weight:900; font-size: 2rem;">리포트</h2>
+            <p id="r-info" style="color:var(--gold-light); font-size:1rem; margin-top:8px; font-weight: 300;"></p>
         </div>
         
         <div class="log-box" id="r-log"></div>
@@ -74,44 +85,32 @@
         <div class="big3-grid" id="r-big3"></div>
         <div id="dynamic-results"></div>
         <div id="cta-area"></div>
-        <button class="btn btn-primary" onclick="location.href='../'" style="margin-top:30px; background:rgba(255,255,255,0.05); color:#fff;">🏠 홈으로 돌아가기</button>
+        <button class="btn btn-primary" onclick="location.href='../'" style="margin-top:40px; background:rgba(255,255,255,0.05); color:#fff; border: 1px solid rgba(255,255,255,0.1); box-shadow: none;">🏠 메인 홈으로 돌아가기</button>
     </div>
 </div>
 
 <script>
 const Core = (() => {
     const ZODIAC = [
-        { name: "양자리", icon: "♈", el: "Fire", sun: "강력한 추진력과 두려움 없는 개척자 정신을 가졌습니다.", moon: "감정 표현이 몹시 솔직하고 직선적입니다.", ris: "활기차고 에너지가 넘치며 당당한 첫인상을 남깁니다." },
-        { name: "황소자리", icon: "♉", el: "Earth", sun: "흔들림 없는 안정감과 끈기의 아이콘입니다.", moon: "심리적 안정을 최우선으로 여기며 오감이 만족스러울 때 평화를 느낍니다.", ris: "신중하고 차분하며 고급스러운 아우라를 풍깁니다." },
-        { name: "쌍둥이자리", icon: "♊", el: "Air", sun: "호기심 천국이자 정보의 마법사입니다.", moon: "감정조차도 이성적으로 분석하고 소통해야 직성이 풀립니다.", ris: "경쾌함과 지적인 호기심이 첫인상으로 드러납니다." },
-        { name: "게자리", icon: "♋", el: "Water", sun: "강력한 모성애와 보호 본능을 지녔습니다.", moon: "내면의 감수성이 풍부하며 가족과 안정적인 둥지를 중시합니다.", ris: "다정하고 부드러우며 보호해주고 싶은 인상을 줍니다." },
-        { name: "사자자리", icon: "♌", el: "Fire", sun: "태양의 지배를 받는 화려한 주인공입니다.", moon: "타인의 인정과 칭찬을 갈구하며 자존심이 매우 강합니다.", ris: "가만히 있어도 묘한 권위와 아우라가 뿜어져 나옵니다." },
-        { name: "처녀자리", icon: "♍", el: "Earth", sun: "완벽을 추구하는 예리한 분석가입니다.", moon: "일상이 체계적으로 돌아갈 때 내면의 평화를 얻습니다.", ris: "단정하고 깔끔한 외모와 예의 바른 태도가 특징입니다." },
-        { name: "천칭자리", icon: "♎", el: "Air", sun: "균형과 조화를 사랑하는 평화주의자입니다.", moon: "타인과 교류할 때 안정을 얻으며 공정함을 중시합니다.", ris: "매력적인 미소와 세련된 패션 감각을 지녔습니다." },
-        { name: "전갈자리", icon: "♏", el: "Water", sun: "강렬한 집념과 꿰뚫어 보는 통찰력의 소유자입니다.", moon: "감정의 깊이가 깊고 강렬하며 흑백이 분명합니다.", ris: "비밀스럽고 강렬한 눈빛으로 상대를 압도합니다." },
-        { name: "사수자리", icon: "♐", el: "Fire", sun: "한계를 모르는 자유로운 모험가입니다.", moon: "구속받는 것을 싫어하며 낙천적인 에너지를 가졌습니다.", ris: "호탕한 미소와 스포티하고 활기찬 인상을 줍니다." },
-        { name: "염소자리", icon: "♑", el: "Earth", sun: "정상을 향해 포기를 모르는 야심가입니다.", moon: "책임감과 의무감을 내면의 최우선 순위로 둡니다.", ris: "애어른처럼 성숙하고 진지한 프로의 아우라가 있습니다." },
-        { name: "물병자리", icon: "♒", el: "Air", sun: "미래를 앞서가는 혁신가이자 마이웨이입니다.", moon: "상황을 한 발짝 떨어져서 객관적으로 분석하려 합니다.", ris: "독특하고 톡톡 튀는 개성이 겉모습에서 드러납니다." },
-        { name: "물고기자리", icon: "♓", el: "Water", sun: "무한한 상상력과 동정심을 가진 예술가입니다.", moon: "예민하고 영적인 내면을 지녀 예술적 감각이 뛰어납니다.", ris: "눈빛이 몽환적이고 부드러우며 신비로운 분위기를 풍깁니다." }
+        { name: "양자리", icon: "♈", el: "Fire", deg: "0°~30°", sun: "강력한 추진력과 두려움 없는 개척자 정신을 가졌습니다.", moon: "감정 표현이 몹시 솔직하고 직선적입니다.", ris: "활기차고 에너지가 넘치며 당당한 첫인상을 남깁니다." },
+        { name: "황소자리", icon: "♉", el: "Earth", deg: "30°~60°", sun: "흔들림 없는 안정감과 끈기의 아이콘입니다.", moon: "심리적 안정을 최우선으로 여기며 오감이 만족스러울 때 평화를 느낍니다.", ris: "신중하고 차분하며 고급스러운 아우라를 풍깁니다." },
+        { name: "쌍둥이자리", icon: "♊", el: "Air", deg: "60°~90°", sun: "호기심 천국이자 정보의 마법사입니다.", moon: "감정조차도 이성적으로 분석하고 소통해야 직성이 풀립니다.", ris: "경쾌함과 지적인 호기심이 첫인상으로 드러납니다." },
+        { name: "게자리", icon: "♋", el: "Water", deg: "90°~120°", sun: "강력한 모성애와 보호 본능을 지녔습니다.", moon: "내면의 감수성이 풍부하며 가족과 안정적인 둥지를 중시합니다.", ris: "다정하고 부드러우며 보호해주고 싶은 인상을 줍니다." },
+        { name: "사자자리", icon: "♌", el: "Fire", deg: "120°~150°", sun: "태양의 지배를 받는 화려한 주인공입니다.", moon: "타인의 인정과 칭찬을 갈구하며 자존심이 매우 강합니다.", ris: "가만히 있어도 묘한 권위와 아우라가 뿜어져 나옵니다." },
+        { name: "처녀자리", icon: "♍", el: "Earth", deg: "150°~180°", sun: "완벽을 추구하는 예리한 분석가입니다.", moon: "일상이 체계적으로 돌아갈 때 내면의 평화를 얻습니다.", ris: "단정하고 깔끔한 외모와 예의 바른 태도가 특징입니다." },
+        { name: "천칭자리", icon: "♎", el: "Air", deg: "180°~210°", sun: "균형과 조화를 사랑하는 평화주의자입니다.", moon: "타인과 교류할 때 안정을 얻으며 공정함을 중시합니다.", ris: "매력적인 미소와 세련된 패션 감각을 지녔습니다." },
+        { name: "전갈자리", icon: "♏", el: "Water", deg: "210°~240°", sun: "강렬한 집념과 꿰뚫어 보는 통찰력의 소유자입니다.", moon: "감정의 깊이가 깊고 강렬하며 흑백이 분명합니다.", ris: "비밀스럽고 강렬한 눈빛으로 상대를 압도합니다." },
+        { name: "사수자리", icon: "♐", el: "Fire", deg: "240°~270°", sun: "한계를 모르는 자유로운 모험가입니다.", moon: "구속받는 것을 싫어하며 낙천적인 에너지를 가졌습니다.", ris: "호탕한 미소와 스포티하고 활기찬 인상을 줍니다." },
+        { name: "염소자리", icon: "♑", el: "Earth", deg: "270°~300°", sun: "정상을 향해 포기를 모르는 야심가입니다.", moon: "책임감과 의무감을 내면의 최우선 순위로 둡니다.", ris: "애어른처럼 성숙하고 진지한 프로의 아우라가 있습니다." },
+        { name: "물병자리", icon: "♒", el: "Air", deg: "300°~330°", sun: "미래를 앞서가는 혁신가이자 마이웨이입니다.", moon: "상황을 한 발짝 떨어져서 객관적으로 분석하려 합니다.", ris: "독특하고 톡톡 튀는 개성이 겉모습에서 드러납니다." },
+        { name: "물고기자리", icon: "♓", el: "Water", deg: "330°~360°", sun: "무한한 상상력과 동정심을 가진 예술가입니다.", moon: "예민하고 영적인 내면을 지녀 예술적 감각이 뛰어납니다.", ris: "눈빛이 몽환적이고 부드러우며 신비로운 분위기를 풍깁니다." }
     ];
 
-    // 🌐 전 세계 주요 권역별 정밀 위경도 및 Timezone(GMT) 데이터 탑재
     const LOC = { 
         SEOUL: { lat: 37.56, lon: 126.97, tz: 9, label: "한국 (서울/경기)" },
-        GANGWON: { lat: 37.82, lon: 128.15, tz: 9, label: "한국 (강원도)" },
-        DAEJEON: { lat: 36.35, lon: 127.38, tz: 9, label: "한국 (충청/대전)" },
-        DAEGU: { lat: 35.87, lon: 128.60, tz: 9, label: "한국 (경북/대구)" },
         BUSAN: { lat: 35.17, lon: 129.07, tz: 9, label: "한국 (경남/부산)" },
-        GWANGJU: { lat: 35.15, lon: 126.85, tz: 9, label: "한국 (전라/광주)" },
-        JEJU: { lat: 33.49, lon: 126.53, tz: 9, label: "한국 (제주특별자치도)" },
-        TOKYO: { lat: 35.67, lon: 139.65, tz: 9, label: "일본 (도쿄)" },
-        BEIJING: { lat: 39.90, lon: 116.40, tz: 8, label: "중국 (베이징)" },
-        SYDNEY: { lat: -33.86, lon: 151.20, tz: 10, label: "호주 (시드니)" },
-        LONDON: { lat: 51.50, lon: -0.12, tz: 0, label: "영국 (런던)" },
-        PARIS: { lat: 48.85, lon: 2.35, tz: 1, label: "프랑스/서유럽 (파리)" },
-        NEWYORK: { lat: 40.71, lon: -74.00, tz: -5, label: "미국 동부 (뉴욕)" },
-        LA: { lat: 34.05, lon: -118.24, tz: -8, label: "미국 서부 (LA)" },
-        SAOPAULO: { lat: -23.55, lon: -46.63, tz: -3, label: "남미 (상파울루)" }
+        NEWYORK: { lat: 40.71, lon: -74.00, tz: -5, label: "미국 (뉴욕)" },
+        LONDON: { lat: 51.50, lon: -0.12, tz: 0, label: "영국 (런던)" }
     };
 
     const run = () => {
@@ -121,22 +120,18 @@ const Core = (() => {
         const coords = LOC[locKey];
 
         setTimeout(() => {
-            // 1. 태양궁
             const dates = [20, 19, 21, 20, 21, 21, 23, 23, 23, 23, 22, 22]; 
             const sunIdx = (d >= dates[m - 1]) ? (m + 9) % 12 : (m + 8) % 12;
 
-            // 2. 입력된 현지 시간을 Timezone 역연산으로 UTC 변환 후 율리우스일 도출
             const date = new Date(Date.UTC(y, m - 1, d, h - coords.tz, 0, 0));
             const jd = (date.getTime() / 86400000) + 2440587.5;
-            const T = jd - 2451545.0; // J2000.0 기준
+            const T = jd - 2451545.0; 
             
-            // 3. 달궁 계산
             let L = (218.316 + 13.176396 * T) % 360; if (L < 0) L += 360;
             let M = (134.963 + 13.064993 * T) % 360; if (M < 0) M += 360;
             let lambda = (L + 6.289 * Math.sin(M * Math.PI / 180)) % 360; if (lambda < 0) lambda += 360;
             const moonIdx = Math.floor(lambda / 30);
 
-            // 4. 상승궁 계산 (해당 지역 경도/위도 완벽 반영)
             let gmst = (18.697374558 + 24.06570982441908 * T) % 24; if (gmst < 0) gmst += 24;
             let lst = (gmst + coords.lon / 15) % 24; if (lst < 0) lst += 24;
             const eps = 23.439 * Math.PI / 180;
@@ -146,11 +141,7 @@ const Core = (() => {
             let ascDeg = (asc * 180 / Math.PI + 360 + 90) % 360;
             const risIdx = Math.floor(ascDeg / 30);
 
-            // 로깅 데이터
-            const logData = {
-                jd: jd.toFixed(4), t: T.toFixed(4), tz: coords.tz, lambda: lambda.toFixed(2), lst: lst.toFixed(2), ascDeg: ascDeg.toFixed(2)
-            };
-
+            const logData = { jd: jd.toFixed(2), t: T.toFixed(4), tz: coords.tz, lambda: lambda.toFixed(2), lst: lst.toFixed(2), ascDeg: ascDeg.toFixed(2) };
             render(sunIdx, moonIdx, risIdx, locKey, logData);
             document.getElementById('loader').style.display = 'none';
         }, 3000);
@@ -158,56 +149,78 @@ const Core = (() => {
 
     const render = (s, m, r, loc, log) => {
         const name = document.getElementById('u-name').value || '게스트';
-        document.getElementById('r-name').innerText = `${name} 님의 정밀 천궁도`;
-        document.getElementById('r-info').innerText = `Location: ${LOC[loc].label} (Lat: ${LOC[loc].lat}°, Lon: ${LOC[loc].lon}°)`;
+        document.getElementById('r-name').innerText = `${name} 님의 정밀 천궁도 리포트`;
+        document.getElementById('r-info').innerText = `Location: ${LOC[loc].label} (위도: ${LOC[loc].lat}°, 경도: ${LOC[loc].lon}°)`;
         
-        // 💡 산출 근거 로그 (Timezone 반영 표기)
         document.getElementById('r-log').innerHTML = `
-            <h4><span>Astro-Mechanics Engine Log</span> <span>[SYSTEM OK]</span></h4>
-            <div>> Julian Date (UTC) : <span class="math">${log.jd}</span> days</div>
-            <div>> Timezone Offset : <span class="math">GMT ${log.tz >= 0 ? '+'+log.tz : log.tz}</span></div>
-            <div>> Moon True Longitude (λ) : <span class="math">${log.lambda}°</span> ➔ <span class="highlight">${ZODIAC[m].name}</span></div>
-            <div>> Local Sidereal Time (LST) : <span class="math">${log.lst} H</span></div>
-            <div>> Ascendant Degree (Asc) : <span class="math">${log.ascDeg}°</span> ➔ <span class="highlight">${ZODIAC[r].name}</span></div>
-            <div style="margin-top:8px; font-size:0.75rem; color:#555;">* 본 데이터는 스위스 천문력(Ephemeris) 기반의 궤도 함수로 산출되었습니다.</div>
+            <h4>Astro-Mechanics Computation Log</h4>
+            <div class="log-item">
+                <span class="log-title">1. 천문학적 기준일(Julian Date) 변환</span>
+                입력하신 생년월일과 현지 시간을 협정 세계시(UTC)로 변환한 후, 점성학 계산의 기준점인 J2000.0(2000년 1월 1일 정오)으로부터 경과된 일수(\\(T\\))를 산출했습니다.
+                <div class="log-formula">\\( T = JD - 2451545.0 = ${log.t} \\text{ days} \\)</div>
+            </div>
+            <div class="log-item">
+                <span class="log-title">2. 달의 궤도 이심률(Eccentricity) 보정</span>
+                달의 평균 황경(\\(L\\))과 근점각(\\(M\\))을 구한 뒤, 찌그러진 타원 궤도의 오차를 삼각함수로 보정하여 태어난 순간 달의 실제 위치인 진황경(\\(\\lambda\\))을 도출했습니다.
+                <div class="log-formula">\\( \\lambda = (L + 6.289 \\times \\sin M) \\pmod{360} = ${log.lambda}^\\circ \\)</div>
+            </div>
+            <div class="log-item">
+                <span class="log-title">3. 상승점(Ascendant) 지평 좌표 변환</span>
+                선택하신 지역의 경도(${LOC[loc].lon}°)를 반영해 지방 항성시(LST: ${log.lst}H)를 구하고, 위도(${LOC[loc].lat}°)와 지구의 황도 경사각(\\(\\epsilon \\approx 23.4^\\circ\\))을 적용해 동쪽 지평선이 황도와 교차하는 각도를 계산했습니다.
+                <div class="log-formula">\\( \\text{Asc} = \\arctan \\left( \\frac{\\cos(\\text{RAMC})}{-\\sin(\\text{RAMC}) \\cos \\epsilon - \\tan \\phi \\sin \\epsilon} \\right) = ${log.ascDeg}^\\circ \\)</div>
+            </div>
         `;
 
         document.getElementById('r-big3').innerHTML = `
-            <div class="big3-card"><p style="font-size:0.7rem; color:var(--text-muted);">SUN</p><p style="font-size:2rem;">${ZODIAC[s].icon}</p><p style="font-weight:700;">${ZODIAC[s].name}</p></div>
-            <div class="big3-card"><p style="font-size:0.7rem; color:var(--text-muted);">MOON</p><p style="font-size:2rem;">${ZODIAC[m].icon}</p><p style="font-weight:700;">${ZODIAC[m].name}</p></div>
-            <div class="big3-card"><p style="font-size:0.7rem; color:var(--text-muted);">RISING</p><p style="font-size:2rem;">${ZODIAC[r].icon}</p><p style="font-weight:700;">${ZODIAC[r].name}</p></div>
+            <div class="big3-card"><p style="font-size:0.75rem; color:var(--text-muted); font-weight:800; letter-spacing:1px;">태양궁 (SUN)</p><p style="font-size:2.2rem; margin:10px 0; color:var(--gold-primary); filter: drop-shadow(0 0 8px rgba(212,175,55,0.4));">${ZODIAC[s].icon}</p><p style="font-weight:900; font-size:1.1rem;">${ZODIAC[s].name}</p></div>
+            <div class="big3-card"><p style="font-size:0.75rem; color:var(--text-muted); font-weight:800; letter-spacing:1px;">달궁 (MOON)</p><p style="font-size:2.2rem; margin:10px 0; color:var(--gold-primary); filter: drop-shadow(0 0 8px rgba(212,175,55,0.4));">${ZODIAC[m].icon}</p><p style="font-weight:900; font-size:1.1rem;">${ZODIAC[m].name}</p></div>
+            <div class="big3-card"><p style="font-size:0.75rem; color:var(--text-muted); font-weight:800; letter-spacing:1px;">상승궁 (RISING)</p><p style="font-size:2.2rem; margin:10px 0; color:var(--gold-primary); filter: drop-shadow(0 0 8px rgba(212,175,55,0.4));">${ZODIAC[r].icon}</p><p style="font-weight:900; font-size:1.1rem;">${ZODIAC[r].name}</p></div>
         `;
+
         document.getElementById('dynamic-results').innerHTML = `
-            <div class="r-section"><div class="basis-box">🔎 <strong>[태양 위치 추적]</strong> 당신의 자아를 결정하는 핵심 에너지를 포착했습니다.</div><h3>☀️ 태양궁: ${ZODIAC[s].name}</h3><p>${ZODIAC[s].sun}</p></div>
-            <div class="r-section"><div class="basis-box">🔎 <strong>[달 궤도 역학]</strong> 무의식과 감정의 파동을 물리적으로 계산했습니다.</div><h3>🌙 달궁: ${ZODIAC[m].name}</h3><p>${ZODIAC[m].moon}</p></div>
-            <div class="r-section"><div class="basis-box">🔎 <strong>[지평선 좌표 연산]</strong> 탄생 순간 동쪽 하늘의 별자리를 산출했습니다.</div><h3>🌅 상승궁: ${ZODIAC[r].name}</h3><p>${ZODIAC[r].ris}</p></div>
+            <div class="r-section">
+                <h3>☀️ 태양궁 (Sun Sign) : ${ZODIAC[s].name}</h3>
+                <div class="theory-box"><strong>[태양궁의 의미]</strong> 우리가 흔히 아는 '별자리'입니다. 지구에서 보았을 때 태양이 1년 동안 지나가는 길인 <strong>황도(Ecliptic)를 30도씩 12개로 분할한 영역</strong>입니다. 태어난 순간 태양의 위치를 뜻하며, 평생을 관통하는 당신의 본질이자 인생의 목적지, 사회적으로 발현되는 가장 핵심적인 자아를 상징합니다.</div>
+                <div class="result-content">당신이 태어난 시기, 태양은 황도 <strong>${ZODIAC[s].deg}</strong> 구간인 ${ZODIAC[s].name}를 지나고 있었습니다.<br><br>${ZODIAC[s].sun}</div>
+            </div>
+            <div class="r-section">
+                <h3>🌙 달궁 (Moon Sign) : ${ZODIAC[m].name}</h3>
+                <div class="theory-box"><strong>[달궁의 의미]</strong> 태양궁이 낮의 모습이라면, 달궁은 밤의 모습입니다. 달은 지구 주위를 공전하며 끊임없이 모양을 바꿉니다. 점성학에서 달은 <strong>무의식, 본능적인 습관, 그리고 감정의 뿌리</strong>를 상징합니다. 내가 혼자 있을 때, 혹은 가장 편안한 사람과 있을 때 무방비하게 드러나는 진짜 내면의 모습입니다.</div>
+                <div class="result-content">탄생 순간 달의 진황경(True Longitude) 위치는 <strong>${ZODIAC[m].deg}</strong> 구간인 ${ZODIAC[m].name}였습니다.<br><br>${ZODIAC[m].moon}</div>
+            </div>
+            <div class="r-section">
+                <h3>🌅 상승궁 (Rising Sign) : ${ZODIAC[r].name}</h3>
+                <div class="theory-box"><strong>[상승궁의 의미]</strong> 지구가 자전함에 따라 <strong>태어난 정확한 순간, 동쪽 지평선(Ascendant)에 떠오르고 있던 별자리</strong>입니다. 태어난 지역의 위도와 경도, 분 단위의 시간에 따라 결과가 완전히 달라집니다. 타인이 나를 처음 보았을 때 느끼는 <strong>'첫인상'이자, 세상에 나아갈 때 쓰는 '사회적 페르소나(가면)'</strong>를 상징합니다.</div>
+                <div class="result-content">해당 지역의 지평 좌표계 연산 결과, 동쪽 지평선은 <strong>${ZODIAC[r].deg}</strong> 구간인 ${ZODIAC[r].name}를 가리키고 있었습니다.<br><br>${ZODIAC[r].ris}</div>
+            </div>
         `;
+
         const link = (ZODIAC[s].el === 'Earth' || ZODIAC[s].el === 'Fire') ? 'https://link.coupang.com/a/eu5uLR' : 'https://link.coupang.com/a/eu5td7';
         document.getElementById('cta-area').innerHTML = `
             <div class="cta-box">
-                <p style="font-weight:800; margin-bottom:15px; font-size:1.1rem; color:#fff;">✨ 우주적 에너지 보완 행운템</p>
-                <a href="${link}" target="_blank" class="btn btn-primary" style="padding:16px 25px; font-size:1.1rem; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);">추천 아이템 확인하기 ></a>
-                <p style="margin-top:20px; font-size:0.75rem; color:rgba(255,255,255,0.3);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
+                <h3 style="color:#fff; margin-bottom:15px; font-weight:900; font-size:1.3rem;">✨ 우주적 에너지를 내 편으로 만드는 개운법</h3>
+                <p style="color:var(--text-muted); font-size:1rem; margin-bottom:25px;">별자리의 긍정적인 기운은 극대화하고, 부족한 원소의 파동은 물리적인 아이템을 통해 상쇄시켜 완벽한 운명의 밸런스를 맞출 수 있습니다.</p>
+                <a href="${link}" target="_blank" class="btn btn-primary" style="padding:18px 30px; font-size:1.15rem; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);">나에게 맞는 행운템 확인하기 ></a>
+                <p style="margin-top:20px; font-size:0.8rem; color:rgba(255,255,255,0.3);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
             </div>
         `;
+        
+        // MathJax 렌더링 호출
+        if(window.MathJax) MathJax.typesetPromise();
+
         document.getElementById('input-view').style.display = 'none';
         document.getElementById('report-view').style.display = 'block';
         window.scrollTo(0,0);
     };
 
     return { run, init: () => {
-        // 년/월/일 세팅
         const ys = document.getElementById('u-year'), ms = document.getElementById('u-month'), ds = document.getElementById('u-day');
         for(let i=new Date().getFullYear(); i>=1940; i--) ys.add(new Option(i+'년', i));
         for(let i=1; i<=12; i++) ms.add(new Option(i+'월', i));
         for(let i=1; i<=31; i++) ds.add(new Option(i+'일', i));
         ys.value = 1995;
-
-        // 지역 리스트 세팅
         const locSelect = document.getElementById('u-location');
-        for (const [key, value] of Object.entries(LOC)) {
-            locSelect.add(new Option(value.label, key));
-        }
+        for (const [key, value] of Object.entries(LOC)) locSelect.add(new Option(value.label, key));
     }};
 })();
 Core.init();
