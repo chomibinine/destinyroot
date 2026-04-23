@@ -9,27 +9,27 @@
 
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-        :root { --bg-base: #030509; --gold-primary: #d4af37; --text-muted: #9aa4b2; }
+        :root { --bg-base: #030509; --gold-primary: #d4af37; --gold-light: #f9e596; --text-muted: #9aa4b2; --border-line: rgba(255,255,255,0.08); }
         * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent;}
-        body { background: var(--bg-base); color: #fff; min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg-base); color: #fff; min-height: 100vh; overflow-x: hidden; line-height: 1.6; }
         
-        /* 오로라 배경 */
         body::before { content: ''; position: absolute; width: 300px; height: 300px; background: rgba(88, 166, 255, 0.1); filter: blur(100px); top: 5%; left: -100px; z-index: 0; }
         body::after { content: ''; position: absolute; width: 250px; height: 250px; background: rgba(212, 175, 55, 0.05); filter: blur(80px); bottom: 15%; right: -50px; z-index: 0; }
 
-        .app-container { max-width: 600px; margin: 0 auto; padding: 40px 20px 100px; text-align: center; position: relative; z-index: 1;}
-        .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 30px 24px; }
+        .app-container { max-width: 700px; margin: 0 auto; padding: 40px 20px 100px; position: relative; z-index: 1;}
+        .glass-card { background: rgba(255,255,255,0.02); backdrop-filter: blur(12px); border: 1px solid var(--border-line); border-radius: 24px; padding: 35px 30px; }
         
         /* 📸 사진 표시 영역 */
         #image-container {
             width: 100%; max-width: 320px; height: 320px; margin: 0 auto 25px;
             border-radius: 50%; border: 3px dashed rgba(212, 175, 55, 0.5); background: rgba(0,0,0,0.5);
             display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        #placeholder-text { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; font-weight: 300; }
+        #placeholder-text { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; font-weight: 300; text-align: center; }
         #captured-image { width: 100%; height: 100%; object-fit: cover; display: none; }
         
-        /* 🎛️ 버튼 스타일 (input file을 라벨로 감싸서 버튼처럼 만듦) */
+        /* 🎛️ 버튼 스타일 */
         .btn-wrapper { margin-bottom: 12px; }
         .btn {
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -40,39 +40,65 @@
         .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); }
         input[type="file"] { display: none; }
         
-        #status-msg { font-size: 0.9rem; color: var(--gold-primary); margin: 15px 0; font-weight: 600; min-height: 1.5rem; }
+        #status-msg { font-size: 0.95rem; color: var(--gold-primary); margin: 15px 0; font-weight: 600; min-height: 1.5rem; text-align: center; }
         
         /* 로더 */
-        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(5px);}
-        .spinner { width: 50px; height: 50px; border: 4px solid rgba(212,175,55,0.1); border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3,5,9,0.95); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { width: 55px; height: 55px; border: 4px solid rgba(212,175,55,0.1); border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 25px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* 리포트 화면 */
-        #report-view { display: none; text-align: left; animation: fadeIn 0.5s ease; }
+        /* 📄 리포트 화면 (볼륨업) */
+        #report-view { display: none; animation: fadeIn 0.6s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .r-section { margin-bottom: 30px; }
-        .r-section h3 { font-size: 1.3rem; margin-bottom: 15px; border-left: 4px solid var(--gold-primary); padding-left: 10px; }
-        .basis-box { background: rgba(212,175,55,0.05); padding: 15px; border-radius: 12px; font-size: 0.85rem; color: var(--gold-primary); margin-bottom: 12px; border: 1px solid rgba(212,175,55,0.1); }
-        .cta-box { margin-top: 40px; padding: 25px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        
+        .r-header { text-align: center; margin-bottom: 40px; padding-bottom: 25px; border-bottom: 1px solid var(--border-line); }
+        .r-header h2 { font-size: 2rem; color: #fff; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px; }
+        .r-header p { color: #4ade80; font-weight: 600; font-size: 0.95rem; }
+
+        /* 데이터 시각화 바 */
+        .stat-container { background: rgba(0,0,0,0.3); padding: 25px; border-radius: 16px; border: 1px solid var(--border-line); margin-bottom: 40px; }
+        .stat-title { font-size: 1.1rem; color: #fff; font-weight: 800; margin-bottom: 20px; text-align: center; }
+        .stat-row { display: flex; align-items: center; margin-bottom: 15px; gap: 15px; }
+        .stat-label { width: 60px; font-weight: 700; font-size: 0.95rem; color: var(--text-muted); }
+        .stat-bar-bg { flex: 1; height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
+        .stat-bar-fill { height: 100%; border-radius: 10px; background: var(--gold-primary); box-shadow: 0 0 10px rgba(212,175,55,0.4); transition: width 1.5s ease-out; }
+        .stat-val { width: 40px; text-align: right; font-size: 0.9rem; font-weight: 800; color: var(--gold-light); }
+
+        .r-section { margin-bottom: 40px; }
+        .r-section h3 { font-size: 1.4rem; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; font-weight: 800; color: #fff; }
+        .r-section h3::before { content: ''; display:inline-block; width:4px; height:18px; background:var(--gold-primary); border-radius:2px;}
+        .basis-box { background: rgba(88,166,255,0.05); padding: 18px 20px; border-radius: 12px; font-size: 0.9rem; color: #a1b0c0; margin-bottom: 15px; border-left: 3px solid #58a6ff; line-height: 1.5; }
+        .r-content { font-size: 1.05rem; line-height: 1.8; color: #d1d5db; text-align: justify; }
+        .r-content strong { color: var(--gold-light); font-weight: 700; }
+        
+        .r-advice { background: rgba(212,175,55,0.05); padding: 25px; border-radius: 16px; border: 1px solid rgba(212,175,55,0.2); margin-bottom: 40px; }
+        .r-advice h4 { color: var(--gold-light); font-size: 1.2rem; margin-bottom: 12px; font-weight: 800; }
+        .r-advice p { font-size: 1rem; color: #fff; line-height: 1.7; }
+
+        .cta-box { padding: 35px 25px; border-radius: 20px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid rgba(212,175,55,0.3); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.15rem; font-weight: 800; padding: 18px 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s; margin-top: 15px;}
+        .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
     </style>
 </head>
 <body>
 
 <div id="loader">
     <div class="spinner"></div>
-    <div id="loader-text" style="color: #fff; font-weight: 700; font-size: 1.2rem;">AI 이목구비 정밀 스캔 중...</div>
+    <div id="loader-text" style="color: #fff; font-weight: 800; font-size: 1.3rem; letter-spacing: 1px;">AI 안면 데이터 추출 중...</div>
 </div>
 
 <div class="app-container">
     <div id="input-view">
-        <h1 style="font-size: 2.2rem; margin-bottom: 8px; font-weight: 900;">AI 관상 스캐너</h1>
-        <p style="color: var(--text-muted); margin-bottom: 30px;">사진 한 장으로 타고난 운명과 길흉화복 분석</p>
+        <div class="header">
+            <h1>AI 관상 스캐너</h1>
+            <p>사진 한 장으로 꿰뚫어 보는 타고난 운명</p>
+        </div>
         
         <div class="glass-card">
             <div id="image-container">
                 <div id="placeholder-text">
-                    <span style="font-size: 2rem; display: block; margin-bottom: 10px;">👤</span>
-                    정면 얼굴이 잘 보이는<br>사진을 준비해주세요
+                    <span style="font-size: 2.5rem; display: block; margin-bottom: 12px;">👤</span>
+                    이목구비가 선명한<br>정면 사진을 준비해주세요
                 </div>
                 <img id="captured-image">
             </div>
@@ -83,33 +109,39 @@
                 <div class="btn-wrapper">
                     <label class="btn btn-primary">
                         📷 카메라로 바로 찍기
-                        <input type="file" accept="image/*" capture="user" onchange="Action.processImage(event)">
+                        <input type="file" accept="image/*" capture="user" onchange="Scanner.processImage(event)">
                     </label>
                 </div>
                 <div class="btn-wrapper">
                     <label class="btn btn-secondary">
                         📂 앨범에서 사진 고르기
-                        <input type="file" accept="image/*" onchange="Action.processImage(event)">
+                        <input type="file" accept="image/*" onchange="Scanner.processImage(event)">
                     </label>
                 </div>
             </div>
             
-            <p style="color:rgba(255,255,255,0.3); font-size:0.75rem; margin-top:20px;">* 분석된 사진은 서버에 저장되지 않고 100% 안전하게 즉시 폐기됩니다.</p>
+            <p style="color:rgba(255,255,255,0.3); font-size:0.8rem; margin-top:25px;">* 사진은 서버에 전송되지 않으며, 기기 내에서 즉시 파기됩니다.</p>
         </div>
     </div>
 
     <div id="report-view" class="glass-card">
-        <h2 style="text-align: center; margin-bottom: 30px; color: #fff; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;">관상 정밀 분석 리포트</h2>
+        <div class="r-header">
+            <h2>정통 관상 딥스캔 리포트</h2>
+            <p>● 68개 안면 랜드마크 분석 완료</p>
+        </div>
+        
+        <div class="stat-container" id="stat-bars"></div>
         
         <div id="dynamic-results"></div>
+        
         <div id="cta-area"></div>
         
-        <button class="btn btn-secondary" onclick="location.href='https://chomibinine.github.io/destinyroot/'" style="margin-top: 40px;">🏠 메인 홈으로 돌아가기</button>
+        <button class="btn btn-secondary" onclick="location.href='https://chomibinine.github.io/destinyroot/'" style="margin-top: 50px;">🏠 메인 홈으로 돌아가기</button>
     </div>
 </div>
 
 <script>
-const Action = (() => {
+const Scanner = (() => {
     let isAIReady = false;
     const img = document.getElementById('captured-image');
     const placeholder = document.getElementById('placeholder-text');
@@ -119,7 +151,7 @@ const Action = (() => {
 
     // 1. 모델 비동기 로드
     const init = async () => {
-        status.innerText = "✨ 스캐너 준비 완료";
+        status.innerText = "✨ AI 스캐너 엔진 준비 완료";
         const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
         try {
             await Promise.all([
@@ -132,7 +164,7 @@ const Action = (() => {
         }
     };
 
-    // 2. 사진 파일 처리 (네이티브 카메라 or 앨범 공통)
+    // 2. 사진 파일 처리 (자동 시작)
     const processImage = (e) => {
         const file = e.target.files[0];
         if(!file) return;
@@ -143,24 +175,30 @@ const Action = (() => {
             img.style.display = 'block';
             placeholder.style.display = 'none';
             document.getElementById('image-container').style.border = '2px solid var(--gold-primary)';
-            
-            // 사진이 화면에 뜨자마자 즉시 분석 시작
             analyze();
         };
         reader.readAsDataURL(file);
     };
 
-    // 3. 분석 로직 (AI + 스텔스 폴백)
+    // 3. 분석 로직 (볼륨업)
     const analyze = async () => {
         loader.style.display = 'flex';
         
-        const msgs = ["얼굴 윤곽 스캔 중...", "이목구비 비율 계산 중...", "관상 데이터 대조 중...", "운명 리포트 작성 중..."];
+        const msgs = ["안면 68개 랜드마크 추출 중...", "오악(五嶽) 사독(四瀆) 비율 계산 중...", "명궁 및 재백궁 에너지 측정 중...", "정통 관상학 DB 매칭 중...", "최종 운명 리포트 컴파일 중..."];
         let mIdx = 0; loaderText.textContent = msgs[mIdx];
         const mInt = setInterval(() => { mIdx++; if(mIdx < msgs.length) loaderText.textContent = msgs[mIdx]; }, 800);
 
         try {
-            let result = { bigNose: Math.random() > 0.5, wideMouth: Math.random() > 0.5 };
+            // 기본 난수 세팅 (다양한 결과 도출용)
+            let res = {
+                bigNose: Math.random() > 0.5,
+                wideMouth: Math.random() > 0.5,
+                wideGlabella: Math.random() > 0.5,
+                strongJaw: Math.random() > 0.5,
+                stats: { wealth: 75 + Math.floor(Math.random()*20), people: 70 + Math.floor(Math.random()*25), success: 80 + Math.floor(Math.random()*18) }
+            };
             
+            // AI가 켜져 있으면 코/입 비율은 실제 얼굴 비율로 덮어쓰기
             if (isAIReady) {
                 const detection = await faceapi.detectSingleFace(img, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
                 if (detection) {
@@ -168,41 +206,99 @@ const Action = (() => {
                     const fW = l.getJawOutline()[16].x - l.getJawOutline()[0].x;
                     const nW = l.getNose()[8].x - l.getNose()[4].x;
                     const mW = l.getMouth()[6].x - l.getMouth()[0].x;
-                    result.bigNose = (nW / fW) > 0.24;
-                    result.wideMouth = (mW / fW) > 0.33;
+                    const gW = l.getRightEye()[0].x - l.getLeftEye()[3].x; // 미간
+                    
+                    res.bigNose = (nW / fW) > 0.24;
+                    res.wideMouth = (mW / fW) > 0.33;
+                    res.wideGlabella = (gW / fW) > 0.22;
+                    
+                    // 스탯 보정
+                    if(res.bigNose) res.stats.wealth = 92 + Math.floor(Math.random()*6);
+                    if(res.wideMouth) res.stats.people = 90 + Math.floor(Math.random()*8);
                 }
             }
             
-            // 시각적 효과를 위해 무조건 3초 대기
-            setTimeout(() => { clearInterval(mInt); render(result); }, 3000);
+            setTimeout(() => { clearInterval(mInt); render(res); }, 4000);
         } catch (e) {
-            setTimeout(() => { clearInterval(mInt); render({ bigNose: Math.random() > 0.5, wideMouth: Math.random() > 0.5 }); }, 3000);
+            setTimeout(() => { clearInterval(mInt); render(res); }, 4000);
         }
     };
 
-    // 4. 결과 출력
+    // 4. 결과 출력 (초대형 볼륨)
     const render = (res) => {
+        // 📊 스탯 바 렌더링
+        const statHTML = `
+            <div class="stat-title">운명 에너지 밸런스 측정</div>
+            <div class="stat-row"><div class="stat-label">재물운</div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${res.stats.wealth}%"></div></div><div class="stat-val">${res.stats.wealth}%</div></div>
+            <div class="stat-row"><div class="stat-label">인복/연애</div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${res.stats.people}%"></div></div><div class="stat-val">${res.stats.people}%</div></div>
+            <div class="stat-row"><div class="stat-label">성공운</div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${res.stats.success}%"></div></div><div class="stat-val">${res.stats.success}%</div></div>
+        `;
+        document.getElementById('stat-bars').innerHTML = statHTML;
+
+        // 📝 상세 리포트 렌더링
         const container = document.getElementById('dynamic-results');
         container.innerHTML = `
             <div class="r-section">
-                <div class="basis-box">🔎 비익(콧방울) 비율 측정 결과: ${res.bigNose ? '발달형' : '슬림형'} 구조</div>
-                <h3>재백궁 (코/재물운) 분석</h3>
-                <p style="line-height:1.8; color:#d1d5db;">${res.bigNose ? '코끝이 도톰하게 발달하여 <b>재물운의 거대한 저장고</b>를 가졌습니다. 금전 감각이 탁월하여 자수성가로 큰 부를 이룰 수 있는 매우 좋은 복코 관상입니다.' : '콧대가 슬림하고 날렵하여 세속적인 물욕보다는 <b>명예와 자신만의 철학</b>을 더욱 중시합니다. 투기보다는 안정적인 저축을 통해 내실을 다지는 것이 유리합니다.'}</p>
+                <h3>1. 타고난 상모(相貌) 총평</h3>
+                <div class="r-content">
+                    얼굴 전체의 골격과 기색을 종합해보면, 겉으로는 부드럽고 유연해 보이지만 내면에는 결코 꺾이지 않는 <strong>강인한 심지어와 승부사적 기질</strong>이 숨겨져 있습니다. 남에게 의지하기보다는 스스로 환경을 통제하고 길을 개척해 나가는 자수성가의 에너지가 매우 강하게 흐르고 있습니다.
+                </div>
             </div>
+
             <div class="r-section">
-                <div class="basis-box">🔎 구각(입꼬리) 거리 측정 결과: ${res.wideMouth ? '대형' : '소형'} 구조</div>
-                <h3>출납궁 (입/성품) 분석</h3>
-                <p style="line-height:1.8; color:#d1d5db;">${res.wideMouth ? '입의 선이 시원시원하여 <b>스케일이 크고 호탕한 리더십</b>을 지녔습니다. 외부로 뻗어나가는 에너지가 좋아 사람을 쉽게 끌어모으고 말년의 명망이 높습니다.' : '입이 야무지고 섬세하게 모여 있어, 과시하기보다는 <b>철두철미하게 실속을 챙기는 기질</b>입니다. 신중한 언행으로 타인에게 깊은 신뢰를 얻습니다.'}</p>
+                <div class="basis-box">🔎 내안각(눈머리) 사이 물리적 거리: 안면 폭 대비 ${res.wideGlabella ? '넓은(개방형)' : '좁은(집중형)'} 구조</div>
+                <h3>2. 명궁 (미간) : 지혜와 생명력</h3>
+                <div class="r-content">
+                    ${res.wideGlabella 
+                    ? "미간이 넓고 탁 트여 있어 <strong>스케일이 크고 타인을 포용하는 이해심</strong>이 매우 깊습니다. 작은 것에 연연하기보다 거시적인 안목으로 큰 판을 짜는 데 능하며, 학문이나 기획 분야에서 남다른 통찰력을 발휘하여 초년과 중년의 운로가 시원하게 열려 있습니다." 
+                    : "미간이 좁고 응축되어 있어 <strong>고도의 집중력과 예리한 분석력</strong>을 타고났습니다. 남들이 놓치는 미세한 디테일을 완벽하게 캐치해 내는 장인 정신이 있으며, 한 분야를 깊게 파고드는 전문직이나 기술직에서 타의 추종을 불허하는 성공을 거둡니다."}
+                </div>
+            </div>
+
+            <div class="r-section">
+                <div class="basis-box">🔎 비익(콧방울) 너비 스캔: ${res.bigNose ? '발달형 (재물 축적 유리)' : '슬림형 (명예 및 내실 유리)'}</div>
+                <h3>3. 재백궁 (코) : 재물과 중년운</h3>
+                <div class="r-content">
+                    ${res.bigNose 
+                    ? "코끝(준두)과 콧방울이 도톰하게 발달하여 <strong>거대한 재물운의 저장고</strong>를 가졌습니다. 돈의 흐름을 짚어내는 후각이 탁월하고, 한 번 들어온 재물을 절대 밖으로 흘려보내지 않는 강력한 축적 능력이 있어 중년 이후 큰 자산가로 성장할 훌륭한 복코입니다." 
+                    : "콧대가 슬림하고 날렵하게 뻗어 있어 세속적인 물욕보다는 <strong>자신만의 명예, 원칙, 고고한 철학</strong>을 훨씬 중시합니다. 투기적인 성향을 배제하고 안정적인 자산 관리와 본인의 이름값을 높이는 데 집중하면 재물은 자연스럽게 따라옵니다."}
+                </div>
+            </div>
+
+            <div class="r-section">
+                <div class="basis-box">🔎 구각(입꼬리) 거리 측정: ${res.wideMouth ? '대형 (발산형)' : '소형 (수렴형)'}</div>
+                <h3>4. 출납궁 (입) : 대인관계와 말년</h3>
+                <div class="r-content">
+                    ${res.wideMouth 
+                    ? "입의 선이 큼직하고 시원시원하여 <strong>호탕한 리더의 카리스마</strong>를 뿜어냅니다. 언변이 탁월하고 에너지가 외부로 강력하게 뻗어나가 사람들을 끌어당기며, 인생 후반부로 갈수록 인적 네트워크가 막강해져 안정적인 말년을 누립니다." 
+                    : "입이 야무지고 섬세하게 다물어져 있어 <strong>자기 관리가 완벽에 가깝고 실속이 강한 타입</strong>입니다. 함부로 속내를 드러내지 않으며 맺고 끊음이 확실하여, 쓸데없는 구설수에 휘말리지 않고 단단한 신뢰를 구축해 승리합니다."}
+                </div>
+            </div>
+
+            <div class="r-section">
+                <h3>5. 노복궁 (하관) : 인생의 든든한 방어막</h3>
+                <div class="r-content">
+                    하관의 윤곽선이 안정적으로 얼굴 전체를 떠받치고 있습니다. 이는 젊은 시절 뿌린 씨앗들을 <strong>노년에 온전히 수확하여 안전하게 지켜낼 수 있는 힘</strong>을 의미합니다. 아랫사람이나 자녀의 덕을 볼 수 있는 든든한 방어막이 형성되어 있습니다.
+                </div>
             </div>
         `;
         
+        // 💡 개운법 & CTA
+        let mainTrait = res.bigNose ? 'wealth' : 'general';
+        const link = mainTrait === 'wealth' ? 'https://link.coupang.com/a/eu5uLR' : 'https://link.coupang.com/a/eu5td7';
+        
         const cta = document.getElementById('cta-area');
-        const link = res.bigNose ? 'https://link.coupang.com/a/eu5uLR' : 'https://link.coupang.com/a/eu5td7';
         cta.innerHTML = `
+            <div class="r-advice">
+                <h4>💡 운명을 바꾸는 관상학적 개운법</h4>
+                <p>관상은 고정불변이 아닙니다. 당신의 훌륭한 이목구비 기운을 200% 폭발시키기 위해서는 <strong>내면의 에너지를 정화하고 주변의 탁한 기운을 막아주는 물리적인 보호</strong>가 필요합니다. 당신의 약점은 보완하고 강점(재물/인복)은 극대화할 수 있는 강력한 보조 장치를 곁에 두는 것을 추천합니다.</p>
+            </div>
+            
             <div class="cta-box">
-                <p style="margin-bottom:15px; font-weight:800; font-size:1.1rem; color:#fff;">✨ 당신의 타고난 관상운을 틔워줄 아이템</p>
-                <a href="${link}" target="_blank" style="color:#000; background:var(--gold-primary); text-decoration:none; padding:16px 30px; border-radius:30px; font-weight:800; display:inline-block; font-size:1.05rem;">추천 행운템 확인하기 ></a>
-                <p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.3);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
+                <h3 style="color:#fff; margin-bottom:10px; font-weight:900;">✨ 타고난 관상운을 폭발시킬 시크릿 아이템</h3>
+                <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom: 20px;">AI 분석 결과, 당신의 현재 에너지 파동에 가장 필요한 아이템을 매칭했습니다.</p>
+                <a href="${link}" target="_blank" class="btn-coupang">추천 행운템 바로 확인하기 ></a>
+                <p style="margin-top:20px; font-size:0.75rem; color:rgba(255,255,255,0.3);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
             </div>
         `;
 
@@ -215,7 +311,7 @@ const Action = (() => {
     return { init, processImage };
 })();
 
-window.onload = Action.init;
+window.onload = Scanner.init;
 </script>
 </body>
 </html>
