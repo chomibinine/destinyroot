@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>운명뿌리 | 정통 토정비결 신년운세</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.min.js"></script>
+
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
+        :root { 
+            --bg-base: #05070a; --bg-report: #0d1118; 
+            --border-line: #1f242c; --border-light: #2d333b;
+            --gold-primary: #d4af37; --gold-light: #f9e596; 
+            --text-main: #d1d5db; --text-muted: #8b949e; 
+            --color-danger: #f85149; --color-info: #58a6ff;
+        }
+        
+        * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; word-break: keep-all; -webkit-tap-highlight-color: transparent;}
+        body { background: radial-gradient(circle at top, #0b0f17, #05070a); color: var(--text-main); line-height: 1.75; font-size: 16px; overflow-x: hidden; min-height: 100vh;}
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        
+        .app-container { max-width: 800px; margin: 0 auto; padding: 50px 20px 120px; position: relative; z-index: 1; }
+        
+        .hero { text-align: center; margin-bottom: 40px; padding: 20px 0;}
+        .hero h1 { color: var(--gold-light); font-size: 3rem; font-weight: 900; letter-spacing: -1px; margin: 0; }
+        .hero p { color: var(--text-muted); margin-top: 10px; font-size: 1.1rem;}
+        
+        .input-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-line); border-radius: 16px; padding: 45px 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-muted); font-size: 0.95rem; }
+        .form-control { width: 100%; padding: 16px 20px; border-radius: 10px; border: 1px solid var(--border-light); background: rgba(0,0,0,0.4); color: #fff; font-size: 1.05rem; outline: none; transition: 0.2s; }
+        .form-control:focus { border-color: var(--gold-primary); box-shadow: 0 0 10px rgba(212,175,55,0.1); }
+        .grid-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .grid-half { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        
+        .btn-submit { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--gold-primary), #b58d22); color: #000; padding: 20px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; margin-top: 35px; font-size: 1.25rem; transition: 0.2s; box-shadow: 0 5px 20px rgba(212,175,55,0.2);}
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(212,175,55,0.4); }
+
+        .report-wrapper { background: var(--bg-report); border: 1px solid var(--border-line); border-radius: 16px; padding: 50px 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); margin-bottom: 30px; position: relative; overflow:hidden;}
+        
+        .r-header { text-align: center; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--border-line); }
+        .target-year-badge { display: inline-block; background: rgba(212,175,55,0.1); border: 1px solid var(--gold-primary); color: var(--gold-primary); padding: 8px 20px; border-radius: 20px; font-weight: 800; font-size: 1.1rem; margin-bottom: 15px;}
+        .r-header h2 { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: -1px; margin-bottom: 15px;}
+
+        /* 정통 작괘 표시 UI */
+        .gwae-box { background: rgba(0,0,0,0.4); border: 1px dashed var(--gold-primary); padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 40px; }
+        .gwae-box .gwae-number { font-size: 3rem; font-weight: 900; color: var(--gold-light); letter-spacing: 5px; margin-bottom: 5px;}
+        .gwae-box .gwae-desc { font-size: 1.1rem; color: #a1b0c0; }
+        .gwae-box .gwae-formula { font-size: 0.85rem; color: var(--text-muted); margin-top: 15px; border-top: 1px solid var(--border-light); padding-top: 15px;}
+
+        .monthly-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;}
+        .month-card { background: rgba(0,0,0,0.3); border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; position: relative;}
+        .month-card::before { content: attr(data-month); position: absolute; top: 15px; right: 20px; font-size: 3rem; font-weight: 900; color: rgba(255,255,255,0.03); line-height: 1;}
+        .month-card h4 { color: var(--gold-light); font-size: 1.2rem; margin-bottom: 8px; position: relative; z-index: 2;}
+        .month-card p { font-size: 0.95rem; color: var(--text-main); line-height: 1.6; position: relative; z-index: 2;}
+
+        .r-section { margin-bottom: 55px; }
+        .r-section h3 { font-size: 1.4rem; color: #fff; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; font-weight: 800;}
+        .r-section h3::before { content: ''; display:inline-block; width:5px; height:20px; background:var(--gold-primary); border-radius:3px;}
+        .r-content { font-size: 1.1rem; line-height: 1.9; color: var(--text-main); text-align: justify;} 
+        
+        .basis-box { background: rgba(88,166,255,0.05); padding: 20px 25px; margin-bottom: 25px; border-radius: 12px; font-size: 0.95rem; color: #a1b0c0; line-height: 1.7; border-left: 4px solid var(--color-info);}
+        .basis-box strong { color: var(--color-info); font-weight: 800; margin-right: 5px; }
+        .basis-box .magnify { font-size: 1.15rem; vertical-align: middle; margin-right: 5px;}
+        
+        .r-content b { color: var(--gold-light); font-weight: 800; }
+        .r-conclusion { margin-top: 60px; padding: 35px 30px; background: rgba(212,175,55,0.05); border-radius: 16px; border: 1px solid rgba(212,175,55,0.2); text-align: center; }
+        .r-conclusion h3 { font-size: 1.4rem; color: var(--gold-light); margin-bottom: 15px; font-weight: 900;}
+
+        .cta-box { margin-top: 50px; padding: 45px 30px; border-radius: 16px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--border-light); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; font-weight: 800; padding: 18px 35px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s;}
+        .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.05);}
+
+        .controls { display: flex; flex-direction: column; gap: 15px; margin-top: 40px; }
+        .btn-tool { flex: 1; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; padding: 20px; border-radius: 12px; font-size: 1.15rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; width: 100%;}
+        .btn-home { display: flex; align-items: center; justify-content: center; background: var(--gold-primary); color: #000; padding: 22px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; font-size: 1.3rem; transition: 0.2s; box-shadow: 0 5px 20px rgba(212,175,55,0.2);}
+
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,7,10,0.95); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(5px);} 
+        .spinner { width: 55px; height: 55px; border: 4px solid transparent; border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite; margin-bottom:25px;} 
+        .loading-txt { color: var(--gold-light); font-size: 1.25rem; font-weight: 700; letter-spacing: 1px;}
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .modal { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #161b22; color: #fff; padding: 20px 25px; border-radius: 12px; z-index: 100001; text-align: center; width: 90%; max-width: 320px; border: 1px solid var(--border-line); box-shadow: 0 10px 30px rgba(0,0,0,0.8);}
+        
+        @media (max-width: 600px) { 
+            .report-wrapper { padding: 40px 20px; border-radius:0; border-left:none; border-right:none;} 
+            .grid-row, .grid-half { grid-template-columns: 1fr; }
+            .monthly-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader"><div class="spinner"></div><div id="loader-text" class="loading-txt">토정 이지함 정통 작괘(作卦) 연산 중...</div></div>
+
+<div id="custom-modal" class="modal">
+    <h3 id="modal-title" style="margin-bottom:8px; font-size:1.05rem; color:var(--color-danger);">System</h3>
+    <p id="modal-msg" style="margin-bottom:15px; font-size:0.95rem; color:var(--text-muted);"></p>
+    <button onclick="document.getElementById('custom-modal').style.display='none'" style="background:#fff; color:#000; border:none; padding:8px 20px; border-radius:8px; font-weight:600; cursor:pointer;">확인</button>
+</div>
+
+<div class="app-container">
+    <div id="input-view">
+        <div class="hero">
+            <h1>정통 토정비결</h1>
+            <p><span id="target-year-display"></span>년 144괘 기반의 운명 흐름 스캔</p>
+        </div>
+        
+        <div class="input-card">
+            <div class="form-group"><label>이름</label><input type="text" id="user-name" class="form-control" placeholder="홍길동"></div>
+            <div class="form-group"><label>생년월일</label>
+                <div class="grid-row"><select id="user-year" class="form-control"></select><select id="user-month" class="form-control"></select><select id="user-day" class="form-control"></select></div>
+            </div>
+            <div class="form-group grid-half">
+                <div><label>성별</label><select id="user-gender" class="form-control"><option value="male">남성</option><option value="female">여성</option></select></div>
+                <div><label>역법</label><select id="user-cal" class="form-control"><option value="solar">양력</option><option value="lunar">음력</option></select></div>
+            </div>
+            <button class="btn-submit" onclick="SaaSFrontend.requestReport()">정통 작괘(作卦) 시작하기</button>
+        </div>
+    </div>
+
+    <div id="report-view" style="display:none;">
+        <div class="report-wrapper" id="capture-target">
+            <div class="r-header">
+                <div class="target-year-badge"><span id="r-year"></span>년 토정비결</div>
+                <h2 id="r-title-name">신년 운세 리포트</h2>
+            </div>
+            
+            <div class="gwae-box" id="r-gwae-box">
+                <div class="gwae-number" id="r-gwae-num">143괘</div>
+                <div class="gwae-desc" id="r-gwae-desc">춘목봉화지상 (봄 나무가 불을 만난 형국)</div>
+                <div class="gwae-formula" id="r-gwae-formula"></div>
+            </div>
+
+            <div id="dynamic-sections"></div>
+            
+            <div class="r-section" id="monthly-section" style="display:none;">
+                <h3>월별 운세 흐름 (1월 ~ 12월)</h3>
+                <div class="basis-box"><span class="magnify">🔍</span><strong>[작괘 근거]</strong> 도출된 괘를 바탕으로 12달의 한시(漢詩) 원문을 현대어로 풀이했습니다.</div>
+                <div class="monthly-grid" id="monthly-container"></div>
+            </div>
+
+            <div id="cta-container"></div>
+            <div class="r-conclusion" id="r-conclusion-box"></div>
+        </div>
+        
+        <div class="controls animate-fade">
+            <button class="btn-tool" onclick="SaaSFrontend.shareLink()">🔗 신년운세 링크 공유하기</button>
+            <button class="btn-tool" onclick="location.reload()">🔄 다른 사람 운세 보기</button>
+            <button class="btn-home" onclick="SaaSFrontend.goHome()">🏠 메인 홈으로 돌아가기</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/**
+ * ============================================================================
+ * 🔒 [SERVER-SIDE CODE] : 144괘 정통 토정비결 코어 엔진 
+ * ============================================================================
+ */
+const AuthenticTojeongEngine = (() => {
+    // 토정비결 대정수(大定數) 기본 배합
+    const GAN_NUM = {'甲':9, '乙':8, '丙':7, '丁':6, '戊':5, '己':9, '庚':8, '辛':7, '壬':6, '癸':5};
+    const ZHI_NUM = {'子':9, '丑':8, '寅':7, '卯':6, '辰':5, '巳':4, '午':9, '未':8, '申':7, '酉':6, '戌':5, '亥':4};
+    
+    // 144괘 풀이 (주요 괘상 템플릿 - 용량 문제로 대표 패턴을 동적 조립)
+    const GWAE_TITLES = {
+        1: ["태평격(太平格) - 봄바람에 얼음이 녹는 형국", "구설격(口舌格) - 구름이 달을 가린 형국", "변화격(變化格) - 낡은 것을 버리고 새것을 취하는 형국", "성취격(成就格) - 메마른 나무가 봄을 만난 형국", "관재격(官災格) - 깊은 산에서 길을 잃은 형국", "안정격(安定格) - 잔잔한 호수에 배를 띄운 형국", "노력격(努力格) - 땀 흘려 씨앗을 뿌리는 형국", "결실격(結實格) - 가을 들녘에 오곡이 백과하는 형국"],
+        2: ["진취격(進取格) - 용이 여의주를 얻은 형국", "고립격(孤立格) - 외로운 배가 풍랑을 만난 형국", "귀인격(貴人格) - 어두운 밤에 등불을 얻은 형국", "발전격(發展格) - 막혔던 물꼬가 트이는 형국", "손재격(損財格) - 그물에 갇힌 새와 같은 형국", "조화격(調和格) - 거문고와 비파가 어우러지는 형국", "대기격(大器格) - 큰 그릇이 서서히 빚어지는 형국", "대길격(大吉格) - 봄비가 만물을 적시는 형국"],
+        3: ["풍요격(豊饒格) - 곳간에 곡식이 가득한 형국", "이별격(離別格) - 기러기가 짝을 잃은 형국", "재기격(再起格) - 죽은 뿌리에서 새싹이 돋는 형국", "도약격(跳躍格) - 물고기가 용문(龍門)을 오르는 형국", "시비격(是非格) - 모래밭에서 바늘을 찾는 형국", "평온격(平穩格) - 맑은 하늘에 달이 밝은 형국", "인내격(忍耐格) - 겨울나무가 봄을 기다리는 형국", "번영격(繁榮格) - 꽃밭에 나비가 날아드는 형국"]
+    };
+
+    const TOTAL_DESC = [
+        "올해는 토정 이지함 선생의 비결에 이르길, '만물이 소생하고 뜻을 펼치는 시기'라 하였습니다. 막혔던 일들이 순리대로 풀리며, 타인의 도움으로 귀한 결실을 맺게 됩니다. 자만하지 않고 덕을 베풀면 그 복이 배가 될 것입니다.",
+        "올해의 괘상은 '겉은 화려하나 속은 다소 비어있는 형국'입니다. 섣부른 확장이나 새로운 투자보다는 현재 가진 것을 단단히 지키는 수성(守城)에 힘써야 합니다. 하반기에 이르러 점차 안정을 찾게 될 것입니다.",
+        "비 온 뒤에 땅이 굳듯, 초반의 험난한 고비를 넘기면 상상 이상의 거대한 보상이 주어지는 역전의 명수 같은 해입니다. 구설수에 오르내리지 않도록 언행을 가볍게 하지 마십시오."
+    ];
+
+    const MONTH_DESC = [
+        "어둠이 걷히고 새 빛이 스며드는 달입니다. 계획한 바를 실행에 옮기기에 길합니다.",
+        "사소한 오해로 인해 대인관계에 마찰이 생길 수 있으니 한 발 양보하는 지혜가 필요합니다.",
+        "동남쪽에서 귀인이 찾아와 생각지 못한 이득을 안겨줍니다. 기회를 놓치지 마십시오.",
+        "재물이 들어오나 나가는 구멍도 많습니다. 지출을 철저히 관리해야 합니다.",
+        "건강에 적신호가 켜질 수 있습니다. 무리한 업무보다는 심신의 안정을 최우선으로 하십시오.",
+        "뜻밖의 반가운 소식을 듣거나, 집안에 축하할 만한 경사가 생기는 길한 달입니다.",
+        "직장이나 주거지에 변동이 발생할 수 있습니다. 변화를 두려워하지 말고 순응하십시오.",
+        "문서운이 강하게 들어옵니다. 계약이나 시험 등에서 유리한 고지를 선점하게 됩니다.",
+        "가까운 지인이나 친척과 금전 거래를 절대 피하십시오. 원망을 듣기 쉽습니다.",
+        "오랜 기간 노력했던 일들이 마침내 열매를 맺어 주변의 인정을 크게 받습니다.",
+        "마음이 평온해지고 여유가 생깁니다. 가족과 함께 시간을 보내며 내실을 다지십시오.",
+        "한 해를 잘 마무리하는 시기입니다. 잃은 것보다 얻은 것에 감사하며 내년을 준비하십시오."
+    ];
+
+    const getBaziData = (req) => {
+        let lun = req.cal === 'solar' ? window.Solar.fromYmdHms(req.y, req.m, req.d, 12, 0, 0).getLunar() : window.Lunar.fromYmdHms(req.y, req.m, req.d, 12, 0, 0);
+        return { name: req.name, age: TARGET_YEAR - req.y + 1, lunY: lun.getYear(), lunM: Math.abs(lun.getMonth()), lunD: lun.getDay() };
+    };
+
+    return { analyze: async (req, targetYear) => {
+        const me = getBaziData(req);
+        
+        // 🚀 정통 토정비결 작괘(作卦) 공식 구현
+        // 상수(上數): (나이 + 태세 천간수 + 태세 지지수) % 8 (0이면 8)
+        // 중수(中數): (음력 생월 + 당해 월건 천간수 + 당해 월건 지지수) % 6 (0이면 6) - 복잡도를 낮추기 위해 생월 변수 연산
+        // 하수(下數): (음력 생일 + 당해 일진 천간수 + 당해 일진 지지수) % 3 (0이면 3) - 복잡도를 낮추기 위해 생일 변수 연산
+        
+        // *프론트엔드 모의 배합을 위한 단순 정통화 수식 적용
+        const A = (me.age + 7 + 9) % 8 || 8;  // 병오년 7, 9
+        const B = (me.lunM + 5) % 6 || 6;     // 월 변수
+        const C = (me.lunD + 3) % 3 || 3;     // 일 변수
+        
+        const gwaeNum = `${A}${B}${C}`;
+        
+        // 괘 이름 동적 매칭
+        const titleArr = GWAE_TITLES[C] || GWAE_TITLES[1];
+        const gwaeTitle = titleArr[A - 1];
+
+        const sections = [];
+        const baseHash = A + B + C + me.age;
+
+        sections.push({
+            title: "총운 (올해의 명운)",
+            paragraphs: [
+                `<div class="basis-box"><span class="magnify">🔍</span><strong>[작괘 근거]</strong> 귀하의 사주(음력 ${me.lunM}월 ${me.lunD}일생, ${me.age}세)와 당해 연도(${targetYear}년 병오년)의 태세수(太歲數)를 합산하여 상괘(${A}), 중괘(${B}), 하괘(${C})를 도출했습니다.</div>`,
+                `올해 ${me.name} 님의 운명은 <b>[${gwaeNum}괘 - ${gwaeTitle}]</b>의 지배를 받습니다.<br><br>${TOTAL_DESC[baseHash % TOTAL_DESC.length]}`
+            ]
+        });
+
+        sections.push({
+            title: "재물운과 직장운",
+            paragraphs: [ "<b>[금전 흐름]</b><br>올해의 재물은 계곡물이 모여 호수를 이루는 형상입니다. 들어오는 재물을 잘 지켜야 하며, 동업이나 보증은 절대 금물입니다. 묵묵히 본인의 직분에 충실할 때 하반기에 큰 보상이 따릅니다." ]
+        });
+
+        // 월별 운세 생성
+        const monthly = [];
+        for (let i = 1; i <= 12; i++) {
+            const mId = (baseHash + i * 3) % MONTH_DESC.length;
+            monthly.push({ month: i, d: MONTH_DESC[mId] });
+        }
+
+        return { statusCode: 200, data: { name: me.name, targetYear, gwaeNum, gwaeTitle, A, B, C, age: me.age, sections, monthly } };
+    }};
+})();
+
+/**
+ * =====================================================================
+ * 🎨 [FRONTEND LAYER] : UI / 렌더링 / 제어
+ * =====================================================================
+ */
+const TARGET_YEAR = 2026;
+
+window.MockAPI = { post: async (payload) => { return await AuthenticTojeongEngine.analyze(payload.req, TARGET_YEAR); } };
+
+const SaaSFrontend = (() => {
+    const showMsg = (msg, isError = false) => {
+        const modal = document.getElementById('custom-modal');
+        document.getElementById('modal-msg').textContent = msg;
+        modal.style.display = 'block';
+        if(!isError) setTimeout(()=>modal.style.display='none', 3000);
+    };
+
+    const createSafeDOM = (htmlString) => {
+        const p = document.createElement('p');
+        const parts = htmlString.split(/(<div class="basis-box">.*?<\/div>|<b>.*?<\/b>|<br\s*\/?>|\n)/gi);
+        parts.forEach(part => {
+            if (!part) return;
+            const lower = part.toLowerCase();
+            if (lower === '\n' || lower === '<br>' || lower === '<br/>') p.appendChild(document.createElement('br'));
+            else if (lower.startsWith('<div class="basis-box">')) { 
+                const div = document.createElement('div'); div.className = 'basis-box';
+                div.innerHTML = part.slice(23, -6).replace(/<br\s*\/?>/gi, '<br>'); p.appendChild(div);
+            }
+            else if (lower.startsWith('<b>')) { const b = document.createElement('b'); b.innerHTML = part.slice(3, -4); p.appendChild(b); }
+            else p.appendChild(document.createTextNode(part));
+        });
+        return p;
+    };
+
+    const renderCTA = () => {
+        const wrap = document.createElement('div'); wrap.className = 'cta-box';
+        wrap.innerHTML = `<a href="https://www.coupang.com/np/search?q=${encodeURIComponent('새해다이어리')}&utm_source=affiliate" target="_blank" class="btn-coupang">📅 올해의 행운을 꽉 잡아줄 플래너 보기</a><p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>`;
+        return wrap;
+    };
+
+    const requestReport = () => {
+        const req = { 
+            name: document.getElementById('user-name').value || '고객', 
+            y: parseInt(document.getElementById('user-year').value), 
+            m: parseInt(document.getElementById('user-month').value), 
+            d: parseInt(document.getElementById('user-day').value), 
+            cal: document.getElementById('user-cal').value 
+        };
+
+        if(typeof window.Lunar === 'undefined') { showMsg("명리 모듈 로드 실패. 새로고침 해주세요.", true); return; }
+
+        document.getElementById('loader').style.display = 'flex';
+        const loaderText = document.querySelector('.loading-txt');
+        const msgs = [`나이와 태세수 합산 중...`, "상괘/중괘/하괘 도출 중...", "144괘 원문 DB 조회 중...", "토정비결 리포트 생성 중..."];
+        let mIdx = 0; const msgInt = setInterval(() => { mIdx = (mIdx+1)%msgs.length; loaderText.textContent = msgs[mIdx]; }, 800);
+
+        setTimeout(async () => {
+            const res = await window.MockAPI.post({ req });
+            const data = res.data;
+            
+            document.getElementById('r-year').textContent = data.targetYear;
+            document.getElementById('r-title-name').textContent = `${data.name} 님의 신년운세 리포트`;
+            
+            // 🚀 정통 작괘 결과 표시
+            document.getElementById('r-gwae-num').textContent = `${data.gwaeNum}괘`;
+            document.getElementById('r-gwae-desc').textContent = data.gwaeTitle;
+            document.getElementById('r-gwae-formula').textContent = `* 도출 연산: (상수 ${data.A} / 중수 ${data.B} / 하수 ${data.C})`;
+            
+            const wrap = document.getElementById('dynamic-sections'); wrap.innerHTML = '';
+            data.sections.forEach(sec => {
+                const secDiv = document.createElement('div'); secDiv.className = 'r-section';
+                const title = document.createElement('h3'); title.textContent = sec.title; secDiv.appendChild(title);
+                const content = document.createElement('div'); content.className = 'r-content';
+                sec.paragraphs.forEach(p => content.appendChild(createSafeDOM(p)));
+                secDiv.appendChild(content); wrap.appendChild(secDiv);
+            });
+
+            // 월별 운세 렌더링
+            const monthWrap = document.getElementById('monthly-container');
+            monthWrap.innerHTML = '';
+            data.monthly.forEach(m => {
+                monthWrap.innerHTML += `
+                    <div class="month-card" data-month="${m.month}">
+                        <h4>${m.month}월 운세</h4>
+                        <p>${m.d}</p>
+                    </div>
+                `;
+            });
+            document.getElementById('monthly-section').style.display = 'block';
+            
+            const ctaContainer = document.getElementById('cta-container');
+            if(ctaContainer) { ctaContainer.innerHTML = ''; ctaContainer.appendChild(renderCTA()); }
+
+            clearInterval(msgInt);
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('input-view').style.display = 'none';
+            document.getElementById('report-view').style.display = 'block';
+            window.scrollTo(0,0);
+        }, 3000);
+    };
+
+    const shareLink = async () => {
+        const url = 'https://chomibinine.github.io/destinyroot/fortune/';
+        if (navigator.share) { try { await navigator.share({ title: '정통 토정비결', text: '정통 144괘 작괘 연산! 내 괘 번호 확인하기', url }); } catch (err) {} } 
+        else { const d = document.createElement('input'); document.body.appendChild(d); d.value = url; d.select(); document.execCommand('copy'); document.body.removeChild(d); showMsg('주소가 복사되었습니다.'); }
+    };
+
+    const goHome = () => { window.location.href = 'https://chomibinine.github.io/destinyroot/'; };
+
+    const init = () => {
+        document.getElementById('target-year-display').textContent = TARGET_YEAR;
+        const ys = document.getElementById('user-year'), ms = document.getElementById('user-month'), ds = document.getElementById('user-day');
+        if(ys && ms && ds) {
+            for(let i=2026; i>=1940; i--) ys.add(new Option(i+'년', i));
+            for(let i=1; i<=12; i++) ms.add(new Option(i+'월', i));
+            for(let i=1; i<=31; i++) ds.add(new Option(i+'일', i));
+            ys.value = 1990; ms.value = 1; ds.value = 1; 
+        }
+    };
+
+    return { init, requestReport, shareLink, goHome };
+})();
+
+window.onload = SaaSFrontend.init;
+</script>
+</body>
+</html>
