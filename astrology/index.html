@@ -18,13 +18,19 @@
         .app-container { max-width: 750px; margin: 0 auto; padding: 50px 20px 100px; position: relative; z-index: 1; }
         .header { text-align: center; margin-bottom: 40px; }
         .header h1 { font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px; margin: 0; background: linear-gradient(180deg, #fff 0%, #a1a1a1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 24px; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); margin-bottom: 25px; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 24px; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); margin-bottom: 25px; transition: all 0.3s ease;}
         .form-group { margin-bottom: 22px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-muted); font-size: 0.95rem; }
         .form-control { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4); color: #fff; font-size: 1.05rem; outline: none; }
         .grid-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
         .grid-half { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 18px; border-radius: 30px; font-weight: 800; font-size: 1.15rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
+        
+        /* 커스텀 위경도 입력 폼 디자인 */
+        #custom-loc-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; border: 1px dashed rgba(212,175,55,0.3); margin-top: 15px; display: none; animation: fadeIn 0.4s ease;}
+        .btn-gps { background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.3); color: #58a6ff; padding: 12px; width: 100%; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; margin-bottom: 15px;}
+        .btn-gps:hover { background: rgba(88, 166, 255, 0.2); }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 18px; border-radius: 30px; font-weight: 800; font-size: 1.15rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; margin-top: 10px;}
         .btn-primary { background: var(--gold-primary); color: #000; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); }
         #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3,5,9,0.98); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; }
         .orbit { width: 60px; height: 60px; border: 2px solid var(--gold-primary); border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; margin-bottom: 20px; }
@@ -34,7 +40,6 @@
         .log-box { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 16px; padding: 25px; margin-bottom: 40px; font-size: 0.95rem; color: #a1b0c0; line-height: 1.8; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
         .log-box h4 { color: var(--color-info); margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px dashed rgba(88, 166, 255, 0.3); padding-bottom: 10px; font-weight: 800; }
         .log-item { margin-bottom: 15px; }
-        .log-item:last-child { margin-bottom: 0; }
         .log-title { color: #fff; font-weight: 700; display: block; margin-bottom: 4px; }
         .log-formula { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-top: 5px; font-family: monospace; overflow-x: auto;}
 
@@ -47,7 +52,6 @@
         .theory-box strong { font-weight: 800; color: #fff; }
         .result-content { font-size: 1.1rem; line-height: 1.9; color: #d1d5db; text-align: justify; padding: 0 10px;}
         
-        /* 🤫 С텔스 마케팅 CSS - 튀지 않게 글과 자연스럽게 어우러짐 */
         .stealth-advice { margin-top: 50px; padding: 25px; border-radius: 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); }
         .stealth-advice h4 { color: var(--gold-primary); font-size: 1.15rem; margin-bottom: 12px; font-weight: 800; }
         .stealth-advice p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px; }
@@ -55,10 +59,11 @@
         .link-stealth:hover { color: #fff; border-color: #fff; }
         
         @media (max-width: 600px) { .grid-half { grid-template-columns: 1fr; } .big3-grid { grid-template-columns: 1fr; gap: 12px; } .big3-card { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; text-align: left; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-<div id="loader"><div class="orbit"></div><div style="color:var(--gold-light); font-weight:700; font-size:1.2rem;">천체 역학 궤도 산출 중...</div></div>
+<div id="loader"><div class="orbit"></div><div id="loader-text" style="color:var(--gold-light); font-weight:700; font-size:1.2rem;">천체 역학 궤도 산출 중...</div></div>
 <div class="app-container">
     <div id="input-view">
         <div class="header"><h1>점성술 천궁도</h1><p>스위스 천문력(Ephemeris) 기반 정밀 운명 스캔</p></div>
@@ -72,9 +77,23 @@
                     <script>for(let i=0; i<24; i++) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}:00</option>`);</script>
                 </select></div>
                 <div><label>태어난 지역</label>
-                <select id="u-location" class="form-control"></select></div>
+                <select id="u-location" class="form-control" onchange="Core.toggleCustom()">
+                    <option value="CUSTOM">🎯 위도/경도 직접 입력 (정밀 스캔)</option>
+                    <option disabled>──────────</option>
+                    </select></div>
             </div>
-            <button class="btn btn-primary" onclick="Core.run()">리얼 천궁도 추출 시작</button>
+
+            <div id="custom-loc-box">
+                <button type="button" class="btn-gps" onclick="Core.getGPS()">📍 현재 내 위치(GPS) 좌표 자동 불러오기</button>
+                <div class="grid-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <div><label style="font-size:0.8rem;">위도(Lat)</label><input type="number" id="c-lat" class="form-control" placeholder="예: 37.56" step="0.01"></div>
+                    <div><label style="font-size:0.8rem;">경도(Lon)</label><input type="number" id="c-lon" class="form-control" placeholder="예: 126.97" step="0.01"></div>
+                    <div><label style="font-size:0.8rem;">UTC 시차</label><input type="number" id="c-tz" class="form-control" placeholder="예: 9" value="9"></div>
+                </div>
+                <p id="gps-status" style="font-size:0.8rem; color:var(--color-info); margin-top:10px; text-align:center;"></p>
+            </div>
+
+            <button class="btn btn-primary" onclick="Core.run()" style="margin-top:20px;">리얼 천궁도 추출 시작</button>
         </div>
     </div>
     
@@ -85,7 +104,6 @@
         </div>
         
         <div class="log-box" id="r-log"></div>
-
         <div class="big3-grid" id="r-big3"></div>
         <div id="dynamic-results"></div>
         <div id="cta-area"></div>
@@ -110,7 +128,6 @@ const Core = (() => {
         { name: "물고기자리", icon: "♓", el: "Water", deg: "330°~360°", sun: "무한한 상상력과 동정심을 가진 예술가입니다.", moon: "예민하고 영적인 내면을 지녀 예술적 감각이 뛰어납니다.", ris: "눈빛이 몽환적이고 부드러우며 신비로운 분위기를 풍깁니다." }
     ];
 
-    // 🌍 더 풍성해진 지역 데이터
     const LOC = { 
         SEOUL: { lat: 37.56, lon: 126.97, tz: 9, label: "한국 - 서울/경기/인천" },
         GANGWON: { lat: 37.82, lon: 128.15, tz: 9, label: "한국 - 강원도" },
@@ -121,28 +138,79 @@ const Core = (() => {
         JEJU: { lat: 33.49, lon: 126.53, tz: 9, label: "한국 - 제주특별자치도" },
         TOKYO: { lat: 35.67, lon: 139.65, tz: 9, label: "아시아 - 일본 (도쿄)" },
         BEIJING: { lat: 39.90, lon: 116.40, tz: 8, label: "아시아 - 중국 (베이징)" },
-        BANGKOK: { lat: 13.75, lon: 100.50, tz: 7, label: "아시아 - 동남아시아 (방콕)" },
-        SYDNEY: { lat: -33.86, lon: 151.20, tz: 10, label: "오세아니아 - 호주 (시드니)" },
-        DUBAI: { lat: 25.20, lon: 55.27, tz: 4, label: "중동 - UAE (두바이)" },
-        LONDON: { lat: 51.50, lon: -0.12, tz: 0, label: "유럽 - 영국 (런던)" },
-        PARIS: { lat: 48.85, lon: 2.35, tz: 1, label: "유럽 - 프랑스 (파리)" },
         NEWYORK: { lat: 40.71, lon: -74.00, tz: -5, label: "북미 - 미국 동부 (뉴욕)" },
-        LA: { lat: 34.05, lon: -118.24, tz: -8, label: "북미 - 미국 서부 (LA)" },
-        SAOPAULO: { lat: -23.55, lon: -46.63, tz: -3, label: "남미 - 브라질 (상파울루)" },
-        UTC: { lat: 0, lon: 0, tz: 0, label: "기타 지역 (협정세계시 UTC)" }
+        LONDON: { lat: 51.50, lon: -0.12, tz: 0, label: "유럽 - 영국 (런던)" }
     };
 
-    const run = () => {
-        document.getElementById('loader').style.display = 'flex';
+    // 📍 리버스 지오코딩 API (위경도 -> 한글 지명 변환)
+    const getRegionName = async (lat, lon) => {
+        try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&accept-language=ko`);
+            const data = await res.json();
+            if(data && data.address) {
+                let region = data.address.city || data.address.province || data.address.state || data.address.country;
+                return region ? `${data.address.country} ${region}` : "사용자 지정 좌표";
+            }
+        } catch(e) { console.error(e); }
+        return "사용자 지정 좌표";
+    };
+
+    // UI 토글
+    const toggleCustom = () => {
+        const val = document.getElementById('u-location').value;
+        document.getElementById('custom-loc-box').style.display = (val === 'CUSTOM') ? 'block' : 'none';
+    };
+
+    // GPS 불러오기
+    const getGPS = () => {
+        const statusEl = document.getElementById('gps-status');
+        if (!navigator.geolocation) {
+            statusEl.innerText = "이 브라우저에서는 GPS를 지원하지 않습니다."; return;
+        }
+        statusEl.innerText = "위성 신호 수신 중...";
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                document.getElementById('c-lat').value = position.coords.latitude.toFixed(2);
+                document.getElementById('c-lon').value = position.coords.longitude.toFixed(2);
+                document.getElementById('c-tz').value = (new Date().getTimezoneOffset() / -60);
+                statusEl.innerText = "위치 데이터 확보 완료!";
+                statusEl.style.color = "#4ade80";
+            },
+            (error) => {
+                statusEl.innerText = "GPS 권한이 차단되었거나 수신할 수 없습니다.";
+                statusEl.style.color = "#ff6b6b";
+            }
+        );
+    };
+
+    const run = async () => {
+        const name = document.getElementById('u-name').value || '게스트';
         const y = parseInt(document.getElementById('u-year').value), m = parseInt(document.getElementById('u-month').value), d = parseInt(document.getElementById('u-day').value), h = parseInt(document.getElementById('u-time').value);
-        const locKey = document.getElementById('u-location').value;
-        const coords = LOC[locKey];
+        const locMode = document.getElementById('u-location').value;
+        
+        let lat, lon, tz, locLabel;
+
+        document.getElementById('loader').style.display = 'flex';
+        document.getElementById('loader-text').innerText = "천체 역학 궤도 산출 중...";
+
+        // 좌표 및 지명 세팅
+        if (locMode === 'CUSTOM') {
+            lat = parseFloat(document.getElementById('c-lat').value) || 37.56;
+            lon = parseFloat(document.getElementById('c-lon').value) || 126.97;
+            tz = parseFloat(document.getElementById('c-tz').value) || 9;
+            document.getElementById('loader-text').innerText = "위성 좌표 역추적 중 (Reverse Geocoding)...";
+            locLabel = await getRegionName(lat, lon); // 오픈스트리트맵 호출!
+        } else {
+            lat = LOC[locMode].lat; lon = LOC[locMode].lon; tz = LOC[locMode].tz; locLabel = LOC[locMode].label;
+        }
+
+        document.getElementById('loader-text').innerText = "행성 간 각도(Aspect) 대조 중...";
 
         setTimeout(() => {
             const dates = [20, 19, 21, 20, 21, 21, 23, 23, 23, 23, 22, 22]; 
             const sunIdx = (d >= dates[m - 1]) ? (m + 9) % 12 : (m + 8) % 12;
 
-            const date = new Date(Date.UTC(y, m - 1, d, h - coords.tz, 0, 0));
+            const date = new Date(Date.UTC(y, m - 1, d, h - tz, 0, 0));
             const jd = (date.getTime() / 86400000) + 2440587.5;
             const T = jd - 2451545.0; 
             
@@ -152,24 +220,23 @@ const Core = (() => {
             const moonIdx = Math.floor(lambda / 30);
 
             let gmst = (18.697374558 + 24.06570982441908 * T) % 24; if (gmst < 0) gmst += 24;
-            let lst = (gmst + coords.lon / 15) % 24; if (lst < 0) lst += 24;
+            let lst = (gmst + lon / 15) % 24; if (lst < 0) lst += 24;
             const eps = 23.439 * Math.PI / 180;
-            const phi = coords.lat * Math.PI / 180;
+            const phi = lat * Math.PI / 180;
             const RAMC = lst * 15 * Math.PI / 180;
             let asc = Math.atan2(Math.cos(RAMC), -Math.sin(RAMC) * Math.cos(eps) - Math.tan(phi) * Math.sin(eps));
             let ascDeg = (asc * 180 / Math.PI + 360 + 90) % 360;
             const risIdx = Math.floor(ascDeg / 30);
 
-            const logData = { jd: jd.toFixed(2), t: T.toFixed(4), tz: coords.tz, lambda: lambda.toFixed(2), lst: lst.toFixed(2), ascDeg: ascDeg.toFixed(2) };
-            render(sunIdx, moonIdx, risIdx, locKey, logData);
+            const logData = { jd: jd.toFixed(2), t: T.toFixed(4), tz: tz, lambda: lambda.toFixed(2), lst: lst.toFixed(2), ascDeg: ascDeg.toFixed(2), lat: lat, lon: lon };
+            render(name, sunIdx, moonIdx, risIdx, locLabel, logData);
             document.getElementById('loader').style.display = 'none';
-        }, 3000);
+        }, 1500);
     };
 
-    const render = (s, m, r, loc, log) => {
-        const name = document.getElementById('u-name').value || '게스트';
+    const render = (name, s, m, r, locLabel, log) => {
         document.getElementById('r-name').innerText = `${name} 님의 정밀 천궁도 리포트`;
-        document.getElementById('r-info').innerText = `Location: ${LOC[loc].label} (위도: ${LOC[loc].lat}°, 경도: ${LOC[loc].lon}°)`;
+        document.getElementById('r-info').innerText = `Location: ${locLabel} (위도: ${log.lat}°, 경도: ${log.lon}°)`;
         
         document.getElementById('r-log').innerHTML = `
             <h4>Astro-Mechanics Computation Log</h4>
@@ -185,7 +252,7 @@ const Core = (() => {
             </div>
             <div class="log-item">
                 <span class="log-title">3. 상승점(Ascendant) 지평 좌표 변환</span>
-                선택하신 지역의 경도(${LOC[loc].lon}°)를 반영해 지방 항성시(LST: ${log.lst}H)를 구하고, 위도(${LOC[loc].lat}°)와 지구의 황도 경사각(\\(\\epsilon \\approx 23.4^\\circ\\))을 적용해 동쪽 지평선이 황도와 교차하는 각도를 계산했습니다.
+                해당 지역의 경도(${log.lon}°)를 반영해 지방 항성시(LST: ${log.lst}H)를 구하고, 위도(${log.lat}°)와 지구의 황도 경사각(\\(\\epsilon \\approx 23.4^\\circ\\))을 적용해 동쪽 지평선이 황도와 교차하는 각도를 계산했습니다.
                 <div class="log-formula">\\( \\text{Asc} = \\arctan \\left( \\frac{\\cos(\\text{RAMC})}{-\\sin(\\text{RAMC}) \\cos \\epsilon - \\tan \\phi \\sin \\epsilon} \\right) = ${log.ascDeg}^\\circ \\)</div>
             </div>
         `;
@@ -199,24 +266,23 @@ const Core = (() => {
         document.getElementById('dynamic-results').innerHTML = `
             <div class="r-section">
                 <h3>☀️ 태양궁 (Sun Sign) : ${ZODIAC[s].name}</h3>
-                <div class="theory-box"><strong>[태양궁의 의미]</strong> 우리가 흔히 아는 '별자리'입니다. 지구에서 보았을 때 태양이 1년 동안 지나가는 길인 <strong>황도(Ecliptic)를 30도씩 12개로 분할한 영역</strong>입니다. 태어난 순간 태양의 위치를 뜻하며, 평생을 관통하는 당신의 본질이자 인생의 목적지, 사회적으로 발현되는 가장 핵심적인 자아를 상징합니다.</div>
+                <div class="theory-box"><strong>[태양궁의 의미]</strong> 우리가 흔히 아는 '별자리'입니다. 지구에서 보았을 때 태양이 1년 동안 지나가는 길인 <strong>황도(Ecliptic)를 30도씩 12개로 분할한 영역</strong>입니다. 평생을 관통하는 당신의 본질이자 인생의 목적지, 가장 핵심적인 자아를 상징합니다.</div>
                 <div class="result-content">당신이 태어난 시기, 태양은 황도 <strong>${ZODIAC[s].deg}</strong> 구간인 ${ZODIAC[s].name}를 지나고 있었습니다.<br><br>${ZODIAC[s].sun}</div>
             </div>
             <div class="r-section">
                 <h3>🌙 달궁 (Moon Sign) : ${ZODIAC[m].name}</h3>
-                <div class="theory-box"><strong>[달궁의 의미]</strong> 태양궁이 낮의 모습이라면, 달궁은 밤의 모습입니다. 달은 지구 주위를 공전하며 끊임없이 모양을 바꿉니다. 점성학에서 달은 <strong>무의식, 본능적인 습관, 그리고 감정의 뿌리</strong>를 상징합니다. 내가 혼자 있을 때, 혹은 가장 편안한 사람과 있을 때 무방비하게 드러나는 진짜 내면의 모습입니다.</div>
-                <div class="result-content">탄생 순간 달의 진황경(True Longitude) 위치는 <strong>${ZODIAC[m].deg}</strong> 구간인 ${ZODIAC[m].name}였습니다.<br><br>${ZODIAC[m].moon}</div>
+                <div class="theory-box"><strong>[달궁의 의미]</strong> 태양궁이 낮의 모습이라면, 달궁은 밤의 모습입니다. 점성학에서 달은 <strong>무의식, 본능적인 습관, 그리고 감정의 뿌리</strong>를 상징합니다. 내가 가장 편안할 때 무방비하게 드러나는 진짜 내면의 모습입니다.</div>
+                <div class="result-content">탄생 순간 달의 진황경 위치는 <strong>${ZODIAC[m].deg}</strong> 구간인 ${ZODIAC[m].name}였습니다.<br><br>${ZODIAC[m].moon}</div>
             </div>
             <div class="r-section">
                 <h3>🌅 상승궁 (Rising Sign) : ${ZODIAC[r].name}</h3>
-                <div class="theory-box"><strong>[상승궁의 의미]</strong> 지구가 자전함에 따라 <strong>태어난 정확한 순간, 동쪽 지평선(Ascendant)에 떠오르고 있던 별자리</strong>입니다. 태어난 지역의 위도와 경도, 분 단위의 시간에 따라 결과가 완전히 달라집니다. 타인이 나를 처음 보았을 때 느끼는 <strong>'첫인상'이자, 세상에 나아갈 때 쓰는 '사회적 페르소나(가면)'</strong>를 상징합니다.</div>
+                <div class="theory-box"><strong>[상승궁의 의미]</strong> 지구가 자전함에 따라 <strong>태어난 정확한 순간, 동쪽 지평선(Ascendant)에 떠오르고 있던 별자리</strong>입니다. 타인이 나를 처음 보았을 때 느끼는 <strong>'첫인상'이자 세상에 나아갈 때 쓰는 '사회적 페르소나'</strong>를 상징합니다.</div>
                 <div class="result-content">해당 지역의 지평 좌표계 연산 결과, 동쪽 지평선은 <strong>${ZODIAC[r].deg}</strong> 구간인 ${ZODIAC[r].name}를 가리키고 있었습니다.<br><br>${ZODIAC[r].ris}</div>
             </div>
         `;
 
         const link = (ZODIAC[s].el === 'Earth' || ZODIAC[s].el === 'Fire') ? 'https://link.coupang.com/a/eu5uLR' : 'https://link.coupang.com/a/eu5td7';
         
-        // 🤫 스텔스 마케팅 로직 적용 (노골적이지 않게, 정보를 주는 척하며 스며들기)
         document.getElementById('cta-area').innerHTML = `
             <div class="stealth-advice">
                 <h4>💡 별자리 에너지를 채우는 일상 속 작은 변화</h4>
@@ -233,7 +299,7 @@ const Core = (() => {
         window.scrollTo(0,0);
     };
 
-    return { run, init: () => {
+    return { run, toggleCustom, getGPS, init: () => {
         const ys = document.getElementById('u-year'), ms = document.getElementById('u-month'), ds = document.getElementById('u-day');
         for(let i=new Date().getFullYear(); i>=1940; i--) ys.add(new Option(i+'년', i));
         for(let i=1; i<=12; i++) ms.add(new Option(i+'월', i));
@@ -241,6 +307,8 @@ const Core = (() => {
         ys.value = 1995;
         const locSelect = document.getElementById('u-location');
         for (const [key, value] of Object.entries(LOC)) locSelect.add(new Option(value.label, key));
+        locSelect.value = 'CUSTOM';
+        toggleCustom();
     }};
 })();
 Core.init();
