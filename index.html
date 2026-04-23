@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>운명뿌리 | Destiny Root - 데이터 기반 운명 분석 SaaS</title>
+<meta name="description" content="사주, 궁합, 토정비결, 점성술, 타로까지 한 번에 분석하는 AI 운명 분석 플랫폼">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph -->
+<meta property="og:title" content="운명뿌리 | Destiny Root">
+<meta property="og:description" content="당신의 운명을 데이터로 분석하는 통합 운명 엔진">
+<meta property="og:type" content="website">
+
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+body {
+    margin:0;
+    font-family: Pretendard, sans-serif;
+    background: radial-gradient(circle at top, #0b0f17, #05070a);
+    color:#fff;
+}
+
+/* HEADER */
+.header {
+    text-align:center;
+    padding:60px 20px 30px;
+}
+
+.header h1 {
+    font-size:2.6rem;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+
+.header p {
+    color:#9aa4b2;
+    margin-top:10px;
+    font-size:1rem;
+}
+
+/* GRID */
+.grid {
+    max-width:900px;
+    margin:0 auto;
+    padding:20px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+/* CARD */
+.card {
+    background: rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:18px;
+    padding:22px;
+    cursor:pointer;
+    transition:0.25s;
+    position:relative;
+    overflow:hidden;
+}
+
+.card:hover {
+    transform:translateY(-4px);
+    border-color:rgba(212,175,55,0.5);
+    background: rgba(255,255,255,0.06);
+}
+
+.card h2 {
+    font-size:1.2rem;
+    margin-bottom:6px;
+}
+
+.card p {
+    font-size:0.9rem;
+    color:#9aa4b2;
+    line-height:1.5;
+}
+
+/* ICON DOT */
+.dot {
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#d4af37;
+    display:inline-block;
+    margin-bottom:10px;
+}
+
+/* FULL WIDTH CARD */
+.full {
+    grid-column:span 2;
+}
+
+/* TAG */
+.tag {
+    display:inline-block;
+    font-size:0.75rem;
+    padding:4px 10px;
+    border-radius:20px;
+    background:rgba(212,175,55,0.1);
+    color:#d4af37;
+    margin-top:10px;
+}
+
+/* FOOT */
+.footer {
+    text-align:center;
+    margin-top:40px;
+    padding:30px;
+    color:#5a6472;
+    font-size:0.8rem;
+}
+
+@media(max-width:768px){
+    .grid{grid-template-columns:1fr;}
+    .full{grid-column:auto;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>운명뿌리</h1>
+    <p>Destiny Root · 데이터 기반 운명 분석 SaaS</p>
+</div>
+
+<div class="grid">
+
+    <!-- 사주 -->
+    <div class="card full" onclick="go('/saju')">
+        <span class="dot"></span>
+        <h2>사주 분석</h2>
+        <p>생년월일 기반 4기둥 구조 분석<br>가장 정밀한 개인 운명 엔진</p>
+        <div class="tag">Core Engine</div>
+    </div>
+
+    <!-- 궁합 -->
+    <div class="card" onclick="go('/compatibility')">
+        <span class="dot"></span>
+        <h2>궁합 분석</h2>
+        <p>두 사람의 관계 에너지 분석</p>
+        <div class="tag">Relationship</div>
+    </div>
+
+    <!-- 토정비결 -->
+    <div class="card" onclick="go('/fortune')">
+        <span class="dot"></span>
+        <h2>토정비결</h2>
+        <p>2026 올해 운세 흐름 예측</p>
+        <div class="tag">Yearly Forecast</div>
+    </div>
+
+    <!-- 점성술 -->
+    <div class="card" onclick="go('/astrology')">
+        <span class="dot"></span>
+        <h2>점성술</h2>
+        <p>서양 별자리 기반 운명 해석</p>
+        <div class="tag">Astro System</div>
+    </div>
+
+    <!-- 타로 -->
+    <div class="card full" onclick="go('/tarot')">
+        <span class="dot"></span>
+        <h2>타로 리딩</h2>
+        <p>즉각적인 감정 기반 운명 카드 해석</p>
+        <div class="tag">Instant Insight</div>
+    </div>
+
+</div>
+
+<div class="footer">
+    © 2026 운명뿌리 (Destiny Root) · All systems powered by data-driven fate engine
+</div>
+
+<script>
+function go(path){
+    window.location.href = path;
+}
+</script>
+
+</body>
+</html>
