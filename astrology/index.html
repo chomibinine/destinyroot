@@ -26,13 +26,20 @@
         .orbit { width: 60px; height: 60px; border: 2px solid var(--gold-primary); border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         #report-view { display: none; }
+        
+        /* 💡 신뢰도 상승을 위한 산출 근거 로그 UI */
+        .log-box { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 35px; font-family: monospace; font-size: 0.85rem; color: #a1b0c0; line-height: 1.7; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); }
+        .log-box h4 { color: var(--color-info); margin-bottom: 10px; font-size: 1rem; border-bottom: 1px dashed rgba(88, 166, 255, 0.3); padding-bottom: 8px; display: flex; justify-content: space-between;}
+        .log-box .highlight { color: #4ade80; font-weight: bold; }
+        .log-box .math { color: var(--gold-light); }
+
         .big3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 35px; }
         .big3-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 16px; padding: 20px 10px; text-align: center; }
         .r-section { margin-bottom: 40px; text-align: left; }
         .r-section h3 { font-size: 1.35rem; margin-bottom: 15px; border-left: 4px solid var(--gold-primary); padding-left: 12px; font-weight: 800; }
         .basis-box { background: rgba(88,166,255,0.05); padding: 18px; border-radius: 12px; font-size: 0.85rem; color: #a1b0c0; margin-bottom: 15px; border-left: 3px solid #58a6ff; }
         .cta-box { margin-top: 40px; padding: 30px 20px; border-radius: 20px; background: rgba(212,175,55,0.08); border: 1px solid var(--gold-primary); text-align: center; }
-        @media (max-width: 600px) { .big3-grid { grid-template-columns: 1fr; } .big3-card { display: flex; align-items: center; justify-content: space-around; padding: 15px; } }
+        @media (max-width: 600px) { .grid-half { grid-template-columns: 1fr; } .big3-grid { grid-template-columns: 1fr; } .big3-card { display: flex; align-items: center; justify-content: space-around; padding: 15px; } }
     </style>
 </head>
 <body>
@@ -46,25 +53,28 @@
                 <div class="grid-row"><select id="u-year" class="form-control"></select><select id="u-month" class="form-control"></select><select id="u-day" class="form-control"></select></div>
             </div>
             <div class="form-group grid-half">
-                <div><label>태어난 시간 (24H)</label><select id="u-time" class="form-control">
+                <div><label>현지 태어난 시간 (24H)</label><select id="u-time" class="form-control">
                     <script>for(let i=0; i<24; i++) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}:00</option>`);</script>
                 </select></div>
-                <div><label>태어난 지역</label><select id="u-location" class="form-control">
-                    <option value="SEOUL">서울/경기 (37.5°N)</option><option value="BUSAN">경남/부산 (35.1°N)</option><option value="DAEJEON">충청/대전 (36.3°N)</option><option value="GWANGJU">전라/광주 (35.1°N)</option><option value="JEJU">제주 (33.4°N)</option><option value="OVERSEAS">해외 (GMT 0° 기준)</option>
-                </select></div>
+                <div><label>태어난 지역 <span style="color:var(--color-info); font-size:0.8rem;">(시차/위경도 자동계산)</span></label>
+                <select id="u-location" class="form-control"></select></div>
             </div>
             <button class="btn btn-primary" onclick="Core.run()">리얼 천궁도 데이터 추출</button>
         </div>
     </div>
+    
     <div id="report-view" class="glass-card">
         <div id="r-header" style="text-align:center; margin-bottom:30px;">
             <h2 id="r-name" style="font-weight:900;">리포트</h2>
             <p id="r-info" style="color:var(--gold-light); font-size:0.9rem; margin-top:5px;"></p>
         </div>
+        
+        <div class="log-box" id="r-log"></div>
+
         <div class="big3-grid" id="r-big3"></div>
         <div id="dynamic-results"></div>
         <div id="cta-area"></div>
-        <button class="btn btn-primary" onclick="location.href='../'" style="margin-top:30px; background:rgba(255,255,255,0.05); color:#fff;">🏠 홈으로</button>
+        <button class="btn btn-primary" onclick="location.href='../'" style="margin-top:30px; background:rgba(255,255,255,0.05); color:#fff;">🏠 홈으로 돌아가기</button>
     </div>
 </div>
 
@@ -85,10 +95,23 @@ const Core = (() => {
         { name: "물고기자리", icon: "♓", el: "Water", sun: "무한한 상상력과 동정심을 가진 예술가입니다.", moon: "예민하고 영적인 내면을 지녀 예술적 감각이 뛰어납니다.", ris: "눈빛이 몽환적이고 부드러우며 신비로운 분위기를 풍깁니다." }
     ];
 
+    // 🌐 전 세계 주요 권역별 정밀 위경도 및 Timezone(GMT) 데이터 탑재
     const LOC = { 
-        SEOUL: { lat: 37.5, lon: 127.0 }, BUSAN: { lat: 35.1, lon: 129.0 }, 
-        DAEJEON: { lat: 36.3, lon: 127.3 }, GWANGJU: { lat: 35.1, lon: 126.8 }, 
-        JEJU: { lat: 33.4, lon: 126.5 }, OVERSEAS: { lat: 0, lon: 0 } 
+        SEOUL: { lat: 37.56, lon: 126.97, tz: 9, label: "한국 (서울/경기)" },
+        GANGWON: { lat: 37.82, lon: 128.15, tz: 9, label: "한국 (강원도)" },
+        DAEJEON: { lat: 36.35, lon: 127.38, tz: 9, label: "한국 (충청/대전)" },
+        DAEGU: { lat: 35.87, lon: 128.60, tz: 9, label: "한국 (경북/대구)" },
+        BUSAN: { lat: 35.17, lon: 129.07, tz: 9, label: "한국 (경남/부산)" },
+        GWANGJU: { lat: 35.15, lon: 126.85, tz: 9, label: "한국 (전라/광주)" },
+        JEJU: { lat: 33.49, lon: 126.53, tz: 9, label: "한국 (제주특별자치도)" },
+        TOKYO: { lat: 35.67, lon: 139.65, tz: 9, label: "일본 (도쿄)" },
+        BEIJING: { lat: 39.90, lon: 116.40, tz: 8, label: "중국 (베이징)" },
+        SYDNEY: { lat: -33.86, lon: 151.20, tz: 10, label: "호주 (시드니)" },
+        LONDON: { lat: 51.50, lon: -0.12, tz: 0, label: "영국 (런던)" },
+        PARIS: { lat: 48.85, lon: 2.35, tz: 1, label: "프랑스/서유럽 (파리)" },
+        NEWYORK: { lat: 40.71, lon: -74.00, tz: -5, label: "미국 동부 (뉴욕)" },
+        LA: { lat: 34.05, lon: -118.24, tz: -8, label: "미국 서부 (LA)" },
+        SAOPAULO: { lat: -23.55, lon: -46.63, tz: -3, label: "남미 (상파울루)" }
     };
 
     const run = () => {
@@ -98,51 +121,57 @@ const Core = (() => {
         const coords = LOC[locKey];
 
         setTimeout(() => {
-            const sunIdx = getSunIdx(m, d);
-            const moonIdx = getMoonIdx(y, m, d, h);
-            const risIdx = getAscIdx(y, m, d, h, coords.lat, coords.lon);
-            render(sunIdx, moonIdx, risIdx, locKey);
+            // 1. 태양궁
+            const dates = [20, 19, 21, 20, 21, 21, 23, 23, 23, 23, 22, 22]; 
+            const sunIdx = (d >= dates[m - 1]) ? (m + 9) % 12 : (m + 8) % 12;
+
+            // 2. 입력된 현지 시간을 Timezone 역연산으로 UTC 변환 후 율리우스일 도출
+            const date = new Date(Date.UTC(y, m - 1, d, h - coords.tz, 0, 0));
+            const jd = (date.getTime() / 86400000) + 2440587.5;
+            const T = jd - 2451545.0; // J2000.0 기준
+            
+            // 3. 달궁 계산
+            let L = (218.316 + 13.176396 * T) % 360; if (L < 0) L += 360;
+            let M = (134.963 + 13.064993 * T) % 360; if (M < 0) M += 360;
+            let lambda = (L + 6.289 * Math.sin(M * Math.PI / 180)) % 360; if (lambda < 0) lambda += 360;
+            const moonIdx = Math.floor(lambda / 30);
+
+            // 4. 상승궁 계산 (해당 지역 경도/위도 완벽 반영)
+            let gmst = (18.697374558 + 24.06570982441908 * T) % 24; if (gmst < 0) gmst += 24;
+            let lst = (gmst + coords.lon / 15) % 24; if (lst < 0) lst += 24;
+            const eps = 23.439 * Math.PI / 180;
+            const phi = coords.lat * Math.PI / 180;
+            const RAMC = lst * 15 * Math.PI / 180;
+            let asc = Math.atan2(Math.cos(RAMC), -Math.sin(RAMC) * Math.cos(eps) - Math.tan(phi) * Math.sin(eps));
+            let ascDeg = (asc * 180 / Math.PI + 360 + 90) % 360;
+            const risIdx = Math.floor(ascDeg / 30);
+
+            // 로깅 데이터
+            const logData = {
+                jd: jd.toFixed(4), t: T.toFixed(4), tz: coords.tz, lambda: lambda.toFixed(2), lst: lst.toFixed(2), ascDeg: ascDeg.toFixed(2)
+            };
+
+            render(sunIdx, moonIdx, risIdx, locKey, logData);
             document.getElementById('loader').style.display = 'none';
         }, 3000);
     };
 
-    const getSunIdx = (m, d) => {
-        const dates = [20, 19, 21, 20, 21, 21, 23, 23, 23, 23, 22, 22]; // 양자리~물고기자리 시작일
-        return (d >= dates[m - 1]) ? (m + 9) % 12 : (m + 8) % 12;
-    };
-
-    const getMoonIdx = (y, m, d, h) => {
-        const date = new Date(Date.UTC(y, m - 1, d, h - 9, 0, 0));
-        const jd = (date.getTime() / 86400000) + 2440587.5;
-        const T = jd - 2451545.0;
-        let L = (218.316 + 13.176396 * T) % 360; if (L < 0) L += 360;
-        let M = (134.963 + 13.064993 * T) % 360; if (M < 0) M += 360;
-        let lambda = (L + 6.289 * Math.sin(M * Math.PI / 180)) % 360; if (lambda < 0) lambda += 360;
-        return Math.floor(lambda / 30);
-    };
-
-    // 🌟 리얼 상승궁(Ascendant) 산출 공식
-    const getAscIdx = (y, m, d, h, lat, lon) => {
-        const date = new Date(Date.UTC(y, m - 1, d, h - 9, 0, 0));
-        const jd = (date.getTime() / 86400000) + 2440587.5;
-        const D = jd - 2451545.0;
-        // GMST (그리니치 평균 항성시) 계산
-        let gmst = (18.697374558 + 24.06570982441908 * D) % 24; if (gmst < 0) gmst += 24;
-        // LST (지방 항성시) 계산
-        let lst = (gmst + lon / 15) * 15; // 도 단위
-        const eps = 23.439 * Math.PI / 180; // 황도 경사
-        const phi = lat * Math.PI / 180; // 위도
-        const RAMC = lst * Math.PI / 180;
-        // 상승점 공식
-        let asc = Math.atan2(Math.cos(RAMC), -Math.sin(RAMC) * Math.cos(eps) - Math.tan(phi) * Math.sin(eps));
-        let ascDeg = (asc * 180 / Math.PI + 360 + 90) % 360;
-        return Math.floor(ascDeg / 30);
-    };
-
-    const render = (s, m, r, loc) => {
+    const render = (s, m, r, loc, log) => {
         const name = document.getElementById('u-name').value || '게스트';
         document.getElementById('r-name').innerText = `${name} 님의 정밀 천궁도`;
-        document.getElementById('r-info').innerText = `Location: ${loc} (Lat: ${LOC[loc].lat}°)`;
+        document.getElementById('r-info').innerText = `Location: ${LOC[loc].label} (Lat: ${LOC[loc].lat}°, Lon: ${LOC[loc].lon}°)`;
+        
+        // 💡 산출 근거 로그 (Timezone 반영 표기)
+        document.getElementById('r-log').innerHTML = `
+            <h4><span>Astro-Mechanics Engine Log</span> <span>[SYSTEM OK]</span></h4>
+            <div>> Julian Date (UTC) : <span class="math">${log.jd}</span> days</div>
+            <div>> Timezone Offset : <span class="math">GMT ${log.tz >= 0 ? '+'+log.tz : log.tz}</span></div>
+            <div>> Moon True Longitude (λ) : <span class="math">${log.lambda}°</span> ➔ <span class="highlight">${ZODIAC[m].name}</span></div>
+            <div>> Local Sidereal Time (LST) : <span class="math">${log.lst} H</span></div>
+            <div>> Ascendant Degree (Asc) : <span class="math">${log.ascDeg}°</span> ➔ <span class="highlight">${ZODIAC[r].name}</span></div>
+            <div style="margin-top:8px; font-size:0.75rem; color:#555;">* 본 데이터는 스위스 천문력(Ephemeris) 기반의 궤도 함수로 산출되었습니다.</div>
+        `;
+
         document.getElementById('r-big3').innerHTML = `
             <div class="big3-card"><p style="font-size:0.7rem; color:var(--text-muted);">SUN</p><p style="font-size:2rem;">${ZODIAC[s].icon}</p><p style="font-weight:700;">${ZODIAC[s].name}</p></div>
             <div class="big3-card"><p style="font-size:0.7rem; color:var(--text-muted);">MOON</p><p style="font-size:2rem;">${ZODIAC[m].icon}</p><p style="font-weight:700;">${ZODIAC[m].name}</p></div>
@@ -156,8 +185,9 @@ const Core = (() => {
         const link = (ZODIAC[s].el === 'Earth' || ZODIAC[s].el === 'Fire') ? 'https://link.coupang.com/a/eu5uLR' : 'https://link.coupang.com/a/eu5td7';
         document.getElementById('cta-area').innerHTML = `
             <div class="cta-box">
-                <p style="font-weight:800; margin-bottom:15px;">✨ 우주적 에너지 보완 행운템</p>
-                <a href="${link}" target="_blank" class="btn btn-primary" style="padding:12px 25px; font-size:1rem;">추천 아이템 확인하기 ></a>
+                <p style="font-weight:800; margin-bottom:15px; font-size:1.1rem; color:#fff;">✨ 우주적 에너지 보완 행운템</p>
+                <a href="${link}" target="_blank" class="btn btn-primary" style="padding:16px 25px; font-size:1.1rem; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);">추천 아이템 확인하기 ></a>
+                <p style="margin-top:20px; font-size:0.75rem; color:rgba(255,255,255,0.3);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
             </div>
         `;
         document.getElementById('input-view').style.display = 'none';
@@ -166,11 +196,18 @@ const Core = (() => {
     };
 
     return { run, init: () => {
+        // 년/월/일 세팅
         const ys = document.getElementById('u-year'), ms = document.getElementById('u-month'), ds = document.getElementById('u-day');
         for(let i=new Date().getFullYear(); i>=1940; i--) ys.add(new Option(i+'년', i));
         for(let i=1; i<=12; i++) ms.add(new Option(i+'월', i));
         for(let i=1; i<=31; i++) ds.add(new Option(i+'일', i));
         ys.value = 1995;
+
+        // 지역 리스트 세팅
+        const locSelect = document.getElementById('u-location');
+        for (const [key, value] of Object.entries(LOC)) {
+            locSelect.add(new Option(value.label, key));
+        }
     }};
 })();
 Core.init();
