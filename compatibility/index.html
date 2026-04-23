@@ -203,12 +203,12 @@ const CompatibilityEngine = (() => {
 
     const RELATIONS = {
         '木': { gen: '火', ctrl: '土', ctrlBy: '金', genBy: '水' }, '火': { gen: '土', ctrl: '金', ctrlBy: '水', genBy: '木' },
-        '土': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' }, '金': { gen: '水', ctrl: '木', ctrlBy: '火', genBy: '土' },
+        '土': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' }, '金': { gen: '水', ctrl: '목', ctrlBy: '火', genBy: '土' },
         '水': { gen: '木', ctrl: '火', ctrlBy: '土', genBy: '金' }
     };
 
     const ZHI_CHONG = ['子午','丑未','寅申','卯酉','辰戌','巳亥','午子','未丑','申寅','酉卯','戌辰','亥巳'];
-    const ZHI_HAP = ['子丑','寅亥','卯戌','辰酉','巳申','午未','丑子','亥寅','戌卯','酉辰','申巳','未午'];
+    const ZHI_HAP = ['子丑','寅亥','卯戌','辰酉','巳申','午미','丑子','亥寅','戌卯','酉辰','申巳','未午'];
     const ZHI_WONJIN = ['子未','丑午','寅酉','卯申','辰亥','巳戌','未子','午丑','酉寅','申卯','亥辰','戌巳'];
 
     const getBaziData = (req) => {
@@ -247,7 +247,6 @@ const CompatibilityEngine = (() => {
         let totalScore = 70; 
         const sections = [];
 
-        // --- 1. 천생연분 지수 (일간 겉궁합) ---
         const mCore = ELEMENTS[me.dayGan], pCore = ELEMENTS[p.dayGan];
         let sec1Desc = "";
         if (mCore === pCore) { sec1Desc = `두 사람은 <b>${mCore}</b>라는 같은 본질을 공유하는 '거울 같은 관계'입니다. 친구처럼 편안하고 취향이 잘 맞아 연애 초기부터 급속도로 가까워집니다. 다만 자존심 싸움이 시작되면 서로 절대 굽히지 않아 냉전이 길어질 수 있습니다.`; totalScore += 5; } 
@@ -258,12 +257,11 @@ const CompatibilityEngine = (() => {
         sections.push({
             title: "1. 겉궁합과 첫 끌림 (코어 에너지 교차)",
             paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[명리 근거]</strong> 두 사람의 자아를 상징하는 일간(日干) <b>${me.dayGan}</b>과 <b>${p.dayGan}</b>의 생극제화(生剋制化)를 분석했습니다.</div>`,
+                `<div class="basis-box"><span class="magnify">🔍</span><strong>[명리 근거]</strong> 두 사람의 자아를 상징하는 일간(日干) <b>${me.dayGan}</b>과 <b>${p.dayGan}</b>의 생극제화(生剋제化)를 분석했습니다.</div>`,
                 sec1Desc
             ]
         });
 
-        // --- 2. 오행 조후 융합 (상호 보완) ---
         let sec2Desc = "";
         if (mExt.min === pExt.max && pExt.min === mExt.max) {
             sec2Desc = `<b>[완벽한 톱니바퀴 융합]</b><br>놀랍게도 내가 가장 부족한 <b>${mExt.min}</b> 기운을 상대방이 넘치도록 가지고 있고, 상대에게 없는 <b>${pExt.min}</b> 기운을 내가 완벽히 채워주는 <b>천생연분 조후(調候) 궁합</b>입니다. 각자의 단점이 상대방을 만나 완벽한 장점으로 덮어지며, 결혼 후 재물과 안정이 크게 상승하는 이상적인 결합입니다.`;
@@ -289,7 +287,6 @@ const CompatibilityEngine = (() => {
             ]
         });
 
-        // --- 3. 연애 스타일과 속궁합 (일지 분석) ---
         const dayZhiPair = me.dayZhi + p.dayZhi;
         let sec3Desc = "";
         if (ZHI_HAP.includes(dayZhiPair)) {
@@ -313,8 +310,6 @@ const CompatibilityEngine = (() => {
             ]
         });
 
-        // --- 4. 결혼 후 현실 생활 및 경제권 (월지/십신 분석) ---
-        // 철학관 단골 멘트: 누가 주도권을 잡는가?
         let sec4Desc = "";
         let controller = "";
         if (RELATIONS[mCore].ctrl === pCore) controller = me.name;
@@ -343,7 +338,6 @@ const CompatibilityEngine = (() => {
             ]
         });
 
-        // --- 5. 시댁/처가 및 주변 환경 (년지/월지 분석) ---
         const yearZhiPair = me.yearZhi + p.yearZhi;
         let sec5Desc = "";
         if (ZHI_HAP.includes(yearZhiPair)) {
@@ -363,19 +357,13 @@ const CompatibilityEngine = (() => {
             ]
         });
 
-        // 점수 보정
         if (totalScore > 98) totalScore = 98;
-        if (totalScore < 45) totalScore = 45 + Math.floor(Math.random() * 10); // 너무 낮은 점수 방어
+        if (totalScore < 45) totalScore = 45 + Math.floor(Math.random() * 10);
 
         return { statusCode: 200, data: { me, partner: p, meEl, pEl, totalScore, sections } };
     }};
 })();
 
-/**
- * =====================================================================
- * 🎨 [FRONTEND LAYER] : UI / 렌더링 / 제어 로직 
- * =====================================================================
- */
 window.MockAPI = { post: async (payload) => { return await CompatibilityEngine.analyze(payload.me, payload.partner); } };
 
 const SaaSFrontend = (() => {
@@ -418,18 +406,21 @@ const SaaSFrontend = (() => {
         `;
     };
 
-        // 🚀 스텔스 쿠파스 (초단기 텍스트 버전)
+    // 🚀 스텔스 쿠파스 (제공하신 링크 적용 및 검색 방식 라벨 적용)
     const renderCTA = (score) => {
         const wrap = document.createElement('div'); 
         wrap.className = 'cta-box';
         
-        let pData = score >= 85 ? { q: '커플 여행', label: '천생연분 시크릿템 확인', i: '✨' } 
-                  : score >= 70 ? { q: '커플 심리테스트', label: '숨겨진 진심 확인하기', i: '💌' } 
-                  : { q: '힐링템', label: '관계 회복 힐링템 확인', i: '🍀' };
+        // 사용자가 제공한 단축 링크
+        const myLink = 'https://link.coupang.com/a/eu2HBv';
+
+        let label = score >= 85 ? '✨ 천생연분 시크릿템 확인' 
+                  : score >= 70 ? '💌 숨겨진 진심 확인하기' 
+                  : '🍀 관계 회복 힐링템 확인';
 
         wrap.innerHTML = `
-            <a href="https://www.coupang.com/np/search?q=${encodeURIComponent(pData.q)}&utm_source=affiliate" target="_blank" class="btn-coupang">
-                ${pData.i} ${pData.label}
+            <a href="${myLink}" target="_blank" class="btn-coupang">
+                ${label}
             </a>
             <p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
         `;
@@ -455,7 +446,6 @@ const SaaSFrontend = (() => {
             
             document.getElementById('r-title-name').textContent = `${data.me.name} 님과 ${data.partner.name} 님의 심층 리포트`;
             
-            // 점수 카운트업 연출
             let currentScore = 0; const targetScore = data.totalScore;
             const scoreEl = document.getElementById('r-score');
             const scoreInt = setInterval(() => {
@@ -507,7 +497,8 @@ const SaaSFrontend = (() => {
         ['me-', 'p-'].forEach(prefix => {
             const ys = document.getElementById(prefix+'year'), ms = document.getElementById(prefix+'month'), ds = document.getElementById(prefix+'day');
             if(ys && ms && ds) {
-                for(let i=2026; i>=1940; i--) ys.add(new Option(i+'년', i));
+                const currY = new Date().getFullYear();
+                for(let i=currY; i>=1940; i--) ys.add(new Option(i+'년', i));
                 for(let i=1; i<=12; i++) ms.add(new Option(i+'월', i));
                 for(let i=1; i<=31; i++) ds.add(new Option(i+'일', i));
                 ys.value = 1990; ms.value = 1; ds.value = 1; 
