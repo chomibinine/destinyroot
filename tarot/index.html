@@ -23,19 +23,19 @@
         
         .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 24px; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); margin-bottom: 25px; transition: all 0.3s ease;}
         
-        /* 🃏 타로 카드 덱 UI */
-        .tarot-instruction { text-align: center; margin-bottom: 25px; font-size: 1.1rem; color: var(--gold-light); font-weight: 600; line-height: 1.6;}
-        .card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; perspective: 1000px;}
+        /* 🃏 타로 카드 덱 UI (22장 대응) */
+        .tarot-instruction { text-align: center; margin-bottom: 30px; font-size: 1.1rem; color: var(--gold-light); font-weight: 600; line-height: 1.6;}
+        .card-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 30px; perspective: 1000px;}
         .tarot-card { 
             aspect-ratio: 1 / 1.6; background: linear-gradient(135deg, #1a1a2e, #0f0f1a); 
-            border: 2px solid rgba(212,175,55,0.4); border-radius: 10px; cursor: pointer;
+            border: 2px solid rgba(212,175,55,0.4); border-radius: 8px; cursor: pointer;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, border-color 0.3s;
             background-image: repeating-linear-gradient(45deg, rgba(212,175,55,0.05) 0px, rgba(212,175,55,0.05) 2px, transparent 2px, transparent 8px);
             display: flex; justify-content: center; align-items: center; position: relative;
         }
         .tarot-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(212,175,55,0.3); border-color: var(--gold-primary); }
         .tarot-card.selected { transform: translateY(-15px) rotateY(180deg); pointer-events: none; border-color: var(--gold-light); background: rgba(212,175,55,0.1); }
-        .tarot-card.selected::after { content: "선택됨"; position: absolute; transform: rotateY(180deg); color: var(--gold-light); font-weight: 800; font-size: 0.9rem;}
+        .tarot-card.selected::after { content: "✓"; position: absolute; transform: rotateY(180deg); color: var(--gold-light); font-weight: 800; font-size: 1.5rem;}
         
         .btn { display: inline-flex; align-items: center; justify-content: center; padding: 18px; border-radius: 30px; font-weight: 800; font-size: 1.15rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; margin-top: 10px;}
         .btn-primary { background: var(--gold-primary); color: #000; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); }
@@ -49,19 +49,19 @@
         /* 📄 리포트 뷰 */
         #report-view { display: none; }
         
-        /* 💡 공시성 로그 박스 (신뢰감 극대화) */
-        .log-box { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(138, 43, 226, 0.3); border-radius: 16px; padding: 25px; margin-bottom: 45px; font-size: 0.95rem; color: #a1b0c0; line-height: 1.8; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        /* 💡 공시성 로그 박스 */
+        .log-box { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(138, 43, 226, 0.3); border-radius: 16px; padding: 25px; margin-bottom: 50px; font-size: 0.95rem; color: #a1b0c0; line-height: 1.8; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
         .log-box h4 { color: #b388ff; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px dashed rgba(138, 43, 226, 0.3); padding-bottom: 10px; font-weight: 800; }
         .log-item { margin-bottom: 15px; }
         .log-title { color: #fff; font-weight: 700; display: block; margin-bottom: 4px; }
         .log-formula { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-top: 5px; font-family: monospace; overflow-x: auto; color: var(--gold-light);}
 
-        /* 3카드 스프레드 시각화 */
-        .spread-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 45px; }
-        .spread-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 16px; padding: 25px 15px; text-align: center; }
+        /* 3카드 스프레드 시각화 (이미지 추가) */
+        .spread-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 50px; }
+        .spread-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 16px; padding: 20px 15px; text-align: center; }
         .spread-card .position { font-size: 0.85rem; color: var(--text-muted); font-weight: 800; letter-spacing: 1px; margin-bottom: 15px; }
-        .spread-card .c-num { font-size: 1.8rem; font-weight: 900; color: var(--gold-primary); font-family: serif; margin-bottom: 5px; text-shadow: 0 0 10px rgba(212,175,55,0.3);}
-        .spread-card .c-name { font-size: 1.1rem; font-weight: 800; color: #fff; }
+        .spread-card .c-img { width: 100%; border-radius: 8px; margin-bottom: 15px; border: 2px solid rgba(212,175,55,0.5); box-shadow: 0 5px 15px rgba(0,0,0,0.5);}
+        .spread-card .c-name { font-size: 1.1rem; font-weight: 800; color: #fff; line-height: 1.4;}
 
         .r-section { margin-bottom: 60px; text-align: left; }
         .r-section h3 { font-size: 1.5rem; margin-bottom: 20px; border-left: 4px solid var(--gold-primary); padding-left: 15px; font-weight: 900; color: #fff; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px;}
@@ -83,14 +83,14 @@
         @media (max-width: 600px) { 
             .app-container { padding: 20px 15px 100px; } 
             .header h1 { font-size: 2rem; }
-            .glass-card { padding: 25px 20px; }
-            .card-grid { grid-template-columns: repeat(4, 1fr); gap: 8px;}
-            .spread-grid { grid-template-columns: 1fr; gap: 12px; } 
-            .spread-card { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; text-align: left; } 
-            .spread-card .position { margin-bottom: 0; width: 80px;}
+            .glass-card { padding: 30px 20px; }
+            .card-grid { grid-template-columns: repeat(5, 1fr); gap: 8px;}
+            .spread-grid { grid-template-columns: 1fr; gap: 20px; } 
+            .spread-card { display: flex; align-items: center; justify-content: flex-start; padding: 15px; gap: 20px; text-align: left; } 
+            .spread-card .position { margin-bottom: 5px; color: var(--gold-primary); font-size:0.8rem;}
+            .spread-card .c-img { width: 80px; margin-bottom: 0; }
             .r-section h3 { font-size: 1.3rem; }
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -105,19 +105,19 @@
         <div class="header"><h1>타로 리딩</h1><p>무의식의 파동과 공시성(Synchronicity) 기반 스캔</p></div>
         <div class="glass-card">
             <div class="tarot-instruction">
-                해결하고 싶은 고민이나 상황을 마음속에 깊이 떠올린 후,<br>직관이 이끄는 운명의 카드 <span style="color:#fff; font-size:1.3rem; margin:0 5px;">3장</span>을 선택해 주세요.
+                해결하고 싶은 고민이나 막막한 상황을 마음속에 깊이 떠올린 후,<br>직관이 이끄는 운명의 카드 <span style="color:#fff; font-size:1.4rem; font-weight:900; margin:0 5px;">3장</span>을 선택해 주세요.
             </div>
             
             <div class="card-grid" id="deck">
                 <script>
-                    for(let i=0; i<12; i++) {
+                    for(let i=0; i<22; i++) {
                         document.write(`<div class="tarot-card" onclick="Tarot.drawCard(this)"></div>`);
                     }
                 </script>
             </div>
 
-            <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
-                선택한 카드: <span id="draw-count" style="color: #fff; font-weight: 800; font-size: 1.1rem;">0</span> / 3
+            <div style="text-align: center; color: var(--text-muted); font-size: 1rem; margin-top: 20px;">
+                선택한 카드: <span id="draw-count" style="color: var(--gold-primary); font-weight: 900; font-size: 1.5rem;">0</span> / 3
             </div>
         </div>
     </div>
@@ -133,7 +133,6 @@
         <div class="spread-grid" id="r-spread"></div>
         
         <div id="dynamic-results"></div>
-        
         <div id="cta-area"></div>
         
         <div style="display:flex; flex-direction:column; gap:10px; margin-top:50px;">
@@ -145,68 +144,118 @@
 
 <script>
 const Tarot = (() => {
-    // 🔥 타로 메이저 아르카나 22장 심층 DB
+    // 🔥 메이저 아르카나 22장 (오리지널 일러스트 링크 + 딥 리딩 해설)
     const MAJOR_ARCANA = [
-        { num: "0", name: "The Fool (바보)", type: "Air",
-          sym: "절벽 끝에 서 있으면서도 하늘을 올려다보고 있는 청년과, 곁에서 짖고 있는 하얀 강아지. 발밑의 위험을 인지하지 못하는 것이 아니라, 두려움을 초월한 순수한 믿음을 뜻합니다.",
-          sit: "당신은 현재 아무것도 확정되지 않은 백지상태, 혹은 완전히 새로운 챕터의 시작점에 서 있습니다. 과거의 짐을 훌훌 털어버리고 홀가분하게 나아가고 싶은 강한 충동을 느끼고 있습니다. 리스크가 존재하지만, 무한한 가능성 역시 열려 있는 상황입니다.",
-          adv: "계산하고 따지는 이성의 목소리를 잠시 꺼두세요. 지금은 논리보다 직관과 충동에 몸을 맡길 때입니다. 실패를 두려워하지 않는 '바보 같은 순수함'이 오히려 가장 강력한 무기가 되어 줄 것입니다.",
-          out: "완전히 새로운 형태의 자유와 해방을 맞이하게 됩니다. 당신을 옭아매던 답답한 현실에서 벗어나, 예상치 못한 즐거운 모험과 새로운 인연이 기다리고 있는 길로 접어들 것입니다." },
-        { num: "I", name: "The Magician (마법사)", type: "Air",
-          sym: "테이블 위에 놓인 지팡이, 성배, 검, 동전(4원소). 그리고 하늘과 땅을 가리키는 손짓. 무(無)에서 유(有)를 창조해 내는 무한한 잠재력과 다재다능함을 의미합니다.",
-          sit: "당신은 이미 문제 해결에 필요한 모든 자원과 능력을 갖추고 있습니다. 아이디어가 넘치고, 사람들을 설득할 수 있는 화술과 매력이 최고조에 달해 있는 긍정적인 파동의 시기입니다.",
-          adv: "머릿속으로 상상만 하던 것을 밖으로 꺼내어 실행에 옮기십시오. 당신의 생각과 의도를 자신감 있게 어필할 때, 막혔던 문들이 마법처럼 열리기 시작할 것입니다. 스스로의 능력을 의심하지 마세요.",
-          out: "당신의 기획이나 아이디어가 현실에서 완벽하게 구체화되어 눈에 보이는 성과로 나타납니다. 능력을 널리 인정받고 주도권을 쥐게 되는 압도적인 성공의 결말입니다." },
-        { num: "II", name: "High Priestess (여사제)", type: "Water",
-          sym: "흑과 백의 기둥(선과 악, 의식과 무의식) 사이에 앉아 율법서를 들고 있는 여인. 겉으로 드러난 현상 이면의 숨겨진 진실과 고도의 직관력을 상징합니다.",
-          sit: "겉으로는 평온해 보이지만, 상황의 수면 아래에서 당신만 느끼는 미묘한 직감이나 비밀이 존재합니다. 섣불리 행동하기보다는 상황을 관망하며 속내를 숨기고 있는 정적인 상태입니다.",
-          adv: "주변 사람들의 조언이나 겉으로 보이는 데이터에 휘둘리지 마십시오. 당신 내면의 직관(촉)이 정답을 알고 있습니다. 침묵을 지키고 한 발 물러서서 상황의 이면을 예리하게 관찰할 때입니다.",
-          out: "숨겨져 있던 진실이 밝혀지며, 억지로 애쓰지 않아도 상황이 당신에게 유리한 쪽으로 자연스럽게 흘러갑니다. 깊은 정신적 깨달음과 내면의 평화를 얻게 될 것입니다." },
-        { num: "III", name: "The Empress (여황제)", type: "Earth",
-          sym: "풍요로운 자연 속에 편안하게 앉아 있는 여인과 비너스(금성)의 기호. 어머니의 대지처럼 만물을 길러내고 수용하는 무조건적인 사랑과 물질적 풍요로움을 상징합니다.",
-          sit: "당신은 현재 감정적으로나 물질적으로 매우 안정적이고 풍요로운 파동 속에 있습니다. 주변 사람들을 포용하고 챙기며, 노력해 온 일들이 아름다운 결실을 맺기 시작하는 따뜻한 시기입니다.",
-          adv: "치열하게 경쟁하고 투쟁하기보다는, 여유를 가지고 주변을 따뜻하게 품어 안으십시오. 타인에게 베푸는 작은 배려와 공감이 오히려 더 큰 기회와 행운으로 돌아오는 시기입니다.",
-          out: "풍성한 수확의 결말입니다. 프로젝트의 성공, 관계에서의 깊은 애정, 혹은 금전적인 여유 등 당신이 뿌려둔 씨앗들이 무럭무럭 자라나 기대 이상의 달콤한 결실을 안겨줄 것입니다." },
-        { num: "IV", name: "The Emperor (황제)", type: "Fire",
-          sym: "견고한 돌 의자에 꼿꼿이 앉아 통제권을 쥐고 있는 남성. 감정을 철저히 배제하고 현실적인 질서와 규칙을 세우는 세속적인 권력과 확고한 지배력을 상징합니다.",
-          sit: "당신은 현재 큰 책임을 지고 있거나, 상황을 철저하게 통제해야만 하는 압박감 속에 놓여 있습니다. 이성적이고 체계적인 룰을 바탕으로 당신만의 견고한 성벽을 구축하고 있는 단계입니다.",
-          adv: "감정에 흔들리지 마십시오. 단호하고 냉철한 리더십이 필요합니다. 모호한 태도를 버리고, 분명한 규칙을 세워 주변 상황과 인간관계를 확실하게 통제하고 리드해야 합니다.",
-          out: "흔들리지 않는 확고한 지위와 안정을 쟁취합니다. 당신이 목표로 하던 권위, 승진, 혹은 물질적 기반이 단단한 바위처럼 구축되어 누구도 당신의 자리를 넘볼 수 없게 됩니다." },
-        { num: "VI", name: "The Lovers (연인)", type: "Air",
-          sym: "에덴동산의 아담과 이브, 그리고 그들을 축복하는 천사. 단순한 남녀의 사랑을 넘어선 가치관의 결합, 완벽한 조화, 그리고 피할 수 없는 '선택'의 상징입니다.",
-          sit: "누군가와의 깊은 교감이나 중요한 파트너십(연애, 동업)이 형성되고 있는 파동입니다. 혹은 두 가지의 매력적인 선택지 사이에서 마음이 강하게 이끌리며 고민하고 있는 상태일 수 있습니다.",
-          adv: "머리로 계산하여 이익을 좇기보다는, 당신의 가슴이 진정으로 설레고 이끌리는 쪽을 선택하십시오. 혼자서 해결하려 하지 말고 진심이 통하는 누군가와 적극적으로 소통하고 연대하세요.",
-          out: "영혼의 주파수가 맞는 완벽한 파트너를 만나거나, 갈등이 해결되고 극적인 화해와 융합을 이루게 됩니다. 선택에 대한 후회 없이, 깊은 유대감과 사랑으로 충만한 결말을 맞이합니다." },
-        { num: "VII", name: "The Chariot (전차)", type: "Water",
-          sym: "서로 다른 색깔(본능과 이성)의 스핑크스가 끄는 전차를 통제하며 앞으로 돌진하는 전사. 내면의 갈등을 의지력으로 짓누르고 목표를 향해 돌파해 내는 승리와 투쟁을 상징합니다.",
-          sit: "여러 가지 복잡한 감정이나 장애물이 산재해 있지만, 당신은 강한 의지력으로 상황을 장악하고 앞으로 밀어붙이고 있습니다. 멈출 수 없는 강력한 전진의 에너지가 지배하는 시기입니다.",
-          adv: "좌고우면하지 말고 목표만 보고 직진하십시오. 지금 당신에게 필요한 것은 치밀한 계획보다 상황을 돌파해 내는 흔들림 없는 추진력과 뻔뻔할 정도의 자신감입니다.",
-          out: "어떤 난관이나 방해물도 박살 내고 마침내 속 시원한 승리를 거머쥡니다. 경쟁 상황에서 확고한 우위를 점하며, 당신의 의도대로 상황을 완벽하게 쟁취해 내는 역동적인 결말입니다." },
-        { num: "X", name: "Wheel of Fortune (운명의 수레바퀴)", type: "Fire",
-          sym: "끊임없이 회전하는 바퀴와 그 주변의 네 신수. 인간의 의지를 초월하여 일어나는 우주적 순환, 즉 필연적인 변화와 타이밍, 그리고 피할 수 없는 인연을 상징합니다.",
-          sit: "당신의 통제권 밖에서 거대한 변화의 사이클이 돌아가기 시작했습니다. 우연이라고 생각했던 일들이 사실은 운명적인 타이밍 속에서 일어나는 필연의 궤도에 진입한 상태입니다.",
-          adv: "변화의 흐름을 거스르려 저항하지 마십시오. 다가오는 기회나 갑작스러운 상황 변화에 유연하게 올라타세요. 지금 다가오는 인연이나 사건은 당신이 겪어야만 하는 중요한 운명의 챕터입니다.",
-          out: "정체되어 있던 운의 흐름이 긍정적인 방향으로 크게 전환됩니다. 뜻밖의 행운이나 피할 수 없는 좋은 인연이 찾아오며, 한 단계 더 높은 차원으로 삶의 궤도가 업그레이드될 것입니다." },
-        { num: "XI", name: "Justice (정의)", type: "Air",
-          sym: "저울(공평)과 양날의 검(단호한 판결)을 쥐고 있는 인물. 감정에 치우치지 않는 차가운 이성과 냉혹한 인과응보, 그리고 완벽한 균형점을 상징합니다.",
-          sit: "당신은 현재 옳고 그름을 따져야 하거나, 이성과 감정 사이에서 완벽한 밸런스를 잡기 위해 고군분투하고 있습니다. 어떠한 결정이나 계약, 법적인 이슈를 앞두고 신중을 기하는 시기입니다.",
-          adv: "사사로운 감정이나 정에 휩쓸리지 마십시오. 제3자의 시선으로 상황을 극도로 객관화하고 팩트만 놓고 냉정하게 판단해야 합니다. 뿌린 대로 거두는 법이니 원칙을 지키는 것이 유일한 해답입니다.",
-          out: "모호했던 상황이 명확하고 깔끔하게 정리됩니다. 당신이 정당한 노력을 기울였다면 마땅한 보상과 승리를, 만약 속임수가 있었다면 가차 없는 패배를 맞이하는 가장 공정하고 확실한 결론입니다." },
-        { num: "XIII", name: "Death (죽음)", type: "Water",
-          sym: "백마를 탄 해골 기사와 그 앞에 쓰러진 왕. 이는 육체적 죽음이 아니라, 불필요해진 낡은 껍질을 부수고 완전히 새로운 생명으로 태어나기 위한 '거대한 끝과 부활'을 상징합니다.",
-          sit: "당신을 오랫동안 괴롭혔던 문제나 미련 가득한 관계가 바닥을 치고 완전히 종결되어 가고 있는 파동입니다. 상실감과 고통이 동반될 수 있으나, 이는 피할 수 없는 변화의 진통입니다.",
-          adv: "끝나가는 인연이나 돌이킬 수 없는 상황에 대한 집착을 완전히 놓아버리십시오. 과거를 단칼에 도려내야만 새로운 에너지가 들어올 자리가 생깁니다. 비워냄의 미학을 실천할 때입니다.",
-          out: "지긋지긋했던 상황이 극적으로 완전히 종료되고, 과거의 낡은 당신은 죽고 전혀 새로운 차원의 삶이 시작됩니다. 재를 뚫고 날아오르는 불사조처럼 눈부신 재생과 부활을 맞이합니다." },
-        { num: "XIX", name: "The Sun (태양)", type: "Fire",
-          sym: "해바라기 밭에서 백마를 타고 환호하는 어린아이와 하늘을 가득 채운 거대한 태양. 한 점의 그늘도 없는 가장 순수한 긍정의 힘, 완벽한 치유와 압도적인 성공을 상징합니다.",
-          sit: "우주가 내리는 강력한 긍정의 에너지가 당신을 감싸고 있습니다. 마음속의 불안과 그림자가 걷히고, 모든 상황이 명백하게 이해되며 활력과 자신감이 가득 차오르는 최고의 파동입니다.",
-          adv: "고민과 의심을 모두 멈추고 빛을 향해 걸어 나가십시오. 어린아이처럼 순수하고 솔직한 마음으로 당신의 열정과 에너지를 주변에 아낌없이 발산하면 모든 문제가 눈 녹듯 사라집니다.",
-          out: "어둠은 완전히 걷히고 모두가 당신을 축복하는 완벽하고 눈부신 성공을 거머쥡니다. 건강, 연애, 재물 모든 면에서 그늘 없는 최고의 해피엔딩이자 궁극적인 성취를 이룩하게 됩니다." },
-        { num: "XXI", name: "The World (세계)", type: "Earth",
-          sym: "월계수 화환 안에서 춤추는 인물과 네 모서리의 수호성. 한 챕터의 완벽한 완성, 깨달음, 그리고 한계를 넘어선 궁극적인 해방과 그랜드 피날레를 상징합니다.",
-          sit: "오랜 시간 공들여 온 긴 여정이 마침내 종착역에 다다랐습니다. 조각나 있던 퍼즐들이 하나로 완벽하게 맞춰지며, 심리적으로나 현실적으로 완전한 충만함을 느끼고 있는 파동입니다.",
-          adv: "지금까지 당신이 쌓아온 노력과 성취를 온전히 즐기고 스스로를 칭찬하십시오. 더 이상 채워 넣을 것이 없으니, 만족의 지혜를 깨닫고 다음 챕터를 향해 미련 없이 나아갈 준비를 하세요.",
-          out: "당신이 바라던 가장 이상적이고 완벽한 형태의 목표를 100% 달성하게 됩니다. 더 이상의 미련이나 아쉬움이 없는 궁극의 완성이며, 그 완성을 발판으로 더 큰 우주로 나아가는 영광스러운 결말입니다." }
+        { num: "0", name: "The Fool (바보)", img: "https://sacred-texts.com/tarot/pkt/img/ar00.jpg", type: "Air",
+          sym: "절벽 끝에 서 있으면서도 하늘을 올려다보고 있는 청년과 하얀 강아지. 두려움을 초월한 순수한 믿음을 뜻합니다.",
+          sit: "아무것도 확정되지 않은 백지상태, 혹은 완전히 새로운 챕터의 시작점입니다. 과거의 짐을 털어버리고 무한한 가능성을 향해 나아가고 싶은 충동을 느낍니다.",
+          adv: "이성의 목소리를 잠시 끄고 직관에 몸을 맡기세요. 실패를 두려워하지 않는 '바보 같은 순수함'이 가장 강력한 무기가 됩니다.",
+          out: "당신을 옭아매던 현실에서 해방되어, 예상치 못한 모험과 새로운 인연이 기다리는 길로 접어듭니다." },
+        { num: "I", name: "The Magician (마법사)", img: "https://sacred-texts.com/tarot/pkt/img/ar01.jpg", type: "Air",
+          sym: "테이블 위의 4원소(지팡이, 성배, 검, 동전)와 무한대 기호. 무(無)에서 유(有)를 창조하는 잠재력과 다재다능함입니다.",
+          sit: "문제 해결에 필요한 모든 자원과 능력을 갖추고 있습니다. 아이디어가 넘치고 화술과 매력이 최고조에 달한 파동입니다.",
+          adv: "상상만 하던 것을 실행에 옮기십시오. 당신의 기획을 자신감 있게 어필할 때 마법처럼 문이 열립니다.",
+          out: "아이디어가 눈에 보이는 성과로 구체화됩니다. 능력을 널리 인정받고 주도권을 쥐는 압도적인 성공입니다." },
+        { num: "II", name: "High Priestess (여사제)", img: "https://sacred-texts.com/tarot/pkt/img/ar02.jpg", type: "Water",
+          sym: "흑백의 기둥 사이에 앉아 율법서를 든 여인. 표면 이면의 진실과 고도의 직관력을 상징합니다.",
+          sit: "겉으로는 평온하지만 수면 아래 미묘한 직감이나 비밀이 존재합니다. 섣부른 행동보다 관망하며 속내를 숨긴 상태입니다.",
+          adv: "주변의 조언보다 당신의 '촉(직관)'을 믿으세요. 침묵을 지키고 한 발 물러서서 상황을 예리하게 관찰할 때입니다.",
+          out: "숨겨진 진실이 밝혀지며 상황이 자연스럽게 당신에게 유리해집니다. 깊은 정신적 평화를 얻습니다." },
+        { num: "III", name: "The Empress (여황제)", img: "https://sacred-texts.com/tarot/pkt/img/ar03.jpg", type: "Earth",
+          sym: "풍요로운 자연 속에 앉은 여인과 금성 기호. 만물을 길러내는 무조건적인 사랑과 물질적 풍요를 상징합니다.",
+          sit: "감정적, 물질적으로 안정적이고 풍요로운 파동입니다. 노력해 온 일들이 결실을 맺기 시작하는 따뜻한 시기입니다.",
+          adv: "경쟁하기보다는 여유를 가지고 주변을 품어 안으십시오. 타인에 대한 배려와 공감이 더 큰 행운으로 돌아옵니다.",
+          out: "풍성한 수확을 거둡니다. 일의 성공, 깊은 애정, 금전적 여유 등 기대 이상의 달콤한 결실을 안게 됩니다." },
+        { num: "IV", name: "The Emperor (황제)", img: "https://sacred-texts.com/tarot/pkt/img/ar04.jpg", type: "Fire",
+          sym: "견고한 돌 의자에 앉아 통제권을 쥔 남성. 감정을 배제하고 질서를 세우는 권력과 확고한 지배력을 상징합니다.",
+          sit: "큰 책임을 지거나 상황을 철저히 통제해야 하는 압박감 속에 있습니다. 체계적인 룰을 바탕으로 성벽을 구축하는 단계입니다.",
+          adv: "감정에 흔들리지 마십시오. 단호하고 냉철한 리더십으로 모호함을 버리고 확실하게 상황을 통제해야 합니다.",
+          out: "흔들리지 않는 확고한 지위를 쟁취합니다. 목표하던 권위나 물질적 기반이 단단하게 구축되어 누구도 넘볼 수 없게 됩니다." },
+        { num: "V", name: "The Hierophant (교황)", img: "https://sacred-texts.com/tarot/pkt/img/ar05.jpg", type: "Earth",
+          sym: "두 사제에게 축복을 내리는 교황. 전통, 사회적 규범, 그리고 지혜를 전수하는 영적인 멘토를 상징합니다.",
+          sit: "소속된 집단이나 사회적 규칙 안에서 안정감을 찾고 있거나, 경험 많은 멘토의 조언이 절실히 필요한 파동입니다.",
+          adv: "혼자 튀려 하지 말고 검증된 전통과 시스템의 룰을 따르십시오. 신뢰할 수 있는 멘토나 전문가의 조언을 수용해야 합니다.",
+          out: "안정적인 조직에 안착하거나 합법적이고 공인된 계약(결혼, 취업)이 성사됩니다. 올바른 가르침을 통해 크게 성장합니다." },
+        { num: "VI", name: "The Lovers (연인)", img: "https://sacred-texts.com/tarot/pkt/img/ar06.jpg", type: "Air",
+          sym: "에덴동산의 아담과 이브, 그들을 축복하는 천사. 완벽한 조화, 가치관의 결합, 그리고 중대한 '선택'의 상징입니다.",
+          sit: "누군가와의 깊은 교감이나 중요한 파트너십이 형성되고 있거나, 매력적인 두 선택지 사이에서 갈등하는 파동입니다.",
+          adv: "이익을 계산하기보다 가슴이 진정으로 설레고 이끌리는 쪽을 선택하십시오. 진심이 통하는 이와 적극적으로 연대하세요.",
+          out: "주파수가 맞는 완벽한 파트너를 만나거나 극적인 화해를 이룹니다. 선택에 후회 없이 유대감으로 충만한 결말입니다." },
+        { num: "VII", name: "The Chariot (전차)", img: "https://sacred-texts.com/tarot/pkt/img/ar07.jpg", type: "Water",
+          sym: "상반된 두 스핑크스가 끄는 전차를 통제하며 돌진하는 전사. 내면의 갈등을 의지로 짓누르고 목표를 돌파하는 투쟁입니다.",
+          sit: "복잡한 장애물이 산재해 있지만, 강한 의지력으로 상황을 장악하고 밀어붙이는 전진의 에너지가 지배합니다.",
+          adv: "주변을 신경 쓰지 말고 목표만 보고 직진하십시오. 치밀한 계획보다 상황을 돌파하는 흔들림 없는 추진력이 필요합니다.",
+          out: "어떤 난관도 부수고 마침내 승리를 거머쥡니다. 경쟁에서 우위를 점하며 의도대로 상황을 완벽히 쟁취합니다." },
+        { num: "VIII", name: "Strength (힘)", img: "https://sacred-texts.com/tarot/pkt/img/ar08.jpg", type: "Fire",
+          sym: "사자(야성)의 입을 맨손으로 부드럽게 쓰다듬는 여인. 완력이나 억압이 아닌 인내, 포용력, 진정한 내면의 힘을 상징합니다.",
+          sit: "외부의 압박이나 스스로의 부정적 감정(분노, 두려움)을 이성으로 통제하며 인내의 시간을 보내고 있는 상태입니다.",
+          adv: "강압적으로 상황을 굴복시키려 하지 마십시오. 부드러운 카리스마와 끝없는 인내심으로 상대를 포용해야 이길 수 있습니다.",
+          out: "오랜 인내 끝에 가장 평화롭고 완벽한 형태로 상황을 통제하게 됩니다. 반대하던 이들조차 당신의 편으로 완전히 돌아섭니다." },
+        { num: "IX", name: "The Hermit (은둔자)", img: "https://sacred-texts.com/tarot/pkt/img/ar09.jpg", type: "Earth",
+          sym: "세상의 소음을 등지고 차가운 설산에서 등불 하나에 의지해 걷는 노인. 깊은 자기 성찰과 고독한 진리 탐구를 상징합니다.",
+          sit: "현실의 번잡함에서 벗어나 혼자만의 시간을 가지며 내면의 목소리에 귀 기울이고 있는, 혹은 그러고 싶은 정체기입니다.",
+          adv: "외부에서 답을 찾지 말고 스스로의 심연으로 들어가십시오. 고독을 즐기며 깊이 사색할 때 진짜 해결책이 떠오릅니다.",
+          out: "오랜 고민 끝에 남들이 보지 못하는 지혜와 깨달음을 얻게 됩니다. 내면이 단단해져 어떤 풍파에도 흔들리지 않게 됩니다." },
+        { num: "X", name: "Wheel of Fortune (운명의 수레바퀴)", img: "https://sacred-texts.com/tarot/pkt/img/ar10.jpg", type: "Fire",
+          sym: "끊임없이 회전하는 바퀴와 신수들. 인간의 의지를 초월한 우주적 순환, 필연적인 변화와 피할 수 없는 인연의 상징입니다.",
+          sit: "통제권 밖에서 거대한 변화의 사이클이 돌아가기 시작했습니다. 우연이라 생각했던 일들이 필연의 궤도에 진입했습니다.",
+          adv: "변화를 거스르지 마십시오. 다가오는 기회나 갑작스러운 상황에 유연하게 올라타야 하는 중요한 운명의 챕터입니다.",
+          out: "정체되었던 운이 긍정적인 방향으로 크게 전환됩니다. 뜻밖의 행운과 귀인이 찾아오며 삶의 궤도가 한 차원 업그레이드됩니다." },
+        { num: "XI", name: "Justice (정의)", img: "https://sacred-texts.com/tarot/pkt/img/ar11.jpg", type: "Air",
+          sym: "저울(공평)과 양날의 검(단호한 판결)을 쥔 인물. 차가운 이성과 냉혹한 인과응보, 완벽한 균형점을 상징합니다.",
+          sit: "옳고 그름을 따져야 하거나, 이성과 감정 사이에서 밸런스를 잡으려 고군분투 중입니다. 법적, 계약적 이슈가 있을 수 있습니다.",
+          adv: "사사로운 감정에 휩쓸리지 마십시오. 제3자의 시선으로 팩트만 놓고 냉정하게 원칙을 지키는 것이 유일한 해답입니다.",
+          out: "모호했던 상황이 명확하게 정리됩니다. 정당한 노력을 했다면 마땅한 보상을, 속임수가 있었다면 가차 없는 판결을 받습니다." },
+        { num: "XII", name: "The Hanged Man (매달린 사람)", img: "https://sacred-texts.com/tarot/pkt/img/ar12.jpg", type: "Water",
+          sym: "T자형 나무에 거꾸로 매달려 평온한 표정을 짓는 남자. 육체적 정체 속에서 영적 깨달음을 얻는 희생과 시각의 전환입니다.",
+          sit: "일이 뜻대로 진척되지 않고 꼼짝할 수 없는 답답한 정체기입니다. 하지만 이는 실패가 아니라 잠시 멈춰 서야 하는 시간입니다.",
+          adv: "발버둥 칠수록 상황은 꼬입니다. 저항을 멈추고 관점을 180도 뒤집어 보십시오. 기꺼이 희생을 감수할 때 돌파구가 보입니다.",
+          out: "고통스러운 정체기가 끝나고 영혼의 큰 깨달음을 얻습니다. 완전히 다른 차원의 시야를 가지게 되어 상황을 역전시킵니다." },
+        { num: "XIII", name: "Death (죽음)", img: "https://sacred-texts.com/tarot/pkt/img/ar13.jpg", type: "Water",
+          sym: "백마를 탄 해골 기사와 쓰러진 왕. 육체의 죽음이 아니라, 낡은 껍질을 부수고 새로 태어나는 '거대한 끝과 부활'입니다.",
+          sit: "오랫동안 괴롭혔던 문제나 미련 가득한 관계가 완전히 종결되어 가는 파동입니다. 변화의 진통으로 상실감이 동반될 수 있습니다.",
+          adv: "끝나가는 인연이나 상황에 대한 집착을 놓아버리십시오. 과거를 단칼에 도려내야만 새로운 에너지가 들어올 자리가 생깁니다.",
+          out: "지긋지긋했던 상황이 극적으로 종료되고, 재를 뚫고 날아오르는 불사조처럼 눈부신 재생과 완전히 새로운 삶을 맞이합니다." },
+        { num: "XIV", name: "Temperance (절제)", img: "https://sacred-texts.com/tarot/pkt/img/ar14.jpg", type: "Fire",
+          sym: "두 개의 잔에 물을 섞고 있는 천사. 어느 한쪽으로 치우치지 않고 상반된 에너지를 조화롭게 융합하는 황금비율을 의미합니다.",
+          sit: "과한 욕심을 버리고 현실과 이상 사이에서 타협점을 찾아가고 있는, 극적인 사건 없이 물 흐르듯 지나가는 안정된 시기입니다.",
+          adv: "서두르지 마십시오. 전혀 다른 두 가지 의견이나 감정을 부드럽게 섞어내는 중용의 미덕이 당신을 구원할 것입니다.",
+          out: "모든 것이 완벽한 밸런스를 찾습니다. 극단적인 대립이 사라지고 평화롭고 순조롭게 원하는 목적지에 도달하게 됩니다." },
+        { num: "XV", name: "The Devil (악마)", img: "https://sacred-texts.com/tarot/pkt/img/ar15.jpg", type: "Earth",
+          sym: "느슨한 사슬에 묶인 채 쾌락에 빠진 남녀와 악마. 끊어내기 힘든 세속적인 유혹, 물질적 집착, 중독적 관계를 상징합니다.",
+          sit: "나쁜 줄 알면서도 끊어내지 못하는 관계(구속, 치명적 매력)나, 물질과 쾌락에 깊이 얽매여 이성이 마비된 상태입니다.",
+          adv: "사슬은 마음만 먹으면 언제든 풀 수 있습니다. 스스로를 옭아매는 집착과 부정적인 습관을 직시하고 뼈를 깎는 각오로 단절하세요.",
+          out: "유혹을 이기지 못하면 늪에 빠지지만, 본능을 인정하고 이성으로 제어한다면 역으로 그 강렬한 에너지를 거대한 재물로 바꿀 수 있습니다." },
+        { num: "XVI", name: "The Tower (탑)", img: "https://sacred-texts.com/tarot/pkt/img/ar16.jpg", type: "Fire",
+          sym: "번개에 맞아 왕관이 떨어지고 무너져 내리는 바벨탑. 예상치 못한 외부의 충격과 낡은 기반의 필연적 파괴를 상징합니다.",
+          sit: "안전하다고 믿었던 현실이나 가치관이 예기치 못한 사건으로 인해 송두리째 흔들리고 있는 거대한 충격의 파동입니다.",
+          adv: "무너지는 탑을 억지로 버티려 하지 마십시오. 썩은 토대는 부서져야 마땅합니다. 파괴를 기꺼이 받아들이고 잔해 속에서 다시 시작할 용기를 내세요.",
+          out: "거짓된 안정은 완전히 붕괴하지만, 그 파멸의 끝에서 당신은 거짓의 장막을 벗고 진정으로 단단한 새로운 성벽을 세우게 됩니다." },
+        { num: "XVII", name: "The Star (별)", img: "https://sacred-texts.com/tarot/pkt/img/ar17.jpg", type: "Air",
+          sym: "밤하늘의 큰 별 아래 생명수를 붓고 있는 여인. 고난과 파괴(탑) 뒤에 찾아오는 순수한 희망, 영감, 우주적 치유의 에너지입니다.",
+          sit: "힘든 터널을 지나 마침내 한 줄기 빛을 발견한 상태입니다. 영감이 솟아나고 긍정적인 미래에 대한 희망으로 마음이 정화되고 있습니다.",
+          adv: "순수한 열정과 꿈을 숨기지 말고 우주에 당신의 소망을 투사하십시오. 지금의 긍정적인 믿음이 곧 현실의 기적을 끌어당길 것입니다.",
+          out: "상처가 완전히 치유되고 당신이 꿈꾸던 이상적인 소원이 이루어집니다. 예술, 기획 등 영감이 필요한 분야에서 빛나는 성취를 얻습니다." },
+        { num: "XVIII", name: "The Moon (달)", img: "https://sacred-texts.com/tarot/pkt/img/ar18.jpg", type: "Water",
+          sym: "어둠 속에서 달을 향해 짖는 동물들과 물속의 가재. 불확실성, 무의식의 깊은 불안, 그리고 눈에 보이지 않는 숨겨진 진실을 상징합니다.",
+          sit: "확실한 것이 아무것도 없어 안개 속을 걷는 듯한 혼란스러움과 원인 모를 두려움에 사로잡혀 있습니다. 숨겨진 적이나 기만이 있을 수 있습니다.",
+          adv: "어둠 속에서는 섣불리 움직이는 것이 가장 위험합니다. 상상력이 만들어낸 환상에 속지 말고 안개가 걷힐 때까지 차분히 직관을 연마하세요.",
+          out: "거짓된 환상과 두려움의 그림자가 점차 걷힙니다. 혼란을 견뎌낸 당신은 무의식의 깊은 지혜를 얻어 다음 단계로 무사히 나아갑니다." },
+        { num: "XIX", name: "The Sun (태양)", img: "https://sacred-texts.com/tarot/pkt/img/ar19.jpg", type: "Fire",
+          sym: "해바라기 밭에서 백마를 타고 환호하는 어린아이. 한 점의 그늘도 없는 가장 순수한 긍정의 힘, 완벽한 치유와 생명력입니다.",
+          sit: "우주가 내리는 강력한 긍정 에너지가 감싸고 있습니다. 불안과 그림자가 걷히고 모든 상황이 명백하게 풀리며 활력이 넘치는 최고조의 파동입니다.",
+          adv: "의심을 멈추고 빛을 향해 걸어 나가십시오. 순수하고 솔직한 마음으로 열정을 발산하면 모든 문제가 눈 녹듯 사라집니다.",
+          out: "모두가 축복하는 완벽하고 눈부신 성공을 거머쥡니다. 건강, 연애, 재물 모든 면에서 그늘 없는 최고의 해피엔딩을 맞이합니다." },
+        { num: "XX", name: "Judgement (심판)", img: "https://sacred-texts.com/tarot/pkt/img/ar20.jpg", type: "Fire",
+          sym: "대천사 가브리엘의 나팔 소리에 무덤에서 깨어나는 자들. 과거의 업보(카르마)에 대한 최종적인 보상과 영광스러운 부활입니다.",
+          sit: "오랜 시간 기다리거나 노력해 온 일에 대한 최종적인 결과 발표를 앞두고 있습니다. 과거의 행동들이 평가받는 전환점입니다.",
+          adv: "당신이 뿌린 씨앗을 거둘 때입니다. 두려워하지 말고 과거의 낡은 껍질을 벗어던지는 부활의 부름에 기꺼이 응답하십시오.",
+          out: "당신의 정당한 노력이 마침내 구원받고 극적인 보상을 받습니다. 재회, 합격, 기사회생 등 죽어가던 상황이 기적처럼 살아나는 결말입니다." },
+        { num: "XXI", name: "The World (세계)", img: "https://sacred-texts.com/tarot/pkt/img/ar21.jpg", type: "Earth",
+          sym: "월계수 화환 안에서 춤추는 인물과 네 모서리의 수호성. 한 챕터의 완벽한 완성, 깨달음, 궁극적인 해방과 피날레를 상징합니다.",
+          sit: "오랜 여정이 마침내 종착역에 다다랐습니다. 퍼즐들이 완벽하게 맞춰지며 심리적으로나 현실적으로 완전한 충만함을 느끼는 파동입니다.",
+          adv: "지금까지 쌓아온 성취를 온전히 즐기고 스스로를 칭찬하십시오. 만족의 지혜를 깨닫고 미련 없이 다음 챕터를 향해 나아갈 준비를 하세요.",
+          out: "바라던 가장 이상적이고 완벽한 목표를 100% 달성합니다. 더 이상의 미련이 없는 궁극의 완성이며, 이를 발판으로 더 큰 우주로 나아갑니다." }
     ];
 
     let selectedCards = [];
@@ -218,7 +267,6 @@ const Tarot = (() => {
         
         cardEl.classList.add('selected');
         
-        // 남은 카드 중 랜덤 뽑기 (중복 불가)
         let randomIdx;
         do { randomIdx = Math.floor(Math.random() * MAJOR_ARCANA.length); } 
         while (selectedCards.some(c => c.idx === randomIdx));
@@ -233,18 +281,15 @@ const Tarot = (() => {
         }
     };
 
-    // 2. 분석 애니메이션 & 로직 (신뢰성 펌핑)
+    // 2. 분석 애니메이션
     const analyze = () => {
         document.getElementById('loader').style.display = 'flex';
         const txtEl = document.getElementById('loader-text');
-        const msgs = ["아카식 레코드(Akashic Records) 접속 중...", "융(Jung)의 공시성 동기화 모듈 가동...", "과거-현재-미래 파동 좌표 추출 중...", "운명의 상징 심층 디코딩 중..."];
+        const msgs = ["아카식 레코드(Akashic Records) 접속 중...", "칼 융(Jung)의 공시성 동기화 모듈 가동...", "과거-현재-미래 파동 좌표 추출 중...", "라이더 웨이트 오리지널 상징 디코딩 중..."];
         let msgIdx = 0; txtEl.textContent = msgs[msgIdx];
         const mInt = setInterval(() => { msgIdx++; if(msgIdx < msgs.length) txtEl.textContent = msgs[msgIdx]; }, 800);
 
-        setTimeout(() => {
-            clearInterval(mInt);
-            renderReport();
-        }, 3500);
+        setTimeout(() => { clearInterval(mInt); renderReport(); }, 3500);
     };
 
     // 3. 리포트 출력 
@@ -253,7 +298,6 @@ const Tarot = (() => {
         const c2 = selectedCards[1].data; // 조언
         const c3 = selectedCards[2].data; // 결과
 
-        // 💡 밀리초 기반 공시성 로그 생성 (스텔스 마케팅의 핵심 - 신뢰도 폭발)
         const now = new Date();
         const ms = now.getMilliseconds();
         const hash = Math.floor(Math.random() * 999999).toString(16).toUpperCase().padStart(6, '0');
@@ -262,49 +306,66 @@ const Tarot = (() => {
             <h4>Synchronicity Engine Log</h4>
             <div class="log-item">
                 <span class="log-title">1. 공시성(Synchronicity) 기반 파동 캡처</span>
-                당신이 3장의 카드를 선택한 정확한 순간의 미세 시간값(Time-seed: <span class="log-formula">${now.getTime()} ms</span>)과 마우스 클릭 궤적이 만들어낸 엔트로피를 통해 무의식의 파동을 추출했습니다.
+                당신이 3장의 카드를 선택한 정확한 순간의 미세 시간값(Time-seed: <span class="log-formula">${now.getTime()} ms</span>)과 클릭 궤적이 만들어낸 엔트로피를 통해 무의식의 파동을 추출했습니다.
             </div>
             <div class="log-item">
                 <span class="log-title">2. 아카식 좌표 및 원소 매칭</span>
-                추출된 파동 해시(<span class="log-formula">#${hash}</span>)를 바탕으로 타로 메이저 아르카나 22장의 상징 체계와 완벽하게 동기화된 배열을 산출했습니다. 단순한 랜덤이 아닌, 심리학자 칼 융이 주창한 '의미 있는 우연의 일치'를 따릅니다.
+                추출된 파동 해시(<span class="log-formula">#${hash}</span>)를 바탕으로 타로 22장의 상징 체계와 동기화된 배열을 산출했습니다. 단순한 랜덤이 아닌, 칼 융이 주창한 '의미 있는 우연의 일치'를 따릅니다.
             </div>
         `;
 
-        // 3카드 스프레드 시각화
+        // 💡 3카드 스프레드 시각화 (오리지널 이미지 삽입!)
         document.getElementById('r-spread').innerHTML = `
-            <div class="spread-card"><div class="position">CARD 1. 현재의 내면</div><div class="c-num">${c1.num}</div><div class="c-name">${c1.name}</div></div>
-            <div class="spread-card"><div class="position">CARD 2. 운명의 조언</div><div class="c-num">${c2.num}</div><div class="c-name">${c2.name}</div></div>
-            <div class="spread-card"><div class="position">CARD 3. 궁극의 미래</div><div class="c-num">${c3.num}</div><div class="c-name">${c3.name}</div></div>
+            <div class="spread-card">
+                <div style="flex:1;">
+                    <div class="position">CARD 1. 현재의 내면</div>
+                    <div class="c-name"><span style="color:var(--gold-primary); font-family:serif;">${c1.num}.</span><br>${c1.name}</div>
+                </div>
+                <img src="${c1.img}" class="c-img" alt="${c1.name}">
+            </div>
+            <div class="spread-card">
+                <div style="flex:1;">
+                    <div class="position">CARD 2. 운명의 조언</div>
+                    <div class="c-name"><span style="color:var(--gold-primary); font-family:serif;">${c2.num}.</span><br>${c2.name}</div>
+                </div>
+                <img src="${c2.img}" class="c-img" alt="${c2.name}">
+            </div>
+            <div class="spread-card">
+                <div style="flex:1;">
+                    <div class="position">CARD 3. 궁극의 미래</div>
+                    <div class="c-name"><span style="color:var(--gold-primary); font-family:serif;">${c3.num}.</span><br>${c3.name}</div>
+                </div>
+                <img src="${c3.img}" class="c-img" alt="${c3.name}">
+            </div>
         `;
 
         // 심층 해설
         document.getElementById('dynamic-results').innerHTML = `
             <div class="r-section">
                 <h3>1. 현재 상황과 무의식의 파동</h3>
-                <div class="theory-box"><strong>[상징의 디코딩: ${c1.name}]</strong><br>${c1.sym}</div>
-                <div class="result-content">${c1.sit}</div>
+                <div class="theory-box"><strong>[오리지널 상징 디코딩: ${c1.name}]</strong><br>${c1.sym}</div>
+                <div class="result-content"><p>${c1.sit}</p></div>
             </div>
             
             <div class="r-section">
                 <h3>2. 막힌 운을 뚫어줄 핵심 조언</h3>
-                <div class="theory-box"><strong>[상징의 디코딩: ${c2.name}]</strong><br>${c2.sym}</div>
-                <div class="result-content">${c2.adv}</div>
+                <div class="theory-box"><strong>[오리지널 상징 디코딩: ${c2.name}]</strong><br>${c2.sym}</div>
+                <div class="result-content"><p>${c2.adv}</p></div>
             </div>
 
             <div class="r-section">
-                <h3>3. 다가올 최종적인 미래</h3>
-                <div class="theory-box"><strong>[상징의 디코딩: ${c3.name}]</strong><br>${c3.sym}</div>
-                <div class="result-content">${c3.out}</div>
+                <h3>3. 당신이 마주할 최종적인 미래</h3>
+                <div class="theory-box"><strong>[오리지널 상징 디코딩: ${c3.name}]</strong><br>${c3.sym}</div>
+                <div class="result-content"><p>${c3.out}</p></div>
             </div>
         `;
 
-        // 🤫 스텔스 마케팅: 결과 카드(c3)의 속성에 맞춰 맞춤형 쿠파스 링크 제시
         let link = 'https://link.coupang.com/a/eu5td7'; 
         let adviceTitle = '✨ 흩어진 긍정 에너지를 모아주는 시크릿 아이템';
         
         if (c3.type === 'Fire' || c3.type === 'Earth') {
             link = 'https://link.coupang.com/a/eu5uLR';
-            adviceTitle = '💰 현실적인 성공과 재물 파동을 끌어당기는 시크릿 아이템';
+            adviceTitle = '💰 거대한 재물 파동을 현실로 끌어당기는 시크릿 아이템';
         } else if (c3.type === 'Water') {
             link = 'https://link.coupang.com/a/eu5vYe';
             adviceTitle = '🛡️ 예민해진 내면의 파동을 평온하게 보호해 줄 시크릿 아이템';
@@ -312,8 +373,8 @@ const Tarot = (() => {
 
         document.getElementById('cta-area').innerHTML = `
             <div class="stealth-advice">
-                <h4>💡 타로의 파동을 현실로 끌어오는 스텔스 개운법</h4>
-                <p>타로가 보여준 미래의 흐름을 가장 유리한 쪽으로 끌어당기거나, 잠재된 부정적 에너지를 물리적으로 차단하기 위해서는 당신의 무의식과 주파수가 맞는 소품을 곁에 두는 것이 심리학적으로 매우 큰 도움이 됩니다.</p>
+                <h4>💡 타로의 파동을 현실로 굳히는 스텔스 개운법</h4>
+                <p>타로가 보여준 미래의 흐름을 가장 유리한 쪽으로 확정 짓거나, 잠재된 부정적 에너지를 차단하기 위해서는 당신의 무의식과 주파수가 맞는 소품을 곁에 두는 것이 심리학적으로 매우 큰 도움이 됩니다.</p>
                 <a href="${link}" target="_blank" class="link-stealth">${adviceTitle} ↗</a>
                 <p style="margin-top: 15px; font-size: 0.75rem; color: rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
             </div>
@@ -325,7 +386,6 @@ const Tarot = (() => {
         window.scrollTo(0,0);
     };
 
-    // 🔗 공유하기 로직
     const shareLink = async () => {
         const url = 'https://chomibinine.github.io/destinyroot/tarot/';
         const shareData = { title: '운명뿌리 - 타로 리딩', text: '의식과 무의식을 꿰뚫는 정통 타로 리딩으로 당신의 숨겨진 미래를 확인해보세요.', url: url };
@@ -335,7 +395,7 @@ const Tarot = (() => {
         } else {
             const dummy = document.createElement('input'); document.body.appendChild(dummy);
             dummy.value = url; dummy.select(); document.execCommand('copy'); document.body.removeChild(dummy);
-            alert('사이트 주소가 복사되었습니다. 카카오톡 등에 붙여넣기 하세요.');
+            alert('사이트 주소가 복사되었습니다. 지인들에게 널리 퍼트려주세요.');
         }
     };
 
