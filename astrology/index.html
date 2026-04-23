@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>운명뿌리 | 점성술 천궁도 분석</title>
     
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
@@ -21,7 +20,7 @@
         .header h1 { font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px; margin: 0; background: linear-gradient(180deg, #fff 0%, #a1a1a1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .header p { color: var(--text-muted); margin-top: 10px; font-size: 1rem; font-weight: 300; }
         
-        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 24px; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); margin-bottom: 25px; transition: all 0.3s ease;}
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 24px; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); margin-bottom: 25px; transition: all 0.3s ease;}
         
         .form-group { margin-bottom: 25px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-muted); font-size: 0.95rem; }
@@ -63,7 +62,7 @@
         .result-content p { margin-bottom: 20px; }
         .result-content strong { color: var(--gold-light); font-weight: 800; }
         
-        /* 💎 사주/관상과 동일한 일관된 CTA 박스 디자인 */
+        /* 💎 일관된 CTA 박스 디자인 */
         .cta-box { margin-top: 50px; padding: 45px 30px; border-radius: 16px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--border-glass); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; font-weight: 800; padding: 18px 35px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s;}
         .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.05);}
@@ -82,12 +81,16 @@
         <div class="glass-card">
             <div class="form-group"><label>이름</label><input type="text" id="u-name" class="form-control" placeholder="홍길동"></div>
             <div class="form-group"><label>태어난 날짜 (양력)</label>
-                <div class="grid-row"><select id="u-year" class="form-control"></select><select id="u-month" class="form-control"></select><select id="u-day" class="form-control"></select></div>
+                <div class="grid-row">
+                    <select id="u-year" class="form-control"></select>
+                    <select id="u-month" class="form-control"></select>
+                    <select id="u-day" class="form-control"></select>
+                </div>
             </div>
             <div class="form-group grid-half">
-                <div><label>현지 태어난 시간 (24H)</label><select id="u-time" class="form-control">
-                    <script>for(let i=0; i<24; i++) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}:00</option>`);</script>
-                </select></div>
+                <div><label>현지 태어난 시간 (24H)</label>
+                    <select id="u-time" class="form-control"></select>
+                </div>
                 <div><label>태어난 지역</label>
                 <select id="u-location" class="form-control" onchange="Core.toggleCustom()">
                     <option value="SEOUL">한국 - 서울/경기/인천</option>
@@ -145,63 +148,52 @@
 
 <script>
 const Core = (() => {
-    // 🔥 볼륨이 500% 폭발한 점성학 정밀 DB
+    // 🔥 볼륨업 정밀 DB
     const ZODIAC = [
         { name: "양자리", icon: "♈", el: "Fire", deg: "0°~30°",
           sun: "<p>12별자리의 첫 번째 싸인인 양자리는 태어남 그 자체이자 강렬한 시작의 에너지를 품고 있습니다. <strong>당신의 본질은 '개척자'입니다.</strong> 남들이 주저하고 계산할 때, 당신은 직관적인 충동에 몸을 맡기고 가장 먼저 뛰어드는 용기를 가졌습니다.</p><p>거짓과 가식을 몹시 싫어하며 속을 훤히 내보이는 어린아이 같은 순수함이 당신의 가장 큰 무기입니다. 하지만 때로는 그 강력한 돌진 에너지가 브레이크 없는 자동차처럼 작용하여 주변 사람들을 당황하게 하거나 스스로 지치게 만들 수 있습니다. 화가 나면 불같이 폭발하지만 뒤끝이 전혀 없는 쿨한 성격의 소유자입니다.</p>",
           moon: "<p>달이 양자리에 머물렀던 당신의 내면은 <strong>아주 뜨겁고 정열적이며 행동 지향적</strong>입니다. 감정적인 상처를 받았을 때 우울해하거나 슬퍼하기보다는 분노로 표출하거나 몸을 움직여 풀어내는 역동적인 패턴을 가집니다.</p><p>내면의 깊은 곳에는 타인에게 의존하기 싫어하는 강력한 자립심이 자리 잡고 있습니다. 누군가 당신의 감정이나 행동을 통제하려 들 때 극심한 스트레스를 받으며, 독립적인 공간이 보장될 때 비로소 진정한 내면의 평화를 얻습니다.</p>",
           ris: "<p>동쪽 지평선에 양자리가 떠올랐습니다. 당신은 타인에게 <strong>몹시 에너제틱하고 당당하며, 때로는 도전적인 첫인상</strong>을 줍니다. 걸음걸이가 빠르고 행동에 거침이 없으며, 낯선 환경에서도 주눅 들지 않고 무리의 리더 역할을 자처하는 아우라가 있습니다.</p><p>사람들은 당신의 솔직함과 시원시원한 태도에 매력을 느끼지만, 너무 성급하게 다가갈 경우 자칫 위압적으로 보일 수 있으니 부드러운 화술을 곁들이는 것이 사회적 성공의 열쇠입니다.</p>" },
-        
         { name: "황소자리", icon: "♉", el: "Earth", deg: "30°~60°",
           sun: "<p>대지의 묵직함을 닮은 황소자리는 12별자리 중 <strong>가장 압도적인 인내심과 물질화 능력</strong>을 지녔습니다. 당신의 코어 자아는 뜬구름 잡는 이상을 좇기보다는, 내 손으로 만질 수 있고 눈으로 볼 수 있는 확실한 결과물(돈, 안정, 예술)을 만들어내는 데 특화되어 있습니다.</p><p>변화를 극도로 싫어하고 한 번 시작한 일은 무서운 뚝심으로 끝을 봅니다. 뛰어난 미적 감각과 미식가의 기질을 지녔으며, 평소에는 한없이 온순하지만 자신의 영역이나 소유물이 침범당했을 때는 그야말로 '성난 황소'처럼 변해 누구도 말릴 수 없는 엄청난 고집을 보여줍니다.</p>",
-          moon: "<p>달이 황소자리에 머물렀습니다. 점성학에서 황소자리의 달은 <strong>가장 안정적이고 강력한(Exalted) 위상</strong>을 가집니다. 당신의 내면은 평온한 호수와 같으며, 감정의 기복이 적고 웬만한 스트레스에는 끄떡도 하지 않는 엄청난 멘탈을 자랑합니다.</p><p>정서적인 안정감은 곧 '물질적이고 오감적인 충족'과 직결됩니다. 맛있는 음식, 부드러운 이불, 통장 잔고가 채워져 있을 때 가장 깊은 마음의 평화를 느낍니다. 변화보다는 익숙한 사람들과 오래도록 변치 않는 관계를 유지하길 갈망합니다.</p>",
+          moon: "<p>달이 황소자리에 머물렀습니다. 점성학에서 황소자리의 달은 <strong>가장 안정적이고 강력한 위상</strong>을 가집니다. 당신의 내면은 평온한 호수와 같으며, 감정의 기복이 적고 웬만한 스트레스에는 끄떡도 하지 않는 엄청난 멘탈을 자랑합니다.</p><p>정서적인 안정감은 곧 '물질적이고 오감적인 충족'과 직결됩니다. 맛있는 음식, 부드러운 이불, 통장 잔고가 채워져 있을 때 가장 깊은 마음의 평화를 느낍니다. 변화보다는 익숙한 사람들과 오래도록 변치 않는 관계를 유지하길 갈망합니다.</p>",
           ris: "<p>당신의 사회적 가면(페르소나)은 <strong>극도로 차분하고 믿음직스러우며 고급스러운 아우라</strong>를 뿜어냅니다. 초면인 사람에게 절대 서두르지 않으며, 묵직하게 상황을 관망하는 태도 덕분에 사람들은 당신에게 본능적으로 깊은 신뢰감을 느낍니다.</p><p>목소리가 톤 다운되어 있거나 행동이 여유로워 보이며, 값비싼 브랜드가 아니더라도 본인만의 확고하고 세련된 미적 감각을 외모에 녹여내는 재주가 탁월합니다.</p>" },
-
         { name: "쌍둥이자리", icon: "♊", el: "Air", deg: "60°~90°",
           sun: "<p>바람처럼 가볍고 빠른 쌍둥이자리는 <strong>우주 최고의 커뮤니케이터이자 정보의 마법사</strong>입니다. 당신의 자아는 하나의 고정된 틀에 갇히는 것을 거부하며, 끝없는 지적 호기심으로 세상을 탐구하고 사람들과 정보를 교류하는 데서 삶의 의미를 찾습니다.</p><p>머리 회전이 타의 추종을 불허할 정도로 빠르며, 두 가지 이상의 일을 동시에 완벽하게 처리하는 멀티태스킹의 달인입니다. 말을 다루는 솜씨가 예술의 경지에 올라 있지만, 흥미가 금방 식어 변덕스럽거나 깊이가 부족하다는 오해를 살 수 있으니 한 분야를 깊게 파는 훈련이 평생의 카르마입니다.</p>",
           moon: "<p>내면을 다스리는 달궁이 쌍둥이자리입니다. 당신은 <strong>감정마저도 논리적으로 분석하고 언어로 표현해야 직성이 풀리는</strong> 독특한 내면의 구조를 가졌습니다. 슬프거나 화가 났을 때 혼자 삭히기보다는, 누군가에게 말을 하거나 글을 쓰면서 스트레스를 해산시킵니다.</p><p>정서적인 한자리에 가만히 머무는 것을 몹시 답답해하며, 감정의 전환이 매우 빠릅니다. 나를 지루하게 만들지 않고 끊임없이 지적인 자극을 주는 대화 파트너가 옆에 있을 때 가장 큰 안정감을 느낍니다.</p>",
           ris: "<p>동쪽 지평선의 쌍둥이자리는 당신에게 <strong>소년/소녀 같은 경쾌함과 반짝이는 눈빛</strong>을 선물했습니다. 낯선 모임에 던져져도 순식간에 사람들의 특징을 파악하고 대화를 주도해 나가는 엄청난 사교적 페르소나를 지녔습니다.</p><p>사람들은 당신을 볼 때 재치 있고 영리하며 트렌드에 민감한 사람이라고 인식합니다. 표정의 변화가 다채롭고 제스처가 풍부하여 언제나 주변에 경쾌한 에너지를 불어넣는 인간 비타민입니다.</p>" },
-
         { name: "게자리", icon: "♋", el: "Water", deg: "90°~120°",
           sun: "<p>생명을 잉태하는 바다를 상징하는 게자리는 <strong>12별자리 중 가장 강력한 공감 능력과 모성애</strong>를 지니고 있습니다. 당신의 본질은 타인의 아픔을 스펀지처럼 흡수하고 보호하려는 치유자입니다. 가족이나 내 사람이라고 생각하는 이들에게는 한없는 희생과 사랑을 베풉니다.</p><p>하지만 껍질이 단단한 게처럼, 상처받는 것을 두려워하여 낯선 사람 앞에서는 철저하게 철벽을 칩니다. 감정의 기복이 달의 위상처럼 출렁이며, 타인의 말 한마디에 깊이 상처받고 오랫동안 과거의 기억을 품고 사는 풍부한 감수성의 소유자입니다.</p>",
           moon: "<p>달이 자신의 본래 자리인 게자리에 머물러 있어, 달궁의 힘이 <strong>극대화(Dignity)된 상태</strong>입니다. 당신의 내면은 거대한 감정의 바다와 같아, 타인의 슬픔이나 분위기를 본능적으로 직감하고 스며듭니다.</p><p>외부의 치열한 경쟁보다는 나만의 안전한 둥지(집, 방, 가까운 지인)에서 완벽한 프라이버시가 보장될 때 심리적 평화를 얻습니다. 과거의 물건이나 추억을 잘 버리지 못하며, 영혼 깊은 곳에서 누군가를 돌보고 또 돌봄을 받고 싶어 하는 순수한 갈망이 있습니다.</p>",
           ris: "<p>상승궁 게자리는 당신의 외모와 첫인상에 <strong>한없이 부드럽고 다정하며 둥글둥글한 아우라</strong>를 씌워놓았습니다. 차갑거나 날카롭기보다는 묘하게 사람을 무장해제시키는 친근함과 보호 본능을 자극하는 매력이 있습니다.</p><p>처음 만난 사람들은 당신이 수줍음이 많고 방어적이라고 느끼지만, 동시에 알 수 없는 따뜻함을 느껴 자신의 속마음을 당신에게 쉽게 털어놓게 됩니다. 전형적인 외유내강의 마스크입니다.</p>" },
-
         { name: "사자자리", icon: "♌", el: "Fire", deg: "120°~150°",
           sun: "<p>우주의 중심인 태양의 지배를 직접 받는 사자자리는 <strong>무대를 장악하기 위해 태어난 화려한 제왕</strong>입니다. 당신의 자아는 어디서나 스포트라이트를 받고 주인공이 되기를 갈망하며, 굽힐 줄 모르는 자존심과 압도적인 관대함을 동시에 지니고 있습니다.</p><p>스케일이 남다르고 창조적인 에너지가 넘쳐흐르며, 한 번 마음을 준 사람에게는 드라마틱한 로맨스와 아낌없는 지원을 쏟아붓습니다. 다만 타인의 인정과 칭찬에 지나치게 굶주려 자만심이나 아집으로 변질될 수 있으니, 고개를 숙일 줄 아는 지혜를 배우는 것이 성공의 핵심입니다.</p>",
           moon: "<p>내면의 거울인 달이 사자자리에 위치했습니다. 겉으로 얼마나 차분해 보이든, 당신의 내면 깊은 곳에는 <strong>인정 욕구와 뜨거운 프라이드</strong>가 용암처럼 끓어오르고 있습니다. 무시당하거나 투명 인간 취급을 받을 때 영혼의 상처를 입습니다.</p><p>내면의 아이가 끊임없이 박수갈채를 원하고 있으며, 누군가 당신의 가치를 알아보고 진심으로 찬사를 보낼 때 엄청난 에너지와 행복을 느낍니다. 사랑하는 사람 앞에서는 한없이 다정하고 유쾌한 내면을 꺼내어 보여줍니다.</p>",
           ris: "<p>당신의 사회적 페르소나는 <strong>압도적인 당당함과 숨길 수 없는 화려한 기품</strong>입니다. 구석에 가만히 앉아 있어도 이상하게 사람들의 시선이 쏠리는 특유의 카리스마와 매력을 타고났습니다.</p><p>자신감이 넘치는 걸음걸이와 목소리, 드라마틱한 제스처로 조직이나 무리의 리더 역할을 자연스럽게 넘겨받게 됩니다. 긍정적이고 밝은 에너지로 사람들에게 영감을 주며 언제나 당당한 마스크를 유지합니다.</p>" },
-
         { name: "처녀자리", icon: "♍", el: "Earth", deg: "150°~180°",
           sun: "<p>흙의 기운을 바탕으로 한 처녀자리는 <strong>완벽을 향해 끊임없이 자신을 갈고닦는 예리한 장인</strong>입니다. 당신의 본질은 무질서한 혼돈 속에서 규칙을 찾아내고, 아무도 신경 쓰지 않는 미세한 디테일을 잡아내어 완벽한 결과물을 조각해 내는 것입니다.</p><p>분석력과 실무 능력이 12별자리 중 단연 최고 수준이며, 책임감이 몹시 강해 다른 사람의 일까지 떠맡아 처리하곤 합니다. 하지만 이 깐깐한 잣대를 자신과 타인에게 너무 가혹하게 들이대어 잦은 스트레스와 비판주의에 빠질 수 있으니, 세상의 불완전함을 있는 그대로 포용하는 여유가 절실합니다.</p>",
           moon: "<p>내면의 달이 처녀자리에 있을 때, 당신의 무의식은 <strong>극도로 꼼꼼하고 실용적인 방식</strong>으로 작동합니다. 감정이 요동치거나 주변 환경이 어지러울 때 극심한 불안을 느끼며, 방을 청소하거나 계획표를 정리하면서 내면의 안정을 되찾는 독특한 패턴이 있습니다.</p><p>누군가를 사랑하거나 아낄 때 화려한 이벤트보다는 일상적인 도움(밥을 챙겨주거나 문제를 실질적으로 해결해 주는 것)으로 애정을 표현합니다. 스스로의 감정을 논리적으로 분류하고 통제하려는 이성적인 내면의 소유자입니다.</p>",
           ris: "<p>동쪽 지평선의 처녀자리는 당신에게 <strong>단정하고 군더더기 없는 스마트한 외모와 첫인상</strong>을 주었습니다. 화려하고 시끄러운 모습보다는 예의 바르고 조심스러우며 지적인 아우라를 풍깁니다.</p><p>상대방은 당신을 만났을 때 몹시 섬세하고 일 처리가 깔끔할 것이라는 무한한 신뢰를 느낍니다. 상황을 예리하게 관찰하는 분석적인 눈빛을 지녔으며, 나서기보다는 상황을 완벽하게 파악한 뒤에 입을 엽니다.</p>" },
-
         { name: "천칭자리", icon: "♎", el: "Air", deg: "180°~210°",
           sun: "<p>저울을 상징하는 천칭자리는 <strong>우주에서 가장 아름답고 균형 잡힌 평화주의자</strong>입니다. 당신의 코어 에너지는 나와 타인 간의 조화, 그리고 완벽한 미적 균형을 추구하는 데 집중되어 있습니다. 뛰어난 외교적 수완으로 어떤 갈등도 우아하게 중재해 냅니다.</p><p>극단적인 것, 시끄러운 것, 추악한 것을 견디지 못하며 언제나 우아함과 기품을 잃지 않으려 노력합니다. 다만 모든 입장을 너무 공평하게 고려하다 보니 결정 장애(우유부단함)에 빠지기 쉬우며, 타인의 시선을 너무 의식해 정작 자신의 진짜 욕망을 억누르는 카르마를 주의해야 합니다.</p>",
           moon: "<p>달이 천칭자리에 위치한 당신은 <strong>관계 속에서 자신의 존재와 평화를 확인하는 내면</strong>을 지녔습니다. 혼자 있는 것보다는 누군가와 동행하고 정서적인 교감을 나눌 때 비로소 완전해짐을 느낍니다.</p><p>불공평한 상황이나 거친 언쟁이 오가는 환경에서 영혼이 찢어지는 듯한 고통을 받습니다. 갈등을 피하기 위해 기꺼이 자신의 주장을 굽히며, 주변을 언제나 아름답고 조화롭게 꾸미려는 무의식적인 미적 본능이 매우 강렬하게 작용합니다.</p>",
           ris: "<p>상승궁 천칭자리는 당신에게 <strong>타고난 사교계의 귀족 같은 우아함과 매력적인 마스크</strong>를 부여했습니다. 특유의 기분 좋은 미소와 세련된 패션 감각으로 누굴 만나든 3초 안에 호감을 얻어내는 압도적인 페르소나입니다.</p><p>모난 구석 없이 부드럽게 대화를 이끌어가며, 상대방의 기분을 본능적으로 맞추는 외교관 같은 태도를 보입니다. 미적 감각이 외모와 분위기에 자연스럽게 배어 있어 언제나 세련된 첫인상을 남깁니다.</p>" },
-
         { name: "전갈자리", icon: "♏", el: "Water", deg: "210°~240°",
           sun: "<p>12별자리 중 가장 강렬한 마력을 지닌 전갈자리는 <strong>표면을 뚫고 심연의 본질을 꿰뚫어 보는 통찰력의 제왕</strong>입니다. 당신의 자아는 적당히 타협하는 법이 없으며, 죽음과 재생을 상징하는 별자리답게 밑바닥까지 추락하더라도 불사조처럼 부활하는 소름 돋는 생존력과 멘탈을 지녔습니다.</p><p>한 번 목표를 정하면 목숨을 걸고 파고드는 지독한 집념이 있으며, 타인의 거짓말과 속내를 엑스레이처럼 투시해 냅니다. 모 아니면 도, 사랑 아니면 증오라는 극단적인 흑백 논리를 가지고 있어 복수심과 질투심으로 스스로를 태워버리지 않도록 감정의 정화가 필수적입니다.</p>",
           moon: "<p>내면의 바다에 전갈자리가 똬리를 틀었습니다. 당신의 감정은 <strong>블랙홀처럼 깊이를 알 수 없고 파괴적일 만큼 강렬</strong>합니다. 겉으로 아무리 평온해 보여도 속에서는 화산 같은 열정과 의심, 그리고 직관력이 소용돌이치고 있습니다.</p><p>가벼운 관계나 피상적인 대화를 혐오하며, 타인과 영혼까지 완전히 하나로 결합되는 깊고 은밀한 정서적 융합을 갈망합니다. 한 번 상처받은 일은 평생 잊지 않으며, 위기 상황에서 가장 차갑고 이성적인 멘탈이 나오는 기이한 내면의 힘을 가졌습니다.</p>",
           ris: "<p>동쪽 지평선의 전갈자리는 당신에게 <strong>쉽게 범접할 수 없는 신비롭고 비밀스러운 카리스마</strong>를 씌워주었습니다. 말수가 적고 조용하지만, 사람을 꿰뚫어 보는 듯한 깊고 강렬한 눈빛 하나만으로 주변 공기를 압도합니다.</p><p>상대방은 당신을 처음 보았을 때 다소 차갑고 경계심이 많으며 속을 알 수 없는 사람이라고 느낍니다. 하지만 그 묘한 분위기 이면에 숨겨진 엄청난 에너지 때문에 자석처럼 당신에게 이끌리는 치명적인 첫인상입니다.</p>" },
-
         { name: "사수자리", icon: "♐", el: "Fire", deg: "240°~270°",
           sun: "<p>활시위를 당기는 켄타우로스를 상징하는 사수자리는 <strong>끝없이 확장하고 철학적 진리를 좇는 자유로운 영혼</strong>입니다. 당신의 코어 에너지는 한곳에 머무는 것을 죽음보다 싫어하며, 더 넓은 세상(해외), 더 높은 차원의 지식(학문, 종교)을 향해 멈추지 않고 화살을 쏘아 올립니다.</p><p>태생적으로 긍정적이고 낙천적이며, 거짓 없이 투명한 솔직함으로 사람들에게 시원한 에너지를 전파합니다. 그러나 지나친 이상주의로 현실의 디테일을 놓치거나, 필터링 없는 직설적인 화법이 타인에게 무례함으로 비칠 수 있으니 현실 감각을 기르는 것이 숙제입니다.</p>",
-          moon: "<p>달이 사수자리에 있을 때, 당신의 무의식은 <strong>얽매임 없는 абсолют(절대적)인 자유</strong>를 끊임없이 갈망합니다. 감정적으로 끈적거리고 복잡하게 얽히는 상황을 견디지 못하며, 극심한 스트레스를 받을 때는 여행을 떠나거나 완전히 새로운 학문을 탐구하며 내면을 리셋합니다.</p><p>아무리 심각하고 절망적인 상황이라도 특유의 유머 감각과 "어떻게든 되겠지"라는 우주적인 낙천성으로 털어버리는 놀라운 심리적 회복 탄력성을 지니고 있습니다.</p>",
+          moon: "<p>달이 사수자리에 있을 때, 당신의 무의식은 <strong>얽매임 없는 절대적인 자유</strong>를 끊임없이 갈망합니다. 감정적으로 끈적거리고 복잡하게 얽히는 상황을 견디지 못하며, 극심한 스트레스를 받을 때는 여행을 떠나거나 완전히 새로운 학문을 탐구하며 내면을 리셋합니다.</p><p>아무리 심각하고 절망적인 상황이라도 특유의 유머 감각과 '어떻게든 되겠지'라는 우주적인 낙천성으로 털어버리는 놀라운 심리적 회복 탄력성을 지니고 있습니다.</p>",
           ris: "<p>상승궁 사수자리는 당신의 외모와 첫인상에 <strong>탁 트인 호탕함과 스포티한 활력</strong>을 부여했습니다. 당신은 넓은 보폭으로 성큼성큼 걷고 시원한 미소를 지으며 타인에게 다가가는 오픈 마인드의 소유자입니다.</p><p>사람들은 당신을 가식 없고 시원시원하며 어디로 튈지 모르는 재미있는 사람으로 인식합니다. 낯선 환경에서도 주눅 들지 않는 거대한 긍정의 에너지가 당신의 가장 강력한 사회적 무기입니다.</p>" },
-
         { name: "염소자리", icon: "♑", el: "Earth", deg: "270°~300°",
           sun: "<p>혹독한 겨울을 견디며 산의 정상에 오르는 산양, 염소자리는 <strong>야망과 권위, 그리고 궁극적인 인내의 상징</strong>입니다. 당신의 본질은 눈앞의 유혹에 흔들리지 않고 거대한 목표를 향해 피도 눈물도 없이 전진하는 냉철한 전략가입니다.</p><p>뼈를 깎는 책임감과 현실 감각으로 조직을 이끌고 룰을 세우며, 나이가 들수록 점점 더 강력한 성공의 반열에 오르는 완벽한 대기만성형 구조입니다. 그러나 성공을 위해 인간적인 감정과 삶의 여유를 지나치게 억누르며 스스로를 메마르게 하는 카르마를 지녔으니, 가끔은 어린아이처럼 쉴 줄 알아야 합니다.</p>",
-          moon: "<p>달이 염소자리에 위치한 당신의 내면은 <strong>감정을 통제하고 결과를 도출하는 것을 최우선으로 여기는 군관(軍官)</strong>과 같습니다. 슬픔이나 우울감 같은 감정적 동요를 나약함의 증거로 여기며, 혼자서 묵묵히 삭히고 이성으로 짓누르려 합니다.</p><p>당신은 타인에게 감정적으로 위로받기보다는, 현실적인 성취를 이루고 사회적 지위를 확고히 했을 때 가장 깊고 단단한 내면의 안정을 느낍니다. 사랑하는 사람에게도 달콤한 말보다는 끝까지 책임지는 묵직한 행동으로 애정을 증명합니다.</p>",
+          moon: "<p>달이 염소자리에 위치한 당신의 내면은 <strong>감정을 통제하고 결과를 도출하는 것을 최우선으로 여기는 사령관</strong>과 같습니다. 슬픔이나 우울감 같은 감정적 동요를 나약함의 증거로 여기며, 혼자서 묵묵히 삭히고 이성으로 짓누르려 합니다.</p><p>당신은 타인에게 감정적으로 위로받기보다는, 현실적인 성취를 이루고 사회적 지위를 확고히 했을 때 가장 깊고 단단한 내면의 안정을 느낍니다. 사랑하는 사람에게도 달콤한 말보다는 끝까지 책임지는 묵직한 행동으로 애정을 증명합니다.</p>",
           ris: "<p>동쪽 지평선의 염소자리는 당신에게 <strong>빈틈을 허락하지 않는 차갑고 프로페셔널한 아우라</strong>를 덧입혔습니다. 나이에 비해 성숙하고 애어른 같으며, 첫눈에 보아도 뼈대 있는 권위와 진지함이 느껴집니다.</p><p>사람들은 당신을 쉽게 대하지 못하며 몹시 책임감 있고 실력 있는 사람으로 무한한 신뢰를 보냅니다. 다소 무뚝뚝하고 보수적으로 보일 수 있지만, 그 견고한 마스크가 세상의 풍파로부터 당신을 완벽하게 보호해 줍니다.</p>" },
-
         { name: "물병자리", icon: "♒", el: "Air", deg: "300°~330°",
           sun: "<p>혁명과 반역의 별 천왕성의 지배를 받는 물병자리는 <strong>기존의 질서를 파괴하고 새로운 비전을 제시하는 천재이자 마이웨이</strong>입니다. 당신의 자아는 사회적 관습이나 타인의 시선에 1%도 얽매이지 않으며, 오직 자신의 독창적인 논리와 인류애적 이상을 향해 나아갑니다.</p><p>모두와 친구가 될 수 있는 열린 마음을 지녔지만, 누구와도 완전히 섞이지 않는 철저한 객관성과 거리 두기를 유지합니다. 감정에 호소하는 것을 혐오하고 팩트와 논리로만 승부하려 하며, 때로는 이 지나친 이성주의가 타인에게 얼음장 같은 냉정함으로 상처를 줄 수 있습니다.</p>",
-          moon: "<p>내면의 바다인 달궁에 공기의 기운이 섞여, 당신의 감정은 <strong>마치 인공지능처럼 극도로 객관화되고 해체된 상태</strong>로 작용합니다. 강렬한 슬픔이나 분노가 찾아와도 그 감정에 휩싸이기보다는 "내가 왜 이런 감정을 느끼지?"라며 제3자처럼 분석하려 듭니다.</p><p>당신은 누군가와 끈적거리고 감정적으로 얽매이는 관계에서 숨이 막히는 압박감을 느낍니다. 연인이나 가족 간에도 적절한 물리적, 정신적 거리가 유지되고 친구처럼 쿨한 연대감이 형성될 때 내면이 가장 평화롭습니다.</p>",
-          ris: "<p>상승궁 물병자리는 당신의 겉모습에 <strong>어딘지 모르게 톡톡 튀고 범상치 않은 독특한 바이브</strong>를 새겨놓았습니다. 유행을 따라가기보다는 본인만의 확고하고 기하학적인 스타일을 추구하며 타인의 시선을 전혀 신경 쓰지 않는 당당함이 있습니다.</p><p>첫인상에서부터 기존의 상식에 얽매이지 않는 쿨하고 지적인 혁신가의 아우라가 뿜어져 나옵니다. 묘한 매력과 함께 "이 사람은 나랑 완전히 다른 차원에 사는 것 같다"는 신비감을 줍니다.</p>" },
-
+          moon: "<p>내면의 바다인 달궁에 공기의 기운이 섞여, 당신의 감정은 <strong>마치 인공지능처럼 극도로 객관화되고 해체된 상태</strong>로 작용합니다. 강렬한 슬픔이나 분노가 찾아와도 그 감정에 휩싸이기보다는 '내가 왜 이런 감정을 느끼지?'라며 제3자처럼 분석하려 듭니다.</p><p>당신은 누군가와 끈적거리고 감정적으로 얽매이는 관계에서 숨이 막히는 압박감을 느낍니다. 연인이나 가족 간에도 적절한 물리적, 정신적 거리가 유지되고 친구처럼 쿨한 연대감이 형성될 때 내면이 가장 평화롭습니다.</p>",
+          ris: "<p>상승궁 물병자리는 당신의 겉모습에 <strong>어딘지 모르게 톡톡 튀고 범상치 않은 독특한 바이브</strong>를 새겨놓았습니다. 유행을 따라가기보다는 본인만의 확고하고 기하학적인 스타일을 추구하며 타인의 시선을 전혀 신경 쓰지 않는 당당함이 있습니다.</p><p>첫인상에서부터 기존의 상식에 얽매이지 않는 쿨하고 지적인 혁신가의 아우라가 뿜어져 나옵니다. 묘한 매력과 함께 '이 사람은 나랑 완전히 다른 차원에 사는 것 같다'는 신비감을 줍니다.</p>" },
         { name: "물고기자리", icon: "♓", el: "Water", deg: "330°~360°",
           sun: "<p>12별자리의 마지막이자 모든 에너지가 하나로 융합되는 물고기자리는 <strong>우주적 상상력과 경계 없는 동정심을 지닌 영혼의 치유자</strong>입니다. 당신의 본질은 세속적인 경쟁과 물질의 경계를 초월하여, 예술, 종교, 영적인 세계에서 무한한 직관과 영감을 길어 올리는 것입니다.</p><p>타인의 아픔을 자신의 것처럼 똑같이 느끼는 엄청난 공감 능력 탓에 쉽게 상처받고 스스로를 희생양으로 만들기도 합니다. 현실 감각이 떨어지고 맺고 끊음이 불분명하여 사기나 혼란에 빠지기 쉬우니, 차가운 이성의 닻을 현실에 단단히 내리는 훈련이 당신의 궁극적 과제입니다.</p>",
           moon: "<p>달이 물고기자리에 머무는 당신의 무의식은 <strong>스펀지처럼 경계선이 없고 지독하게 예민한 상태</strong>입니다. 의식하지 않아도 주변 공간의 분위기, 사람들의 감정 파동이 당신의 내면으로 고스란히 밀려들어옵니다.</p><p>엄청난 감정적 과부하를 겪기 쉽기 때문에, 현실 도피적인 성향(수면, 예술, 몽상)으로 심리를 방어하려 합니다. 음악이나 미술, 명상 등을 통해 마음속 찌꺼기를 정화하는 시간이 영혼의 생존을 위해 필수적이며 맹목적인 믿음과 로맨스를 갈망합니다.</p>",
@@ -231,7 +223,6 @@ const Core = (() => {
         UTC: { lat: 0, lon: 0, tz: 0, label: "기타 지역 (협정세계시 UTC)" }
     };
 
-    // 원소별 심층 테마 DB
     const THEME_DB = {
         "Fire": { w: "위험을 감수하고 대담하게 판을 벌려 단숨에 막대한 이익을 거머쥐는 추진력의 부자입니다. 주식이나 벤처 등 변동성이 크고 스릴 있는 분야에서 재능을 발휘하며, 생각한 아이디어를 지체 없이 행동으로 옮기는 파괴력이 곧 돈이 됩니다. 다만 기분에 취해 낭비하는 경향을 잡아야 부가 축적됩니다.", c: "리더, 창업가, 엔터테인먼트, 스포츠, 영업 등 끊임없이 경쟁하고 타인의 시선을 즐기는 역동적인 무대가 천직입니다.", l: "밀당을 싫어하고 내 감정에 100% 솔직하게 직진하는 불꽃 같은 연애를 합니다. 정복욕이 강하며 열정이 한 번 식으면 차갑게 식어버리니 두 사람 사이의 끊임없는 이벤트와 긴장감이 유지되어야 합니다." },
         "Earth": { w: "요행과 일확천금을 바라지 않습니다. 한 푼 두 푼 꾸준히 저축하고 시간이 갈수록 가치가 오르는 실물 자산(부동산, 토지)에 묻어두어 절대 무너지지 않는 거대한 부를 묵묵히 쌓아 올리는 복리의 마법사입니다. 잃지 않는 안전한 보수적 투자가 당신의 가장 큰 무기입니다.", c: "금융, 부동산, 행정 관리, 엔지니어, 데이터 분석 등 신뢰를 바탕으로 한 치의 오차 없이 꼼꼼하게 진행되는 실무 분야에서 최고의 권위를 인정받습니다.", l: "가벼운 만남을 싫어하며 쉽게 마음을 열지 않지만, 한 번 확신이 서면 바위처럼 변치 않는 듬직함으로 상대방에게 궁극의 안정감을 제공합니다. 물질적 지원이 곧 사랑의 증거입니다." },
@@ -273,10 +264,12 @@ const Core = (() => {
 
     const run = async () => {
         const name = document.getElementById('u-name').value || '게스트';
-        const y = parseInt(document.getElementById('u-year').value), m = parseInt(document.getElementById('u-month').value), d = parseInt(document.getElementById('u-day').value), h = parseInt(document.getElementById('u-time').value);
+        const y = parseInt(document.getElementById('u-year').value), m = parseInt(document.getElementById('u-month').value), d = parseInt(document.getElementById('u-day').value), h = document.getElementById('u-time').value;
         const locMode = document.getElementById('u-location').value;
         
         let lat, lon, tz, locLabel;
+        const isTimeKnown = (h !== 'none');
+        const hourVal = isTimeKnown ? parseInt(h) : 12; // 모르면 12시 세팅
 
         document.getElementById('loader').style.display = 'flex';
         
@@ -291,7 +284,7 @@ const Core = (() => {
             const dates = [20, 19, 21, 20, 21, 21, 23, 23, 23, 23, 22, 22]; 
             const sunIdx = (d >= dates[m - 1]) ? (m + 9) % 12 : (m + 8) % 12;
 
-            const date = new Date(Date.UTC(y, m - 1, d, h - tz, 0, 0));
+            const date = new Date(Date.UTC(y, m - 1, d, hourVal - tz, 0, 0));
             const jd = (date.getTime() / 86400000) + 2440587.5;
             const T = jd - 2451545.0; 
             
@@ -309,7 +302,7 @@ const Core = (() => {
             let ascDeg = (asc * 180 / Math.PI + 360 + 90) % 360;
             const risIdx = Math.floor(ascDeg / 30);
 
-            const logData = { jd: jd.toFixed(2), t: T.toFixed(4), tz: tz, lambda: lambda.toFixed(2), lst: lst.toFixed(2), ascDeg: ascDeg.toFixed(2), lat: lat, lon: lon };
+            const logData = { jd: jd.toFixed(2), t: T.toFixed(4), tz: tz, lambda: lambda.toFixed(2), lst: lst.toFixed(2), ascDeg: ascDeg.toFixed(2), lat: lat, lon: lon, isTimeKnown: isTimeKnown };
             render(name, sunIdx, moonIdx, risIdx, locLabel, logData);
             document.getElementById('loader').style.display = 'none';
         }, 2000);
@@ -317,23 +310,23 @@ const Core = (() => {
 
     const render = (name, s, m, r, locLabel, log) => {
         document.getElementById('r-name').innerText = `${name} 님의 정밀 천궁도 리포트`;
-        document.getElementById('r-info').innerText = `Location: ${locLabel} (Lat: ${log.lat}°, Lon: ${log.lon}°)`;
+        document.getElementById('r-info').innerText = `Location: ${locLabel} (위도: ${log.lat}°, 경도: ${log.lon}°)`;
         
         document.getElementById('r-log').innerHTML = `
             <h4>Astro-Mechanics Computation Log</h4>
             <div class="log-item">
-                <span class="log-title">1. 천문학 기준일(Julian Date) 변환</span>
-                현지 시간을 협정 세계시(UTC)로 변환 후, 기준점인 J2000.0으로부터 경과된 궤도 일수(\\(T\\))를 산출했습니다.
+                <span class="log-title">1. 천문학적 기준일(Julian Date) 변환</span>
+                입력하신 생년월일과 현지 시간을 협정 세계시(UTC)로 변환한 후, 점성학 계산의 기준점인 J2000.0(2000년 1월 1일 정오)으로부터 경과된 일수(\\(T\\))를 산출했습니다.
                 <div class="log-formula">\\( T = JD - 2451545.0 = ${log.t} \\text{ days} \\)</div>
             </div>
             <div class="log-item">
-                <span class="log-title">2. 달 궤도 이심률 보정 및 진황경 추출</span>
-                달의 평균 황경(\\(L\\))과 근점각(\\(M\\))을 교차 검증하여, 탄생 순간 달의 실제 위치인 진황경(\\(\\lambda\\))을 도출했습니다.
+                <span class="log-title">2. 달의 궤도 이심률(Eccentricity) 보정</span>
+                달의 평균 황경(\\(L\\))과 근점각(\\(M\\))을 구한 뒤, 찌그러진 타원 궤도의 오차를 삼각함수로 보정하여 태어난 순간 달의 실제 위치인 진황경(\\(\\lambda\\))을 도출했습니다.
                 <div class="log-formula">\\( \\lambda = (L + 6.289 \\times \\sin M) \\pmod{360} = ${log.lambda}^\\circ \\)</div>
             </div>
             <div class="log-item">
                 <span class="log-title">3. 상승점(Ascendant) 지평 좌표 변환</span>
-                기재된 경도(${log.lon}°) 기반의 지방 항성시(LST: ${log.lst}H)와 위도(${log.lat}°)를 황도 각도 수식에 대입하여 동쪽 지평선 좌표를 계산했습니다.
+                해당 지역의 경도(${log.lon}°)를 반영해 지방 항성시(LST: ${log.lst}H)를 구하고, 위도(${log.lat}°)와 지구의 황도 경사각(\\(\\epsilon \\approx 23.4^\\circ\\))을 적용해 동쪽 지평선이 황도와 교차하는 각도를 계산했습니다.
                 <div class="log-formula">\\( \\text{Asc} = \\arctan \\left( \\frac{\\cos(\\text{RAMC})}{-\\sin(\\text{RAMC}) \\cos \\epsilon - \\tan \\phi \\sin \\epsilon} \\right) = ${log.ascDeg}^\\circ \\)</div>
             </div>
         `;
@@ -341,34 +334,35 @@ const Core = (() => {
         document.getElementById('r-big3').innerHTML = `
             <div class="big3-card"><p style="font-size:0.75rem; color:var(--text-muted); font-weight:800; letter-spacing:1px;">태양궁 (SUN)</p><p style="font-size:2.2rem; margin:10px 0; color:var(--gold-primary); filter: drop-shadow(0 0 8px rgba(212,175,55,0.4));">${ZODIAC[s].icon}</p><p style="font-weight:900; font-size:1.1rem;">${ZODIAC[s].name}</p></div>
             <div class="big3-card"><p style="font-size:0.75rem; color:var(--text-muted); font-weight:800; letter-spacing:1px;">달궁 (MOON)</p><p style="font-size:2.2rem; margin:10px 0; color:var(--gold-primary); filter: drop-shadow(0 0 8px rgba(212,175,55,0.4));">${ZODIAC[m].icon}</p><p style="font-weight:900; font-size:1.1rem;">${ZODIAC[m].name}</p></div>
-            <div class="big3-card"><p style="font-size:0.75rem; color:var(--text-muted); font-weight:800; letter-spacing:1px;">상승궁 (RISING)</p><p style="font-size:2.2rem; margin:10px 0; color:var(--gold-primary); filter: drop-shadow(0 0 8px rgba(212,175,55,0.4));">${ZODIAC[r].icon}</p><p style="font-weight:900; font-size:1.1rem;">${ZODIAC[r].name}</p></div>
+            <div class="big3-card" style="${log.isTimeKnown ? '' : 'opacity:0.4; filter:grayscale(1);'}"><p style="font-size:0.75rem; color:var(--text-muted); font-weight:800; letter-spacing:1px;">상승궁 (RISING)</p><p style="font-size:2.2rem; margin:10px 0; color:var(--gold-primary); filter: drop-shadow(0 0 8px rgba(212,175,55,0.4));">${log.isTimeKnown ? ZODIAC[r].icon : '❓'}</p><p style="font-weight:900; font-size:1.1rem;">${log.isTimeKnown ? ZODIAC[r].name : '시간 미상'}</p></div>
         `;
 
         document.getElementById('dynamic-results').innerHTML = `
             <div class="r-section">
                 <h3>☀️ 1. 본질과 생애 주기 (태양궁)</h3>
-                <div class="theory-box"><strong>[태양궁의 점성학적 의미]</strong> 지구에서 보았을 때 태양이 1년 동안 지나가는 길인 <strong>황도(Ecliptic)를 30도씩 12개로 분할한 영역</strong>입니다. 태어난 순간 태양의 위치를 뜻하며, 평생을 관통하는 당신의 코어 자아이자 사회적으로 발현되는 가장 핵심적인 정체성을 상징합니다.</div>
-                <div class="result-content">탄생 순간 태양은 황도 <strong>${ZODIAC[s].deg}</strong> 구간을 지나고 있었습니다. <strong>당신의 진정한 자아는 ${ZODIAC[s].name}입니다.</strong><br><br>${ZODIAC[s].sun}</div>
+                <div class="theory-box"><strong>[태양궁의 점성학적 의미]</strong> 지구에서 보았을 때 태양이 1년 동안 지나가는 길인 <strong>황도(Ecliptic)를 30도씩 12개로 분할한 영역</strong>입니다. 평생을 관통하는 당신의 본질이자 인생의 목적지, 사회적으로 발현되는 가장 핵심적인 자아를 상징합니다.</div>
+                <div class="result-content">당신이 태어난 시기, 태양은 황도 <strong>${ZODIAC[s].deg}</strong> 구간인 ${ZODIAC[s].name}를 지나고 있었습니다.<br><br>${ZODIAC[s].sun}</div>
             </div>
-            
             <div class="r-section">
                 <h3>🌙 2. 내면의 거울 (달궁)</h3>
-                <div class="theory-box"><strong>[달궁의 점성학적 의미]</strong> 태양이 낮의 이성적인 모습이라면, 달은 밤의 무의식적인 모습입니다. 점성학에서 달은 <strong>본능적인 습관, 정서적 안정감, 그리고 감정의 억압된 뿌리</strong>를 상징합니다. 내가 온전히 혼자 있을 때나 방어 기제가 해제되었을 때 비로소 드러나는 진짜 나의 속마음입니다.</div>
-                <div class="result-content">궤도 역학 계산 결과, 당신의 달 진황경 위치는 <strong>${ZODIAC[m].deg}</strong> 구간이었습니다. <strong>당신의 영혼을 지배하는 내면은 ${ZODIAC[m].name}입니다.</strong><br><br>${ZODIAC[m].moon}</div>
+                <div class="theory-box"><strong>[달궁의 점성학적 의미]</strong> 태양궁이 낮의 모습이라면, 달궁은 밤의 모습입니다. 점성학에서 달은 <strong>무의식, 본능적인 습관, 그리고 감정의 뿌리</strong>를 상징합니다. 내가 가장 편안할 때 무방비하게 드러나는 진짜 내면의 모습입니다.</div>
+                <div class="result-content">탄생 순간 달의 진황경(True Longitude) 위치는 <strong>${ZODIAC[m].deg}</strong> 구간인 ${ZODIAC[m].name}였습니다.<br><br>${ZODIAC[m].moon}</div>
             </div>
-            
+            ${log.isTimeKnown ? `
             <div class="r-section">
                 <h3>🌅 3. 페르소나와 첫인상 (상승궁)</h3>
-                <div class="theory-box"><strong>[상승궁의 점성학적 의미]</strong> 지구가 자전함에 따라 <strong>당신이 태어난 정확한 순간, 동쪽 지평선(Ascendant)에 떠오르고 있던 별자리</strong>입니다. 위도와 경도, 분 단위의 시간에 따라 결과가 완전히 달라집니다. 타인이 나를 처음 만났을 때 3초 안에 느끼는 <strong>'첫인상'이자, 거친 세상에 나아갈 때 내가 무의식적으로 쓰고 나가는 '사회적 방어구(가면)'</strong>를 의미합니다.</div>
-                <div class="result-content">해당 지역의 지평 좌표계 연산 결과, 동쪽 지평선은 <strong>${ZODIAC[r].deg}</strong> 구간을 가리키고 있었습니다. <strong>세상이 바라보는 당신의 아우라는 ${ZODIAC[r].name}입니다.</strong><br><br>${ZODIAC[r].ris}</div>
-            </div>
-
+                <div class="theory-box"><strong>[상승궁의 점성학적 의미]</strong> 지구가 자전함에 따라 <strong>태어난 정확한 순간, 동쪽 지평선(Ascendant)에 떠오르고 있던 별자리</strong>입니다. 타인이 나를 처음 보았을 때 느끼는 <strong>'첫인상'이자 세상에 나아갈 때 쓰는 '사회적 페르소나'</strong>를 상징합니다.</div>
+                <div class="result-content">해당 지역의 지평 좌표계 연산 결과, 동쪽 지평선은 <strong>${ZODIAC[r].deg}</strong> 구간인 ${ZODIAC[r].name}를 가리키고 있었습니다.<br><br>${ZODIAC[r].ris}</div>
+            </div>` : `
+            <div class="r-section">
+                <h3>🌅 3. 페르소나와 첫인상 (상승궁)</h3>
+                <div class="result-content"><p style="color:var(--color-danger); font-size:0.95rem;">※ 태어난 시간을 정확히 알 수 없어, 동쪽 지평선 기준의 상승궁(Ascendant) 좌표 산출이 불가능합니다. 시간을 확인하신 후 다시 분석을 진행하시면 정확한 첫인상과 사회적 페르소나를 확인할 수 있습니다.</p></div>
+            </div>`}
             <div class="r-section">
                 <h3>💰 4. 우주가 부여한 천직과 재물 파동</h3>
                 <div class="theory-box">태양궁을 지배하는 <strong>${ZODIAC[s].el} (원소) 에너지</strong>를 바탕으로 분석한 당신의 선천적 재물 창출 알고리즘과 직업적성입니다.</div>
                 <div class="result-content"><strong>[재물 축적 패턴]</strong><br>${THEME_DB[ZODIAC[s].el].w}<br><br><strong>[타고난 천직]</strong><br>${THEME_DB[ZODIAC[s].el].c}</div>
             </div>
-
             <div class="r-section">
                 <h3>❤️ 5. 카르마와 연애의 역학</h3>
                 <div class="theory-box">내면과 감정을 통제하는 달궁의 <strong>${ZODIAC[m].el} (원소) 파동</strong>이 요구하는 인간관계의 룰과 정서적 교감 방식입니다.</div>
@@ -378,34 +372,43 @@ const Core = (() => {
 
         const link = (ZODIAC[s].el === 'Earth' || ZODIAC[s].el === 'Fire') ? 'https://link.coupang.com/a/eu5uLR' : 'https://link.coupang.com/a/eu5td7';
         
-        // 💎 사주/관상 페이지와 100% 동일한 일관된 CTA 스타일 
+        // 💎 사주/관상 페이지와 일관된 대형 CTA
         document.getElementById('cta-area').innerHTML = `
             <div class="cta-box">
-                <p style="font-size: 1.1rem; color: #fff; margin-bottom: 20px; font-weight: 300;">별자리의 긍정적인 파동은 극대화하고, 부족한 기운은 물리적인 아이템으로 상쇄시킬 수 있습니다.</p>
-                <a href="${link}" target="_blank" class="btn-coupang">✨ 나의 부족한 기운을 채워줄 시크릿 행운템 확인하기</a>
-                <p style="margin-top:20px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
+                <h3 style="color:#fff; margin-bottom:15px; font-weight:900; font-size:1.4rem;">✨ 타고난 우주적 에너지를 폭발시킬 아이템</h3>
+                <p style="color:var(--text-muted); font-size:1rem; margin-bottom:25px;">별자리의 긍정적인 기운은 극대화하고, 부족한 원소 파동은 물리적인 아이템을 통해 상쇄시켜 완벽한 운명의 밸런스를 맞출 수 있습니다.</p>
+                <a href="${link}" target="_blank" class="btn-coupang">나에게 맞는 행운템 확인하기 ></a>
+                <p style="margin-top:20px; font-size:0.8rem; color:rgba(255,255,255,0.3);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
             </div>
         `;
         
         if(window.MathJax) MathJax.typesetPromise();
+
         document.getElementById('input-view').style.display = 'none';
         document.getElementById('report-view').style.display = 'block';
         window.scrollTo(0,0);
     };
 
     return { run, toggleCustom, getGPS, init: () => {
-        const ys = document.getElementById('u-year'), ms = document.getElementById('u-month'), ds = document.getElementById('u-day');
+        // 날짜 동적 생성 (안전한 DOM 삽입 방식)
+        const ys = document.getElementById('u-year'), ms = document.getElementById('u-month'), ds = document.getElementById('u-day'), ts = document.getElementById('u-time');
+        
         for(let i=new Date().getFullYear(); i>=1940; i--) ys.add(new Option(i+'년', i));
         for(let i=1; i<=12; i++) ms.add(new Option(i+'월', i));
         for(let i=1; i<=31; i++) ds.add(new Option(i+'일', i));
-        ys.value = 1995;
-        const locSelect = document.getElementById('u-location');
-        for (const [key, value] of Object.entries(LOC)) locSelect.add(new Option(value.label, key));
-        locSelect.value = 'SEOUL'; // 디폴트 위치 서울 고정!
+        
+        ts.add(new Option('모름 (정오 기준)', 'none'));
+        for(let i=0; i<24; i++) ts.add(new Option(i.toString().padStart(2,'0')+':00', i));
+
+        ys.value = 1995; ms.value = 1; ds.value = 1; ts.value = 'none';
+        
+        // 지역은 HTML에 하드코딩 되어 있으니 여기서 다시 추가하지 않음 (중복 방지)
         toggleCustom();
     }};
 })();
-Core.init();
+
+// DOM 트리가 완성된 후 안전하게 init 실행
+window.addEventListener('DOMContentLoaded', Core.init);
 </script>
 </body>
 </html>
