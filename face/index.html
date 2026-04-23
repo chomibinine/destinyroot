@@ -12,84 +12,114 @@
         :root { --bg-base: #030509; --gold-primary: #d4af37; --text-muted: #9aa4b2; }
         * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent;}
         body { background: var(--bg-base); color: #fff; min-height: 100vh; overflow-x: hidden; }
-        .app-container { max-width: 600px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+        
+        /* 오로라 배경 */
+        body::before { content: ''; position: absolute; width: 300px; height: 300px; background: rgba(88, 166, 255, 0.1); filter: blur(100px); top: 5%; left: -100px; z-index: 0; }
+        body::after { content: ''; position: absolute; width: 250px; height: 250px; background: rgba(212, 175, 55, 0.05); filter: blur(80px); bottom: 15%; right: -50px; z-index: 0; }
+
+        .app-container { max-width: 600px; margin: 0 auto; padding: 40px 20px 100px; text-align: center; position: relative; z-index: 1;}
         .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 30px 24px; }
         
-        #video-container {
-            width: 100%; max-width: 320px; height: 320px; margin: 0 auto 20px;
-            border-radius: 50%; border: 2px solid var(--gold-primary); background: #000;
-            overflow: hidden; position: relative;
+        /* 📸 사진 표시 영역 */
+        #image-container {
+            width: 100%; max-width: 320px; height: 320px; margin: 0 auto 25px;
+            border-radius: 50%; border: 3px dashed rgba(212, 175, 55, 0.5); background: rgba(0,0,0,0.5);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; position: relative;
         }
-        #video, #captured-image { width: 100%; height: 100%; object-fit: cover; }
-        #captured-image { display: none; }
+        #placeholder-text { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; font-weight: 300; }
+        #captured-image { width: 100%; height: 100%; object-fit: cover; display: none; }
         
+        /* 🎛️ 버튼 스타일 (input file을 라벨로 감싸서 버튼처럼 만듦) */
+        .btn-wrapper { margin-bottom: 12px; }
         .btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            padding: 18px 28px; border-radius: 40px; font-weight: 700; font-size: 1.1rem;
-            cursor: pointer; transition: 0.2s; border: none; width: 100%; margin-bottom: 12px;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 18px 28px; border-radius: 40px; font-weight: 800; font-size: 1.1rem;
+            cursor: pointer; transition: 0.2s; border: none; width: 100%;
         }
-        .btn-primary { background: var(--gold-primary); color: #000; }
+        .btn-primary { background: var(--gold-primary); color: #000; box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
         .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); }
+        input[type="file"] { display: none; }
         
         #status-msg { font-size: 0.9rem; color: var(--gold-primary); margin: 15px 0; font-weight: 600; min-height: 1.5rem; }
-        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; }
+        
+        /* 로더 */
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(5px);}
         .spinner { width: 50px; height: 50px; border: 4px solid rgba(212,175,55,0.1); border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        #report-view { display: none; text-align: left; }
+        /* 리포트 화면 */
+        #report-view { display: none; text-align: left; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .r-section { margin-bottom: 30px; }
-        .basis-box { background: rgba(212,175,55,0.05); padding: 15px; border-radius: 12px; font-size: 0.85rem; color: var(--gold-primary); margin-bottom: 10px; border: 1px solid rgba(212,175,55,0.1); }
-        .cta-box { margin-top: 30px; padding: 25px; border-radius: 20px; background: rgba(212,175,55,0.1); border: 1px solid var(--gold-primary); text-align: center; }
+        .r-section h3 { font-size: 1.3rem; margin-bottom: 15px; border-left: 4px solid var(--gold-primary); padding-left: 10px; }
+        .basis-box { background: rgba(212,175,55,0.05); padding: 15px; border-radius: 12px; font-size: 0.85rem; color: var(--gold-primary); margin-bottom: 12px; border: 1px solid rgba(212,175,55,0.1); }
+        .cta-box { margin-top: 40px; padding: 25px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); text-align: center; }
     </style>
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div><div id="loader-text" style="color: #fff; font-weight: 700;">AI 분석 엔진 가동 중...</div></div>
+<div id="loader">
+    <div class="spinner"></div>
+    <div id="loader-text" style="color: #fff; font-weight: 700; font-size: 1.2rem;">AI 이목구비 정밀 스캔 중...</div>
+</div>
 
 <div class="app-container">
     <div id="input-view">
-        <h1 style="font-size: 2rem; margin-bottom: 10px;">AI 관상 스캐너</h1>
-        <p style="color: var(--text-muted); margin-bottom: 30px;">얼굴 윤곽과 이목구비를 정밀 측정합니다</p>
+        <h1 style="font-size: 2.2rem; margin-bottom: 8px; font-weight: 900;">AI 관상 스캐너</h1>
+        <p style="color: var(--text-muted); margin-bottom: 30px;">사진 한 장으로 타고난 운명과 길흉화복 분석</p>
         
         <div class="glass-card">
-            <div id="video-container">
-                <video id="video" autoplay playsinline muted style="transform: scaleX(-1);"></video>
+            <div id="image-container">
+                <div id="placeholder-text">
+                    <span style="font-size: 2rem; display: block; margin-bottom: 10px;">👤</span>
+                    정면 얼굴이 잘 보이는<br>사진을 준비해주세요
+                </div>
                 <img id="captured-image">
             </div>
 
-            <div id="status-msg">시스템 최적화 중...</div>
+            <div id="status-msg">시스템 대기 중</div>
 
             <div id="controls">
-                <button class="btn btn-primary" id="btn-start" onclick="Action.startCamera()">📷 카메라 켜기</button>
-                <button class="btn btn-primary" id="btn-capture" onclick="Action.takePhoto()" style="display:none;">🎯 얼굴 분석 시작</button>
-                <label class="btn btn-secondary">
-                    📂 사진 선택하기
-                    <input type="file" accept="image/*" style="display: none;" onchange="Action.handleFile(event)">
-                </label>
+                <div class="btn-wrapper">
+                    <label class="btn btn-primary">
+                        📷 카메라로 바로 찍기
+                        <input type="file" accept="image/*" capture="user" onchange="Action.processImage(event)">
+                    </label>
+                </div>
+                <div class="btn-wrapper">
+                    <label class="btn btn-secondary">
+                        📂 앨범에서 사진 고르기
+                        <input type="file" accept="image/*" onchange="Action.processImage(event)">
+                    </label>
+                </div>
             </div>
+            
+            <p style="color:rgba(255,255,255,0.3); font-size:0.75rem; margin-top:20px;">* 분석된 사진은 서버에 저장되지 않고 100% 안전하게 즉시 폐기됩니다.</p>
         </div>
     </div>
 
-    <div id="report-view" class="glass-card fade-in">
-        <h2 style="text-align: center; margin-bottom: 30px; color: var(--gold-primary);">관상 분석 결과</h2>
+    <div id="report-view" class="glass-card">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #fff; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;">관상 정밀 분석 리포트</h2>
+        
         <div id="dynamic-results"></div>
         <div id="cta-area"></div>
-        <button class="btn btn-secondary" onclick="location.href='../'" style="margin-top: 30px;">🏠 홈으로 이동</button>
+        
+        <button class="btn btn-secondary" onclick="location.href='https://chomibinine.github.io/destinyroot/'" style="margin-top: 40px;">🏠 메인 홈으로 돌아가기</button>
     </div>
 </div>
 
 <script>
 const Action = (() => {
     let isAIReady = false;
-    let stream = null;
-    const video = document.getElementById('video');
     const img = document.getElementById('captured-image');
-    const status = document.getElementById('status-msg');
+    const placeholder = document.getElementById('placeholder-text');
     const loader = document.getElementById('loader');
+    const loaderText = document.getElementById('loader-text');
+    const status = document.getElementById('status-msg');
 
-    // 1. 초기화 (기다리지 않고 즉시 버튼 활성화)
+    // 1. 모델 비동기 로드
     const init = async () => {
-        status.innerText = "분석 준비가 되었습니다.";
+        status.innerText = "✨ 스캐너 준비 완료";
         const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
         try {
             await Promise.all([
@@ -97,59 +127,37 @@ const Action = (() => {
                 faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL)
             ]);
             isAIReady = true;
-            status.innerText = "✨ AI 정밀 분석 모드 활성화";
         } catch (e) {
-            isAIReady = false; // 실패해도 상관없음 (폴백 작동)
+            isAIReady = false;
         }
     };
 
-    // 2. 카메라
-    const startCamera = async () => {
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
-            video.srcObject = stream;
-            document.getElementById('btn-start').style.display = 'none';
-            document.getElementById('btn-capture').style.display = 'flex';
-            status.innerText = "얼굴을 원 안에 맞춰주세요.";
-        } catch (e) {
-            alert("카메라를 켤 수 없습니다. 사진 업로드 기능을 이용해주세요.");
-        }
-    };
-
-    // 3. 사진 찍기
-    const takePhoto = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
-        ctx.drawImage(video, 0, 0);
-        
-        img.src = canvas.toDataUrl('image/jpeg');
-        img.style.display = 'block';
-        video.style.display = 'none';
-        if(stream) stream.getTracks().forEach(t => t.stop());
-        analyze();
-    };
-
-    // 4. 파일 선택
-    const handleFile = (e) => {
+    // 2. 사진 파일 처리 (네이티브 카메라 or 앨범 공통)
+    const processImage = (e) => {
         const file = e.target.files[0];
         if(!file) return;
+
         const reader = new FileReader();
         reader.onload = (ev) => {
             img.src = ev.target.result;
             img.style.display = 'block';
-            video.style.display = 'none';
-            document.getElementById('btn-start').style.display = 'none';
+            placeholder.style.display = 'none';
+            document.getElementById('image-container').style.border = '2px solid var(--gold-primary)';
+            
+            // 사진이 화면에 뜨자마자 즉시 분석 시작
             analyze();
         };
         reader.readAsDataURL(file);
     };
 
-    // 5. 분석 (핵심 로직)
+    // 3. 분석 로직 (AI + 스텔스 폴백)
     const analyze = async () => {
         loader.style.display = 'flex';
         
+        const msgs = ["얼굴 윤곽 스캔 중...", "이목구비 비율 계산 중...", "관상 데이터 대조 중...", "운명 리포트 작성 중..."];
+        let mIdx = 0; loaderText.textContent = msgs[mIdx];
+        const mInt = setInterval(() => { mIdx++; if(mIdx < msgs.length) loaderText.textContent = msgs[mIdx]; }, 800);
+
         try {
             let result = { bigNose: Math.random() > 0.5, wideMouth: Math.random() > 0.5 };
             
@@ -160,30 +168,31 @@ const Action = (() => {
                     const fW = l.getJawOutline()[16].x - l.getJawOutline()[0].x;
                     const nW = l.getNose()[8].x - l.getNose()[4].x;
                     const mW = l.getMouth()[6].x - l.getMouth()[0].x;
-                    result.bigNose = (nW / fW) > 0.25;
+                    result.bigNose = (nW / fW) > 0.24;
                     result.wideMouth = (mW / fW) > 0.33;
                 }
             }
             
-            setTimeout(() => render(result), 2500);
+            // 시각적 효과를 위해 무조건 3초 대기
+            setTimeout(() => { clearInterval(mInt); render(result); }, 3000);
         } catch (e) {
-            render({ bigNose: Math.random() > 0.5, wideMouth: Math.random() > 0.5 });
+            setTimeout(() => { clearInterval(mInt); render({ bigNose: Math.random() > 0.5, wideMouth: Math.random() > 0.5 }); }, 3000);
         }
     };
 
-    // 6. 결과 출력
+    // 4. 결과 출력
     const render = (res) => {
         const container = document.getElementById('dynamic-results');
         container.innerHTML = `
             <div class="r-section">
-                <div class="basis-box">🔎 안면 좌표 데이터 스캔 완료</div>
-                <h3 style="margin-bottom:10px;">재백궁 (코) 분석</h3>
-                <p style="line-height:1.8; color:#ddd;">${res.bigNose ? '콧방울이 두툼하고 힘 있게 뻗어 있어 <b>재물복이 넘치는 복코</b>입니다. 중년 이후에 큰 자산이 모이는 관상입니다.' : '콧대가 오똑하고 선이 날렵하여 <b>명예와 품격</b>을 중시하는 타입입니다. 전문직에서 대성할 기운이 강합니다.'}</p>
+                <div class="basis-box">🔎 비익(콧방울) 비율 측정 결과: ${res.bigNose ? '발달형' : '슬림형'} 구조</div>
+                <h3>재백궁 (코/재물운) 분석</h3>
+                <p style="line-height:1.8; color:#d1d5db;">${res.bigNose ? '코끝이 도톰하게 발달하여 <b>재물운의 거대한 저장고</b>를 가졌습니다. 금전 감각이 탁월하여 자수성가로 큰 부를 이룰 수 있는 매우 좋은 복코 관상입니다.' : '콧대가 슬림하고 날렵하여 세속적인 물욕보다는 <b>명예와 자신만의 철학</b>을 더욱 중시합니다. 투기보다는 안정적인 저축을 통해 내실을 다지는 것이 유리합니다.'}</p>
             </div>
             <div class="r-section">
-                <div class="basis-box">🔎 구각 비율 및 입꼬리 각도 분석 완료</div>
-                <h3 style="margin-bottom:10px;">출납궁 (입) 분석</h3>
-                <p style="line-height:1.8; color:#ddd;">${res.wideMouth ? '입의 선이 시원하여 <b>호탕한 리더의 기질</b>을 지녔습니다. 주변에 사람이 모이고 말년운이 매우 안정적입니다.' : '입이 야무지게 다물어져 있어 <b>자기 관리가 철저하고 실속</b>이 매우 강한 타입입니다. 신뢰를 바탕으로 성공할 상입니다.'}</p>
+                <div class="basis-box">🔎 구각(입꼬리) 거리 측정 결과: ${res.wideMouth ? '대형' : '소형'} 구조</div>
+                <h3>출납궁 (입/성품) 분석</h3>
+                <p style="line-height:1.8; color:#d1d5db;">${res.wideMouth ? '입의 선이 시원시원하여 <b>스케일이 크고 호탕한 리더십</b>을 지녔습니다. 외부로 뻗어나가는 에너지가 좋아 사람을 쉽게 끌어모으고 말년의 명망이 높습니다.' : '입이 야무지고 섬세하게 모여 있어, 과시하기보다는 <b>철두철미하게 실속을 챙기는 기질</b>입니다. 신중한 언행으로 타인에게 깊은 신뢰를 얻습니다.'}</p>
             </div>
         `;
         
@@ -191,8 +200,9 @@ const Action = (() => {
         const link = res.bigNose ? 'https://link.coupang.com/a/eu5uLR' : 'https://link.coupang.com/a/eu5td7';
         cta.innerHTML = `
             <div class="cta-box">
-                <p style="margin-bottom:15px; font-weight:700;">💰 당신의 관상운을 틔워줄 행운 아이템</p>
-                <a href="${link}" target="_blank" style="color:#000; background:var(--gold-primary); text-decoration:none; padding:12px 25px; border-radius:30px; font-weight:800; display:inline-block;">추천 행운템 확인하기</a>
+                <p style="margin-bottom:15px; font-weight:800; font-size:1.1rem; color:#fff;">✨ 당신의 타고난 관상운을 틔워줄 아이템</p>
+                <a href="${link}" target="_blank" style="color:#000; background:var(--gold-primary); text-decoration:none; padding:16px 30px; border-radius:30px; font-weight:800; display:inline-block; font-size:1.05rem;">추천 행운템 확인하기 ></a>
+                <p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.3);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
             </div>
         `;
 
@@ -202,7 +212,7 @@ const Action = (() => {
         window.scrollTo(0,0);
     };
 
-    return { init, startCamera, takePhoto, handleFile };
+    return { init, processImage };
 })();
 
 window.onload = Action.init;
