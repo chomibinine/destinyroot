@@ -12,8 +12,8 @@
         body { background: var(--bg-base); color: #fff; line-height: 1.7; min-height: 100vh; position: relative; overflow-x: hidden; }
         
         /* 🌌 몽환적인 보라/골드 오로라 배경 */
-        body::before { content: ''; position: absolute; width: 350px; height: 350px; background: rgba(138, 43, 226, 0.15); filter: blur(120px); top: 5%; left: -100px; z-index: 0; }
-        body::after { content: ''; position: absolute; width: 300px; height: 300px; background: rgba(212, 175, 55, 0.08); filter: blur(100px); bottom: 10%; right: -50px; z-index: 0; }
+        body::before { content: ''; position: absolute; width: 350px; height: 350px; background: rgba(138, 43, 226, 0.15); filter: blur(120px); top: 5%; left: -100px; z-index: 0; pointer-events: none;}
+        body::after { content: ''; position: absolute; width: 300px; height: 300px; background: rgba(212, 175, 55, 0.08); filter: blur(100px); bottom: 10%; right: -50px; z-index: 0; pointer-events: none;}
         
         .app-container { max-width: 750px; margin: 0 auto; padding: 50px 20px 120px; position: relative; z-index: 1; }
         
@@ -25,15 +25,16 @@
         
         /* 🃏 3D 플립 타로 카드 덱 UI */
         .tarot-instruction { text-align: center; margin-bottom: 30px; font-size: 1.1rem; color: var(--gold-light); font-weight: 600; line-height: 1.6;}
-        .card-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 30px; perspective: 1000px;}
+        .card-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 30px; perspective: 1000px;}
         
         .tarot-card { aspect-ratio: 1 / 1.6; background-color: transparent; cursor: pointer; perspective: 1000px; }
-        .tarot-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
+        .tarot-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
         .tarot-card:hover .tarot-card-inner { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(212,175,55,0.2); }
         .tarot-card.selected { pointer-events: none; }
-        .tarot-card.selected .tarot-card-inner { transform: translateY(-12px) rotateY(180deg); box-shadow: 0 15px 30px rgba(212,175,55,0.5); }
+        .tarot-card.selected .tarot-card-inner { transform: translateY(-10px) rotateY(180deg); box-shadow: 0 15px 30px rgba(212,175,55,0.5); }
         
-        .tarot-card-front, .tarot-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; border: 2px solid rgba(212,175,55,0.4); }
+        /* 🚨 모바일 축 틀어짐 방지 핵심 (top/left 고정) */
+        .tarot-card-front, .tarot-card-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 8px; border: 2px solid rgba(212,175,55,0.4); box-sizing: border-box;}
         .tarot-card-front { background: linear-gradient(135deg, #1a1a2e, #0f0f1a); background-image: repeating-linear-gradient(45deg, rgba(212,175,55,0.05) 0px, rgba(212,175,55,0.05) 2px, transparent 2px, transparent 8px); }
         .tarot-card-back { background-color: #000; background-size: cover; background-position: center; transform: rotateY(180deg); border-color: var(--gold-light); }
         
@@ -61,16 +62,16 @@
         .spread-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 16px; padding: 30px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;}
         .spread-card .position { font-size: 0.95rem; color: var(--gold-primary); font-weight: 800; letter-spacing: 1px; margin-bottom: 20px; }
         .spread-card .c-img { width: 100%; max-width: 200px; border-radius: 10px; margin-bottom: 20px; border: 2px solid rgba(212,175,55,0.5); box-shadow: 0 10px 25px rgba(0,0,0,0.6);}
-        .spread-card .c-name { font-size: 1.3rem; font-weight: 900; color: #fff; line-height: 1.4;}
+        .spread-card .c-name { font-size: 1.2rem; font-weight: 900; color: #fff; line-height: 1.4;}
 
-        .r-section { margin-bottom: 60px; text-align: left; }
+        .r-section { margin-bottom: 50px; text-align: left; }
         .r-section h3 { font-size: 1.5rem; margin-bottom: 20px; border-left: 4px solid var(--gold-primary); padding-left: 15px; font-weight: 900; color: #fff; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px;}
         
-        .theory-box { background: rgba(212,175,55,0.05); padding: 25px; border-radius: 12px; font-size: 1rem; color: var(--gold-light); margin-bottom: 25px; border-left: 3px solid var(--gold-primary); line-height: 1.7; font-weight: 300;}
+        .theory-box { background: rgba(212,175,55,0.05); padding: 20px; border-radius: 12px; font-size: 0.95rem; color: var(--gold-light); margin-bottom: 20px; border-left: 3px solid var(--gold-primary); line-height: 1.6; font-weight: 300;}
         .theory-box strong { font-weight: 800; color: #fff; }
         
-        .result-content { font-size: 1.1rem; line-height: 1.9; color: #d1d5db; text-align: justify; padding: 0 10px;}
-        .result-content p { margin-bottom: 20px; }
+        .result-content { font-size: 1.05rem; line-height: 1.8; color: #d1d5db; text-align: justify; padding: 0 5px;}
+        .result-content p { margin-bottom: 15px; }
         .result-content strong { color: var(--gold-light); font-weight: 800; }
         
         /* 🤫 스텔스 마케팅 CSS */
@@ -80,19 +81,35 @@
         .link-stealth { display: inline-block; color: var(--gold-primary); font-size: 1.15rem; font-weight: 800; text-decoration: none; border-bottom: 1px solid rgba(212,175,55,0.4); padding-bottom: 3px; transition: 0.2s; word-break: keep-all;}
         .link-stealth:hover { color: #fff; border-color: #fff; }
 
+        /* 📱 모바일 최적화 (가장 중요한 부분) */
         @media (max-width: 600px) { 
             .app-container { padding: 20px 15px 100px; } 
-            .header h1 { font-size: 2rem; }
-            .glass-card { padding: 30px 20px; }
-            .card-grid { grid-template-columns: repeat(5, 1fr); gap: 8px;}
+            .header h1 { font-size: 1.8rem; }
+            .header p { font-size: 0.9rem; }
+            .glass-card { padding: 25px 15px; }
             
-            /* 📱 모바일에서 카드가 큼직하게 보이도록 세로 정렬(column) 적용 */
-            .spread-grid { grid-template-columns: 1fr; gap: 20px; } 
-            .spread-card { display: flex; flex-direction: column; align-items: center; padding: 30px 20px; text-align: center; } 
-            .spread-card .position { margin-bottom: 15px; color: var(--gold-primary); font-size:1rem;}
-            .spread-card .c-img { width: 100%; max-width: 250px; margin-bottom: 20px; }
+            /* 1. 모바일에서 덱을 4열로 변경 (5열은 너무 찌그러짐) */
+            .card-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;}
+            .tarot-instruction { font-size: 0.95rem; margin-bottom: 20px;}
             
+            /* 2. 모바일 스프레드 시각화 최적화 (카드 크기 조정) */
+            .spread-grid { grid-template-columns: 1fr; gap: 20px; margin-bottom: 40px;} 
+            .spread-card { display: flex; flex-direction: column; align-items: center; padding: 25px 15px; text-align: center; } 
+            .spread-card .position { margin-bottom: 15px; color: var(--gold-primary); font-size: 0.9rem;}
+            .spread-card .c-img { width: 100%; max-width: 180px; margin-bottom: 15px; }
+            .spread-card .c-name { font-size: 1.1rem; }
+            
+            /* 3. 텍스트 및 패딩 압축 */
+            .r-section { margin-bottom: 40px; }
             .r-section h3 { font-size: 1.3rem; }
+            .log-box { padding: 15px; font-size: 0.85rem; margin-bottom: 30px;}
+            .theory-box { padding: 15px; font-size: 0.9rem; }
+            .result-content { font-size: 0.95rem; }
+            
+            .stealth-advice { padding: 20px 15px; margin-top: 30px;}
+            .stealth-advice h4 { font-size: 1.1rem; }
+            .stealth-advice p { font-size: 0.95rem; }
+            .link-stealth { font-size: 1rem; }
         }
     </style>
 </head>
@@ -108,7 +125,7 @@
         <div class="header"><h1>타로 리딩</h1><p>무의식의 파동과 공시성(Synchronicity) 기반 스캔</p></div>
         <div class="glass-card">
             <div class="tarot-instruction">
-                해결하고 싶은 고민이나 막막한 상황을 마음속에 깊이 떠올린 후,<br>직관이 이끄는 운명의 카드 <span style="color:#fff; font-size:1.4rem; font-weight:900; margin:0 5px;">3장</span>을 선택해 주세요.
+                해결하고 싶은 고민이나 막막한 상황을 마음속에 깊이 떠올린 후,<br>직관이 이끄는 운명의 카드 <span style="color:#fff; font-size:1.3rem; font-weight:900; margin:0 5px;">3장</span>을 선택해 주세요.
             </div>
             
             <div class="card-grid" id="deck">
@@ -132,9 +149,9 @@
     </div>
     
     <div id="report-view" class="glass-card">
-        <div id="r-header" style="text-align:center; margin-bottom:35px;">
-            <h2 style="font-weight:900; font-size: 2rem;">정통 타로 딥리딩 리포트</h2>
-            <p style="color:var(--gold-light); font-size:1rem; margin-top:8px; font-weight: 300;">과거, 현재, 그리고 당신이 마주할 미래</p>
+        <div id="r-header" style="text-align:center; margin-bottom:30px;">
+            <h2 style="font-weight:900; font-size: 1.8rem; letter-spacing: -1px;">정통 타로 딥리딩 리포트</h2>
+            <p style="color:var(--gold-light); font-size:0.95rem; margin-top:8px; font-weight: 300;">과거, 현재, 그리고 당신이 마주할 미래</p>
         </div>
         
         <div class="log-box" id="r-log"></div>
@@ -144,7 +161,7 @@
         <div id="dynamic-results"></div>
         <div id="cta-area"></div>
         
-        <div style="display:flex; flex-direction:column; gap:10px; margin-top:50px;">
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:40px;">
             <button class="btn btn-secondary" onclick="Tarot.shareLink()" style="margin-top:0;">🔗 내 타로 결과 공유하기</button>
             <button class="btn btn-primary" onclick="location.href='https://chomibinine.github.io/destinyroot/'">🏠 메인 홈으로 돌아가기</button>
         </div>
@@ -260,7 +277,7 @@ const Tarot = (() => {
           sit: "오랜 시간 기다리거나 노력해 온 일에 대한 최종적인 결과 발표를 앞두고 있습니다. 과거의 행동들이 평가받는 전환점입니다.",
           adv: "당신이 뿌린 씨앗을 거둘 때입니다. 두려워하지 말고 과거의 낡은 껍질을 벗어던지는 부활의 부름에 기꺼이 응답하십시오.",
           out: "당신의 정당한 노력이 마침내 구원받고 극적인 보상을 받습니다. 재회, 합격, 기사회생 등 죽어가던 상황이 기적처럼 살아나는 결말입니다." },
-        { num: "XX1", name: "The World (세계)", img: "https://sacred-texts.com/tarot/pkt/img/ar21.jpg", type: "Earth",
+        { num: "XXI", name: "The World (세계)", img: "https://sacred-texts.com/tarot/pkt/img/ar21.jpg", type: "Earth",
           sym: "월계수 화환 안에서 춤추는 인물과 네 모서리의 수호성. 한 챕터의 완벽한 완성, 깨달음, 궁극적인 해방과 피날레를 상징합니다.",
           sit: "오랜 여정이 마침내 종착역에 다다랐습니다. 퍼즐들이 완벽하게 맞춰지며 심리적으로나 현실적으로 완전한 충만함을 느끼는 파동입니다.",
           adv: "지금까지 쌓아온 성취를 온전히 즐기고 스스로를 칭찬하십시오. 만족의 지혜를 깨닫고 미련 없이 다음 챕터를 향해 나아갈 준비를 하세요.",
@@ -270,7 +287,6 @@ const Tarot = (() => {
     let selectedCards = [];
     let isProcessing = false;
 
-    // 1. 3D 플립 카드 드로우 
     const drawCard = (cardEl) => {
         if(isProcessing || selectedCards.length >= 3 || cardEl.classList.contains('selected')) return;
         
@@ -281,7 +297,6 @@ const Tarot = (() => {
         const cardData = MAJOR_ARCANA[randomIdx];
         selectedCards.push({ el: cardEl, idx: randomIdx, data: cardData });
         
-        // 뒷면 이미지 세팅 (클릭 즉시 세팅하여 플립 될 때 보이게 함)
         const backEl = cardEl.querySelector('.tarot-card-back');
         backEl.style.backgroundImage = `url(${cardData.img})`;
         
@@ -291,7 +306,6 @@ const Tarot = (() => {
         
         if(selectedCards.length === 3) {
             isProcessing = true;
-            // 짜릿한 손맛과 여운을 위해 1.5초 딜레이 후 로딩 화면 진입
             setTimeout(analyze, 1500); 
         }
     };
@@ -312,7 +326,6 @@ const Tarot = (() => {
         const c3 = selectedCards[2].data;
 
         const now = new Date();
-        const ms = now.getMilliseconds();
         const hash = Math.floor(Math.random() * 999999).toString(16).toUpperCase().padStart(6, '0');
         
         document.getElementById('r-log').innerHTML = `
@@ -327,7 +340,6 @@ const Tarot = (() => {
             </div>
         `;
 
-        // 💡 초대형 3카드 스프레드 (모바일에서는 세로로 큼직하게 꽉 참)
         document.getElementById('r-spread').innerHTML = `
             <div class="spread-card">
                 <div class="position">CARD 1. 현재의 내면</div>
