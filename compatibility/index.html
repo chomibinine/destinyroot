@@ -83,7 +83,6 @@
         .r-conclusion { margin-top: 60px; padding: 35px 30px; background: rgba(212,175,55,0.05); border-radius: 16px; border: 1px solid rgba(212,175,55,0.2); text-align: center; }
         .r-conclusion h3 { font-size: 1.4rem; color: var(--gold-light); margin-bottom: 15px; font-weight: 900;}
 
-        /* 스텔스 CTA 박스 */
         .cta-box { margin-top: 50px; padding: 45px 30px; border-radius: 16px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--border-light); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; font-weight: 800; padding: 18px 35px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s;}
         .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.05);}
@@ -111,6 +110,12 @@
 <body>
 
 <div id="loader"><div class="spinner"></div><div id="loader-text" class="loading-txt">철학관 수준 심층 교차 연산 중...</div></div>
+
+<div id="custom-modal" class="modal">
+    <h3 id="modal-title" style="margin-bottom:8px; font-size:1.05rem; color:var(--color-danger);">System</h3>
+    <p id="modal-msg" style="margin-bottom:15px; font-size:0.95rem; color:var(--text-muted);"></p>
+    <button onclick="document.getElementById('custom-modal').style.display='none'" style="background:#fff; color:#000; border:none; padding:8px 20px; border-radius:8px; font-weight:600; cursor:pointer;">확인</button>
+</div>
 
 <div class="app-container">
     <div id="input-view">
@@ -206,12 +211,12 @@ const CompatibilityEngine = (() => {
 
     const RELATIONS = {
         '木': { gen: '火', ctrl: '土', ctrlBy: '金', genBy: '水' }, '火': { gen: '土', ctrl: '金', ctrlBy: '水', genBy: '木' },
-        '土': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' }, '金': { gen: '水', ctrl: '木', ctrlBy: '火', genBy: '土' },
+        '토': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' }, '金': { gen: '水', ctrl: '木', ctrlBy: '火', genBy: '土' },
         '水': { gen: '木', ctrl: '火', ctrlBy: '土', genBy: '金' }
     };
 
-    const ZHI_CHONG = ['子午','丑未','寅申','卯酉','辰戌','巳亥','午子','未丑','申寅','酉卯','戌辰','亥巳'];
-    const ZHI_HAP = ['子丑','寅亥','卯戌','辰酉','巳申','午未','丑子','亥인','戌卯','酉辰','申巳','未午'];
+    const ZHI_CHONG = ['子午','丑未','寅申','卯酉','辰戌','巳亥','午子','未축','申寅','酉卯','戌辰','亥巳'];
+    const ZHI_HAP = ['子丑','寅亥','卯戌','辰酉','巳申','午未','丑子','亥寅','戌卯','酉辰','申巳','未午'];
     const ZHI_WONJIN = ['子미','丑午','寅酉','卯申','辰亥','巳戌','未자','午丑','酉寅','申卯','亥辰','戌巳'];
 
     const getBaziData = (req) => {
@@ -410,7 +415,7 @@ const SaaSFrontend = (() => {
         `;
     };
 
-    // 🚀 정직한 검색결과 링크 매칭 (실제 파트너스 단축 링크들 3종 적용 완료)
+    // 🚀 점수별 맞춤형 정직한 검색 결과 링크 (Sub ID: destinyroot 적용 완료)
     const renderCTA = (score) => {
         const wrap = document.createElement('div'); 
         wrap.className = 'cta-box';
@@ -419,17 +424,17 @@ const SaaSFrontend = (() => {
         let label = '';
 
         if (score >= 85) {
-            // 커플 여행용품
-            targetUrl = 'https://link.coupang.com/a/eu32VW'; 
+            // 1. 커플 여행용품
+            targetUrl = 'https://link.coupang.com/a/eu4M2X'; 
             label = '✨ 천생연분 커플 여행용품 확인';
         } else if (score >= 70) {
-            // 커플 백문백답
-            targetUrl = 'https://link.coupang.com/a/eu39RD'; 
+            // 2. 커플 백문백답
+            targetUrl = 'https://link.coupang.com/a/eu4QZw'; 
             label = '💌 서로의 진심을 확인하는 추천템 보기';
         } else {
-            // 힐링 아이템
-            targetUrl = 'https://link.coupang.com/a/eu4d2D'; 
-            label = '🍀 관계 회복을 돕는 힐링템 확인';
+            // 3. 힐링 아이템
+            targetUrl = 'https://link.coupang.com/a/eu4RV0'; 
+            label = '🍀 관계 회복을 돕는 힐링 아이템 확인';
         }
 
         wrap.innerHTML = `
