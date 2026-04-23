@@ -183,15 +183,12 @@
                 </div>
             </div>
 
-            <!-- 🌟 명식 테이블 -->
             <div class="bazi-grid" id="r-bazi-grid"></div>
 
-            <!-- 🌟 오행 밸런스 그래프 -->
             <div class="element-chart-container" id="r-element-chart"></div>
             
             <div id="dynamic-sections"></div>
 
-            <!-- 스텔스 쿠팡 CTA -->
             <div id="cta-container"></div>
 
             <div class="r-conclusion" id="r-conclusion-box"></div>
@@ -326,7 +323,7 @@ const OrthodoxEngine = (() => {
         },
         "m": { 
             "木": "그동안 축적해온 아이디어를 본격적으로 현실의 실행에 옮기며, 두려움 없이 자신의 영역을 사방으로 뻗어나가며 세력을 무섭게 확장하는 황금기입니다.<br><br>멈추지 않는 도전 정신과 기획력으로 새로운 길을 개척하며, 여러 사람들을 이끄는 리더의 위치에 서게 됩니다. 뻗어나가는 기운이 너무 강해 중간 점검을 잊을 수 있으니 내실을 함께 다지는 것이 중요합니다.", 
-            "火": "내면의 열정과 잠재력이 최고조에 달하여 사회적 무대 중심에서 화려하게 능력을 입증하고 빛을 발하는 멈출 수 없는 전성기입니다.<br><br>당신의 이름이 널리 알려지며 폭발적인 성취를 이룹니다. 하지만 지나친 확장과 과로는 금물이며, 타오르는 불꽃이 한순간에 꺼지지 않도록 체력을 안배하고 성과를 안전한 자산으로 묻어두는 지혜가 필수입니다.", 
+            "火": "내면의 열정과 잠재력이 최고조에 달하여 사회적 무대 중심에서 화려하게 능력을 입증하고 빛을 발하는 멈출 수 정 없는 전성기입니다.<br><br>당신의 이름이 널리 알려지며 폭발적인 성취를 이룹니다. 하지만 지나친 확장과 과로는 금물이며, 타오르는 불꽃이 한순간에 꺼지지 않도록 체력을 안배하고 성과를 안전한 자산으로 묻어두는 지혜가 필수입니다.", 
             "土": "인간관계의 거대한 중심축이 되어 다양한 부류의 사람들을 포용하고 깊은 신뢰를 쌓아가며, 어떠한 풍파에도 무너지지 않는 삶의 확고한 경제적/심리적 안정망을 구축합니다.<br><br>신용과 믿음을 바탕으로 실물 자산을 크게 획득하며 사회적으로 묵직한 권위를 인정받습니다. 변화보다는 현재의 거대한 파이를 튼튼하게 지켜내는 수성(守城)의 지혜가 빛을 발합니다.", 
             "金": "치밀하게 축적된 실력과 냉혹한 원칙을 바탕으로 치열한 경쟁 상황에서 완벽하게 승리하며, 뿌려둔 씨앗에 대한 보상을 명확한 결과물과 지위로 쟁취하는 시기입니다.<br><br>감정을 배제한 이성적이고 예리한 판단이 인생의 여러 갈림길에서 정답을 찾아냅니다. 맺고 끊음이 확실하여 불필요한 인연과 자본의 누수를 완벽히 차단하고 알짜배기 실속을 챙깁니다.", 
             "水": "가장 뛰어난 유연한 대처 능력과 고도의 통찰력을 발휘하여, 어떠한 난관이나 위기 상황도 부드럽게 넘기며 보이지 않는 곳에서 거대한 기회를 선점하고 쟁취합니다.<br><br>경계가 없는 사고방식으로 시대의 흐름과 트렌드를 가장 먼저 읽어내어 부와 명예를 유동적으로 불려 나갑니다. 주변 사람들의 갈등을 해결해 주는 지혜로운 멘토의 역할을 톡톡히 해냅니다." 
@@ -816,21 +813,21 @@ const SaaSFrontend = (() => {
         });
     };
 
-    // 🚀 스텔스 쿠파스 1개 집중 CTA
+    // 🚀 스텔스 쿠파스 1개 집중 CTA (실제 링크 적용)
     const renderCTA = (yongshinEl) => {
         const wrap = document.createElement('div');
         wrap.className = 'cta-box';
-        
-        let pData = {};
-        if (yongshinEl === '木') pData = { q:'식물키우기 세트', label:'행운템 찾기', i:'🍀' };
-        else if (yongshinEl === '火') pData = { q:'아로마 무드등', label:'소울푸드 찾기', i:'🍜' }; 
-        else if (yongshinEl === '土') pData = { q:'동양 철학 도서', label:'추천 도서 찾기', i:'📖' };
-        else if (yongshinEl === '金') pData = { q:'홈트레이닝 기구', label:'행운템 찾기', i:'🍀' };
-        else pData = { q:'힐링 티 세트', label:'소울푸드 찾기', i:'🍜' };
+
+        let label = '✨ 나의 부족한 기운을 채워줄 시크릿 행운템 확인하기';
+        if (yongshinEl === '木') label = '🍀 나의 나무(木) 기운을 키워줄 행운템 확인하기';
+        else if (yongshinEl === '火') label = '🔥 나의 불(火) 기운을 밝혀줄 행운템 확인하기';
+        else if (yongshinEl === '土') label = '⛰️ 나의 흙(土) 기운을 단단하게 해줄 행운템 확인';
+        else if (yongshinEl === '金') label = '💎 나의 쇠(金) 기운을 빛내줄 행운템 확인하기';
+        else if (yongshinEl === '水') label = '💧 나의 물(水) 기운을 채워줄 행운템 확인하기';
 
         wrap.innerHTML = `
-            <a href="https://www.coupang.com/np/search?q=${encodeURIComponent(pData.q)}&utm_source=affiliate" target="_blank" class="btn-coupang">
-                ${pData.i} ${pData.label}
+            <a href="https://link.coupang.com/a/eu2HBv" target="_blank" class="btn-coupang">
+                ${label}
             </a>
             <p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
         `;
@@ -970,4 +967,3 @@ window.onload = SaaSFrontend.init;
 </script>
 </body>
 </html>
-
