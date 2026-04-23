@@ -231,7 +231,7 @@ const OrthodoxEngine = (() => {
     const RELATIONS = {
         '木': { gen: '火', ctrl: '土', ctrlBy: '金', genBy: '水' },
         '火': { gen: '土', ctrl: '金', ctrlBy: '수', genBy: '목' },
-        '土': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' },
+        '土': { gen: '金', ctrl: '水', ctrlBy: '목', genBy: '화' },
         '金': { gen: '水', ctrl: '木', ctrlBy: '火', genBy: '土' },
         '水': { gen: '木', ctrl: '火', ctrlBy: '土', genBy: '金' }
     };
@@ -245,11 +245,11 @@ const OrthodoxEngine = (() => {
     };
 
     const W12_MAP = {
-        '甲': ['亥','子','丑','寅','卯','辰','巳','午','未','申','酉','戌'], '丙': ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'],
-        '戊': ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'], '庚': ['巳','午','未','申','酉','戌','亥','子','丑','寅','卯','辰'],
-        '壬': ['申','酉','戌','亥','子','丑','寅','卯','辰','巳','午','未'], '乙': ['午','巳','辰','卯','寅','丑','子','亥','戌','酉','申','未'],
-        '丁': ['酉','申','未','午','巳','辰','卯','寅','丑','子','亥','戌'], '己': ['酉','申','未','午','巳','辰','卯','寅','丑','子','亥','戌'],
-        '辛': ['子','亥','戌','酉','申','미','오','사','진','묘','인','축'], '癸': ['卯','寅','축','자','해','술','유','신','미','오','사','진']
+        '甲': ['亥','子','丑','寅','卯','辰','巳','오','미','신','유','술'], '丙': ['인','묘','진','사','오','미','신','유','술','해','자','축'],
+        '戊': ['인','묘','진','사','오','미','신','유','술','해','자','축'], '庚': ['사','오','미','신','유','술','해','자','축','인','묘','진'],
+        '壬': ['신','유','술','해','자','축','인','묘','진','사','오','미'], '乙': ['오','사','진','묘','인','축','자','해','술','유','신','미'],
+        '丁': ['유','신','미','오','사','진','묘','인','축','자','해','술'], '己': ['유','신','미','오','사','진','묘','인','축','자','해','술'],
+        '辛': ['자','해','술','유','신','미','오','사','진','묘','인','축'], '癸': ['묘','인','축','자','해','술','유','신','미','오','사','진']
     };
     const W12_NAMES = ['장생','목욕','관대','건록','제왕','쇠','병','사','묘','절','태','양'];
 
@@ -325,28 +325,29 @@ const SaaSFrontend = (() => {
         p.innerHTML = htmlString; return p;
     };
 
-    // 🚀 [쿠파스 업데이트] 대표님이 주신 사주 전용 검색 결과 링크 3종 반영 (Sub ID: destinyroot)
+    // 🚀 [쿠파스 업데이트] 대표님이 주신 3가지 검색 결과 링크 반영 (Sub ID: destinyroot)
     const renderCTA = (yongshinEl) => {
         const wrap = document.createElement('div');
         wrap.className = 'cta-box';
-
-        let targetUrl = 'https://link.coupang.com/a/eu5td7'; 
-        let label = '✨ 나의 부족한 기운을 채워줄 시크릿 행운템 확인하기';
+        
+        let pUrl = 'https://link.coupang.com/a/eu5td7'; // 1. 부족 기운 (기본)
+        let pLabel = '행운템 찾기';
+        let pEmoji = '🍀';
 
         if (yongshinEl === '木' || yongshinEl === '火') {
-            targetUrl = 'https://link.coupang.com/a/eu5td7'; 
-            label = `🍀 나의 부족한 '${yongshinEl}' 기운을 키워줄 행운템 확인하기`;
+            pUrl = 'https://link.coupang.com/a/eu5td7'; // 부족 기운 보완
+            pLabel = '행운템 찾기'; pEmoji = '🍀';
         } else if (yongshinEl === '土' || yongshinEl === '金') {
-            targetUrl = 'https://link.coupang.com/a/eu5uLR'; 
-            label = `💰 나의 '${yongshinEl}' 기운을 빛내줄 재물운 상승템 확인하기`;
+            pUrl = 'https://link.coupang.com/a/eu5uLR'; // 재물운 상승
+            pLabel = '행운템 찾기'; pEmoji = '💰';
         } else if (yongshinEl === '水') {
-            targetUrl = 'https://link.coupang.com/a/eu5vYe'; 
-            label = `💧 나의 안녕을 지켜줄 '${yongshinEl}' 수호 아이템 확인하기`;
+            pUrl = 'https://link.coupang.com/a/eu5vYe'; // 건강/수호
+            pLabel = '행운템 찾기'; pEmoji = '🍀';
         }
 
         wrap.innerHTML = `
-            <a href="${targetUrl}" target="_blank" class="btn-coupang">
-                ${label}
+            <a href="${pUrl}" target="_blank" class="btn-coupang">
+                ${pEmoji} ${pLabel}
             </a>
             <p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
         `;
