@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>운명뿌리 | 점성술 천궁도 분석</title>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954282181306694" crossorigin="anonymous"></script>
+    <meta name="description" content="스위스 천문력 기반 정밀 별자리 운명 스캔">
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954282181306694" crossorigin="anonymous"></script>
     
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
@@ -16,7 +17,7 @@
         body { background: var(--bg-base); color: #fff; line-height: 1.7; min-height: 100vh; position: relative; overflow-x: hidden; }
         body::before { content: ''; position: absolute; width: 350px; height: 350px; background: rgba(162, 155, 254, 0.12); filter: blur(120px); top: 5%; left: -100px; z-index: 0; }
         body::after { content: ''; position: absolute; width: 300px; height: 300px; background: rgba(212, 175, 55, 0.06); filter: blur(100px); bottom: 10%; right: -50px; z-index: 0; }
-        .app-container { max-width: 750px; margin: 0 auto; padding: 50px 20px 120px; position: relative; z-index: 1; }
+        .app-container { max-width: 750px; margin: 0 auto; padding: 50px 20px 60px; position: relative; z-index: 1; }
         
         .header { text-align: center; margin-bottom: 40px; }
         .header h1 { font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px; margin: 0; background: linear-gradient(180deg, #fff 0%, #a1a1a1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -72,8 +73,14 @@
         
         .btn-group { display: flex; flex-direction: column; gap: 12px; margin-top: 40px; }
 
+        /* 🔍 SEO 아코디언 & 푸터 스타일 */
+        details summary::-webkit-details-marker { display:none; }
+        details summary { list-style: none; outline: none; }
+        
+        .footer { text-align: center; margin-top: 40px; padding: 40px 20px; color: #6c757d; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 1;}
+
         @media (max-width: 600px) { 
-            .app-container { padding: 20px 15px 100px; } 
+            .app-container { padding: 20px 15px 60px; } 
             .header h1 { font-size: 2rem; }
             .glass-card { padding: 25px 20px; }
             .grid-half { grid-template-columns: 1fr; gap: 15px; } 
@@ -160,6 +167,21 @@
             <button class="btn btn-primary" onclick="location.href='https://chomibinine.github.io/destinyroot/'">🏠 메인 홈으로 돌아가기</button>
         </div>
     </div>
+
+    <div class="glass-card" style="margin-top: 50px; padding: 25px; opacity: 0.6; cursor: default;">
+        <details>
+            <summary style="color: var(--gold-light); font-weight: 800; font-size: 0.9rem; cursor: pointer;">📚 점성술 천궁도(Natal Chart)의 원리 (상세 보기)</summary>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px; line-height: 1.8; text-align: justify; font-weight: 300;">
+                <p>서양 점성술은 개인이 태어난 정확한 시간과 장소를 기준으로 하늘의 상태를 스냅샷처럼 찍어낸 천궁도(Natal Chart)를 분석합니다. 본 점성술 엔진은 스위스 천문력(Swiss Ephemeris)의 초정밀 천체 역학 데이터를 활용하여 태양궁(자아), 달궁(무의식), 상승궁(사회적 페르소나)의 삼위일체(Big 3)를 디코딩합니다. 이를 통해 우주의 거시적 파동이 미시적 존재인 인간의 심리와 성정에 미치는 영향을 심층적으로 분석합니다.</p>
+            </div>
+        </details>
+    </div>
+</div> <div class="footer">
+    <div style="margin-bottom: 15px;">
+        <a href="../privacy.html" style="color: #888; text-decoration: none; margin: 0 15px; font-weight: 600;">개인정보처리방침</a> | 
+        <a href="mailto:chomibinine@gmail.com" style="color: #888; text-decoration: none; margin: 0 15px; font-weight: 600;">문의하기</a>
+    </div>
+    <p>© 2026 운명뿌리 (Destiny Root)</p>
 </div>
 
 <script>
