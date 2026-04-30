@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>운명뿌리 | 사주 분석</title>
+    <title>운명뿌리 | V56 초정밀 사주 분석</title>
 
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954282181306694" crossorigin="anonymous"></script>
-      
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954282181306694" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
         :root { 
             --bg-base: #05070a; 
-            --bg-report: #0d1118; 
+            --bg-report: #0a0e14; 
             --border-line: #1f242c; 
             --border-light: #2d333b;
             --gold-primary: #d4af37; 
@@ -23,162 +23,245 @@
             --text-muted: #8b949e; 
             --color-danger: #f85149; 
             --color-info: #58a6ff;
-            /* 오행 컬러 */
+            /* 오행 컬러 (Dark Theme) */
             --color-wood: #4ade80; 
             --color-fire: #fb923c; 
             --color-earth: #fbbf24; 
             --color-metal: #cbd5e1; 
             --color-water: #60a5fa;
+            
+            --wood-bg: rgba(74, 222, 128, 0.1);
+            --fire-bg: rgba(251, 146, 60, 0.1);
+            --earth-bg: rgba(251, 191, 36, 0.1);
+            --metal-bg: rgba(203, 213, 225, 0.1);
+            --water-bg: rgba(96, 165, 250, 0.1);
         }
         
         * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; word-break: keep-all; -webkit-tap-highlight-color: transparent;}
-        body { background: radial-gradient(circle at top, #0b0f17, #05070a); color: var(--text-main); line-height: 1.75; font-size: 16px; overflow-x: hidden; min-height: 100vh;}
+        body { background: radial-gradient(circle at top, #080b12, #020305); color: var(--text-main); line-height: 1.8; font-size: 16px; overflow-x: hidden; min-height: 100vh;}
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
         .app-container { max-width: 800px; margin: 0 auto; padding: 50px 20px 120px; position: relative; z-index: 1; }
         
-        /* 홈 화면 UI */
+        /* ── 홈 화면 UI ── */
         .hero { text-align: center; margin-bottom: 40px; padding: 20px 0;}
-        .hero h1 { color: var(--gold-light); font-size: 3rem; font-weight: 900; letter-spacing: -1px; margin: 0; }
+        .hero h1 { color: var(--gold-light); font-size: 3.2rem; font-weight: 900; letter-spacing: -2px; margin: 0; text-shadow: 0 0 20px rgba(212,175,55,0.2);}
         
-        .input-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-line); border-radius: 16px; padding: 45px 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .input-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-line); border-radius: 20px; padding: 45px 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); backdrop-filter: blur(10px);}
         .form-group { margin-bottom: 25px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-muted); font-size: 0.95rem; }
         .form-control { width: 100%; padding: 16px 20px; border-radius: 10px; border: 1px solid var(--border-light); background: rgba(0,0,0,0.4); color: #fff; font-size: 1.05rem; outline: none; transition: 0.2s; }
-        .form-control:focus { border-color: var(--gold-primary); box-shadow: 0 0 10px rgba(212,175,55,0.1); }
+        .form-control:focus { border-color: var(--gold-primary); box-shadow: 0 0 15px rgba(212,175,55,0.15); }
         .grid-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
         .grid-half { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         
-        .btn-submit { display: flex; align-items: center; justify-content: center; background: var(--gold-primary); color: #000; padding: 20px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; margin-top: 35px; font-size: 1.25rem; transition: 0.2s; }
-        .btn-submit:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212,175,55,0.3); }
+        .btn-submit { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--gold-primary), #b8860b); color: #000; padding: 20px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; margin-top: 35px; font-size: 1.25rem; transition: 0.3s; box-shadow: 0 10px 20px rgba(212,175,55,0.2);}
+        .btn-submit:hover { background: var(--gold-light); transform: translateY(-3px); box-shadow: 0 15px 30px rgba(212,175,55,0.3); }
 
-        /* 📄 리포트 영역 */
-        .report-wrapper { background: var(--bg-report); border: 1px solid var(--border-line); border-radius: 16px; padding: 50px 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); margin-bottom: 30px; position: relative; overflow:hidden;}
+        /* ── 리포트 래퍼 ── */
+        .report-wrapper { background: var(--bg-report); border: 1px solid var(--border-line); border-radius: 20px; padding: 50px 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); margin-bottom: 30px; position: relative; overflow:hidden;}
         
-        .r-header { text-align: center; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--border-line); }
-        .r-header h2 { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: -1px; margin-bottom: 15px;}
-        .date-box { display: inline-block; background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); padding: 12px 25px; border-radius: 12px; }
-        .date-box p { color: var(--gold-primary); font-size: 1rem; font-weight: 600; margin: 3px 0; letter-spacing: 0.5px;}
-        .date-box .lunar { color: var(--text-muted); font-size: 0.9rem; }
+        .r-header { text-align: center; margin-bottom: 45px; padding-bottom: 35px; border-bottom: 1px solid var(--border-line); }
+        .r-header h2 { font-size: 2.4rem; font-weight: 900; color: #fff; letter-spacing: -1px; margin-bottom: 15px;}
+        .date-box { display: inline-block; background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); padding: 15px 30px; border-radius: 15px; }
+        .date-box p { color: var(--gold-primary); font-size: 1.05rem; font-weight: 700; margin: 3px 0; letter-spacing: 0.5px;}
+        .date-box .lunar { color: var(--text-muted); font-size: 0.95rem; }
 
-        /* 명식 테이블 */
-        .bazi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 40px; background: rgba(0,0,0,0.3); padding: 20px 10px; border-radius: 12px; border: 1px solid var(--border-line); }
-        .bazi-col { text-align: center; display: flex; flex-direction: column; gap: 5px;}
-        .bazi-header { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; font-weight: 600;}
-        .bazi-char { font-size: 1.8rem; font-weight: 900; color: #fff; padding: 10px 0; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--border-light); }
+        /* ── 명식 테이블 ── */
+        .bazi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 35px; background: rgba(0,0,0,0.4); padding: 25px 15px; border-radius: 16px; border: 1px solid var(--border-line); }
+        .bazi-col { text-align: center; display: flex; flex-direction: column; gap: 6px;}
+        .bazi-header { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; font-weight: 700;}
+        .bazi-char { font-size: 1.9rem; font-weight: 900; color: #fff; padding: 12px 0 6px; background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid var(--border-light); display:flex; flex-direction:column; align-items:center;}
+        .bazi-char-kr { font-size:0.75rem; color:var(--text-muted); font-weight:600; margin-top:2px; letter-spacing:2px; }
         .bazi-ten { font-size: 0.8rem; color: var(--gold-primary); font-weight: bold; }
-        .bazi-hidden { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; border-top: 1px dashed var(--border-light); padding-top: 6px; line-height: 1.4;}
-        .bazi-hidden span { display: block; }
-        .bazi-day-master { border-color: var(--gold-primary) !important; background: rgba(212,175,55,0.1) !important; color: var(--gold-light) !important; }
+        .bazi-hidden { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; border-top: 1px dashed var(--border-light); padding-top: 8px; line-height: 1.5;}
+        .bazi-day-master { border-color: var(--gold-primary) !important; background: rgba(212,175,55,0.08) !important; color: var(--gold-light) !important; }
+        .bazi-day-master .bazi-char-kr { color: rgba(212,175,55,0.6); }
 
-        /* 오행 그래프 */
-        .element-chart-container { margin: 40px 0; padding: 35px 30px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--border-line); }
-        .element-chart-container h4 { color: #fff; font-size: 1.25rem; margin-bottom: 25px; text-align: center; font-weight: 800;}
-        .bar-wrap { display: flex; align-items: center; margin-bottom: 18px; gap: 15px; }
-        .bar-label { width: 40px; font-weight: 900; font-size: 1.15rem; text-align: center; }
-        .bar-bg { flex: 1; height: 10px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; position: relative; }
+        /* ── 오행 바 차트 ── */
+        .bar-wrap { display: flex; align-items: center; margin-bottom: 15px; gap: 15px; }
+        .bar-label { width: 60px; font-weight: 900; font-size: 1.05rem; text-align: left; }
+        .bar-bg { flex: 1; height: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; overflow: hidden; position: relative; }
         .bar-fill { height: 100%; border-radius: 10px; transition: width 1.5s ease-out; }
-        .bar-val { width: 45px; text-align: right; font-size: 0.95rem; color: var(--text-muted); font-weight: 600;}
+        .bar-val { width: 45px; text-align: right; font-size: 0.95rem; color: var(--text-muted); font-weight: 700;}
         .fill-wood { background: var(--color-wood); box-shadow: 0 0 10px rgba(74, 222, 128, 0.4); } 
         .fill-fire { background: var(--color-fire); box-shadow: 0 0 10px rgba(251, 146, 60, 0.4); } 
         .fill-earth { background: var(--color-earth); box-shadow: 0 0 10px rgba(251, 191, 36, 0.4); } 
         .fill-metal { background: var(--color-metal); box-shadow: 0 0 10px rgba(203, 213, 225, 0.4); } 
         .fill-water { background: var(--color-water); box-shadow: 0 0 10px rgba(96, 165, 250, 0.4); }
 
-        /* 섹션 공통 */
-        .r-section { margin-bottom: 55px; }
-        .r-section h3 { font-size: 1.4rem; color: #fff; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; font-weight: 800;}
-        .r-section h3::before { content: ''; display:inline-block; width:5px; height:20px; background:var(--gold-primary); border-radius:3px;}
-        .r-content { font-size: 1.1rem; line-height: 1.9; color: var(--text-main); text-align: justify;} 
-        .r-content p { margin-bottom: 20px; }
-        
-        /* 분석 근거 박스 */
-        .basis-box { background: rgba(88,166,255,0.05); padding: 20px 25px; margin-bottom: 25px; border-radius: 12px; font-size: 0.95rem; color: #a1b0c0; line-height: 1.7; border-left: 4px solid var(--color-info);}
-        .basis-box strong { color: var(--color-info); font-weight: 800; margin-right: 5px; }
-        .basis-box .magnify { font-size: 1.15rem; vertical-align: middle; margin-right: 5px;}
-        
-        .r-content strong { color: #fff; font-weight: 800; }
-        .highlight { color: var(--gold-light); font-weight: 800; }
-        
-        .r-conclusion { margin-top: 60px; padding: 35px 30px; background: rgba(212,175,55,0.05); border-radius: 16px; border: 1px solid rgba(212,175,55,0.2); text-align: center; }
-        .r-conclusion h3 { font-size: 1.4rem; color: var(--gold-light); margin-bottom: 15px; font-weight: 900;}
-        .r-conclusion p { font-size: 1.1rem; line-height: 1.9; color: #fff; font-weight: 500; }
+        /* ── 통변 섹션 ── */
+        .r-section { background: rgba(255,255,255,0.015); border: 1px solid var(--border-line); border-radius: 20px; padding: 40px 35px; margin-bottom: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .r-section h3 { font-size: 1.45rem; color: #fff; margin-bottom: 25px; display: flex; align-items: flex-start; gap: 12px; font-weight: 900; border-bottom: 1px solid var(--border-line); padding-bottom: 18px; line-height:1.4;}
+        .r-section h3::before { content: ''; display:inline-block; width:6px; height:22px; background:var(--gold-primary); border-radius:3px; margin-top:5px;}
+        .r-content { font-size: 1.05rem; line-height: 1.95; color: var(--text-main); text-align: justify; word-break: keep-all;} 
+        .r-content p { margin-bottom: 22px; }
+        .r-content strong { color: #fff; font-weight: 800; background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;}
 
-        /* 스텔스 CTA 박스 (상품명 제거, 추천 텍스트 유지) */
-        .cta-box { margin-top: 50px; padding: 45px 30px; border-radius: 16px; background: linear-gradient(145deg, #0b101a, #131924); border: 1px solid var(--border-light); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .btn-coupang { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; font-weight: 800; padding: 18px 35px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: 0.2s;}
-        .btn-coupang:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.05);}
+        /* ── 토글 박스 (도출 근거 & 용어 해설) ── */
+        .proc-toggle { width: 100%; padding: 16px 22px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-line); border-radius: 10px; text-align: left; font-size: 0.95rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 12px; font-weight: 700; transition: 0.2s; margin-bottom: 20px; }
+        .proc-toggle:hover { background: rgba(255,255,255,0.05); border-color: var(--border-light); color:#fff;}
+        .proc-toggle.term-btn { border-left: 3px solid var(--gold-primary); color:var(--gold-light); background:rgba(212,175,55,0.03);}
+        .proc-toggle.basis-btn { border-left: 3px solid var(--color-info); color:var(--color-info); background:rgba(88,166,255,0.03);}
+        .proc-toggle::before { content: '▼'; font-size: 0.75rem; transition: transform 0.3s; }
+        .proc-toggle.open::before { transform: rotate(-180deg); }
+        
+        .proc-box { display: none; background: rgba(0,0,0,0.4); border: 1px solid var(--border-line); border-radius: 10px; padding: 25px; margin-bottom: 25px; font-size: 0.95rem; line-height: 1.8; color: var(--text-muted); }
+        .proc-box.show { display: block; animation: fadeIn 0.4s ease; }
+        .proc-box code { background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 6px; color: #fff; font-family: monospace; font-size:0.9rem;}
 
-        /* 하단 제어 버튼 */
+        .term-row { display: flex; gap: 15px; padding: 12px 0; border-bottom: 1px dashed var(--border-line); align-items: flex-start; }
+        .term-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .term-key { font-weight: 900; color: var(--gold-light); min-width: 90px; font-size: 0.95rem; letter-spacing:1px;}
+        .term-val { color: var(--text-main); font-size: 0.95rem; line-height: 1.7; }
+
+        /* ── 대운 스크롤 & 세운 차트 ── */
+        .daewun-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 10px 0 25px 0; scroll-snap-type: x mandatory; }
+        .daewun-scroll::-webkit-scrollbar { height: 6px; }
+        .daewun-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
+        .daewun-scroll::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); border-radius: 10px; }
+        .daewun-card { flex: 0 0 125px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-line); border-radius: 14px; padding: 25px 10px; text-align: center; scroll-snap-align: start; transition: 0.3s; position: relative;}
+        .daewun-card.active { border-color: var(--gold-primary); background: linear-gradient(145deg, rgba(212,175,55,0.15), rgba(0,0,0,0.7)); box-shadow: 0 10px 30px rgba(212,175,55,0.25); transform: translateY(-5px); }
+        .daewun-card.active::before { content: '현재 대운'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--gold-primary); color: #000; font-size: 0.75rem; font-weight: 900; padding: 4px 12px; border-radius: 20px; white-space: nowrap;}
+        .d-age { font-size: 0.85rem; color: var(--text-muted); font-weight: 700; margin-bottom: 10px; display: block; }
+        .d-char { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: 2px; text-shadow: 0 2px 15px rgba(0,0,0,0.6); display:flex; flex-direction:column;}
+        .d-char-kr {font-size:0.8rem; color:var(--text-muted); font-weight:600; letter-spacing:4px;}
+        .d-ten { font-size: 0.85rem; color: var(--gold-light); margin-top: 12px; display: block; font-weight: 700; }
+
+        .chart-wrap { position: relative; height: 280px; margin: 30px 0; }
+        
+        .yr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 10px; margin-top: 25px; }
+        .yr-cell { text-align: center; padding: 15px 8px; border: 1px solid var(--border-line); border-radius: 10px; background: rgba(0,0,0,0.4); position: relative; }
+        .yr-cell.now { border-color: var(--gold-primary); background: rgba(212,175,55,0.08); }
+        .yc-yr { font-size: 0.85rem; color: var(--text-muted); font-weight: 800; }
+        .yc-bar { height: 5px; margin: 10px 0; background: var(--border-line); border-radius: 3px; overflow: hidden; }
+        .yc-fill { height: 100%; border-radius: 3px; }
+        .yc-num { font-size: 1rem; font-weight: 900; }
+        .yc-ganzhi { font-size: 0.85rem; font-weight: 700; margin-top: 5px; color: #fff;}
+
+        /* ── 형충파해 테이블 ── */
+        .csp-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 20px; }
+        .csp-table th { background: rgba(0,0,0,0.6); color: var(--gold-light); padding: 15px; text-align: left; font-weight: 800; border-bottom: 1px solid var(--border-line); font-size: 0.9rem;}
+        .csp-table td { padding: 16px 15px; border-bottom: 1px solid var(--border-line); vertical-align: top; line-height: 1.7; }
+        .csp-badge { display: inline-block; font-size: 0.8rem; font-weight: 800; padding: 5px 10px; border-radius: 6px; }
+        .cb-chung { background: var(--fire-bg); color: var(--color-fire); border: 1px solid var(--color-fire); }
+        .cb-hyeong { background: var(--earth-bg); color: var(--color-earth); border: 1px solid var(--color-earth); }
+        .cb-pa { background: var(--metal-bg); color: var(--color-metal); border: 1px solid var(--color-metal); }
+        .cb-hae { background: var(--water-bg); color: var(--color-water); border: 1px solid var(--color-water); }
+        .cb-hap { background: var(--wood-bg); color: var(--color-wood); border: 1px solid var(--color-wood); }
+        .cb-kiban { background: rgba(139,148,158,0.1); color: var(--text-muted); border: 1px solid var(--border-light); }
+
+        /* ── 행운 요소 박스 ── */
+        .lucky-grid { display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin: 25px 0;}
+        .lucky-item { background: rgba(255,255,255,0.02); border:1px solid var(--border-line); padding:20px; border-radius:12px; text-align:center;}
+        .lucky-icon { font-size: 2rem; margin-bottom:10px; display:block;}
+        .lucky-title { font-size:0.85rem; color:var(--text-muted); font-weight:700; margin-bottom:5px; letter-spacing:2px;}
+        .lucky-val { font-size:1.1rem; color:#fff; font-weight:900;}
+
+        /* ── 하단 버튼 ── */
         .controls { display: flex; flex-direction: column; gap: 15px; margin-top: 40px; }
-        .btn-tool { flex: 1; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; padding: 20px; border-radius: 12px; font-size: 1.15rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; width: 100%;}
-        .btn-tool:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);}
-        
-        .btn-home { display: flex; align-items: center; justify-content: center; background: var(--gold-primary); color: #000; padding: 22px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; font-size: 1.3rem; transition: 0.2s; box-shadow: 0 5px 20px rgba(212,175,55,0.2);}
-        .btn-home:hover { background: var(--gold-light); transform: translateY(-2px);}
+        .btn-tool { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); color: #fff; padding: 22px; border-radius: 14px; font-size: 1.15rem; font-weight: 700; border: 1px solid var(--border-line); cursor: pointer; transition: 0.3s; width: 100%;}
+        .btn-tool:hover { background: rgba(255,255,255,0.08); border-color: var(--border-light);}
+        .btn-home { display: flex; align-items: center; justify-content: center; background: var(--border-light); color: #fff; padding: 22px; border-radius: 14px; font-weight: 800; border: none; width: 100%; cursor: pointer; font-size: 1.2rem; transition: 0.3s; margin-top:10px;}
+        .btn-home:hover { background: var(--text-muted); color:#000;}
 
-        /* 로더 연출 */
-        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,7,10,0.95); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(5px);} 
-        .spinner { width: 55px; height: 55px; border: 4px solid transparent; border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite; margin-bottom:25px;} 
-        .loading-txt { color: var(--gold-light); font-size: 1.25rem; font-weight: 700; letter-spacing: 1px;}
+        /* ── 로더 ── */
+        #loader { display: none; position: fixed; inset: 0; background: rgba(2,3,5,0.98); z-index: 100000; flex-direction: column; justify-content: center; align-items: center;} 
+        .spinner { width: 60px; height: 60px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite; margin-bottom:30px;} 
+        .loading-txt { color: var(--gold-light); font-size: 1.2rem; font-weight: 800; letter-spacing: 2px;}
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        .modal { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #161b22; color: #fff; padding: 20px 25px; border-radius: 12px; z-index: 100001; text-align: center; width: 90%; max-width: 320px; border: 1px solid var(--border-line); box-shadow: 0 10px 30px rgba(0,0,0,0.8);}
+        .modal { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #161b22; color: #fff; padding: 25px; border-radius: 16px; z-index: 100001; text-align: center; width: 90%; max-width: 350px; border: 1px solid var(--border-line); box-shadow: 0 20px 50px rgba(0,0,0,0.9);}
         
         @media (max-width: 600px) { 
             .report-wrapper { padding: 40px 20px; border-radius:0; border-left:none; border-right:none;} 
             .grid-row, .grid-half { grid-template-columns: 1fr; }
-            .bazi-grid { gap: 5px; padding: 15px 5px; }
-            .bazi-char { font-size: 1.5rem; padding: 8px 0; }
+            .bazi-grid { gap: 6px; padding: 20px 8px; }
+            .bazi-char { font-size: 1.5rem; padding: 10px 0; }
+            .bazi-char-kr { font-size: 0.7rem; letter-spacing:1px; margin-top:0;}
+            .r-section { padding: 30px 20px; border-radius: 16px;}
+            .lucky-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div><div id="loader-text" class="loading-txt">명리 엔진 가동 중...</div></div>
+<div id="loader">
+    <div class="spinner"></div>
+    <div id="loader-text" class="loading-txt">V56 운명 궤적 추적 중...</div>
+</div>
 
 <div id="custom-modal" class="modal">
-    <h3 id="modal-title" style="margin-bottom:8px; font-size:1.05rem; color:var(--color-danger);">System</h3>
-    <p id="modal-msg" style="margin-bottom:15px; font-size:0.95rem; color:var(--text-muted);"></p>
-    <button onclick="document.getElementById('custom-modal').style.display='none'" style="background:#fff; color:#000; border:none; padding:8px 20px; border-radius:8px; font-weight:600; cursor:pointer;">확인</button>
+    <h3 id="modal-title" style="margin-bottom:10px; font-size:1.15rem; color:var(--color-danger); font-weight:900;">System</h3>
+    <p id="modal-msg" style="margin-bottom:20px; font-size:1rem; color:var(--text-main); line-height:1.6;"></p>
+    <button onclick="document.getElementById('custom-modal').style.display='none'" style="background:var(--gold-primary); color:#000; border:none; padding:12px 30px; border-radius:10px; font-weight:800; cursor:pointer; font-size:1.05rem; width:100%;">확인</button>
 </div>
 
 <div class="app-container">
     <div id="input-view">
         <div class="hero">
-            <h1>사주 분석</h1>
+            <h1>운명뿌리</h1>
+            <p style="color:var(--text-muted); margin-top:15px; font-size:1.05rem; letter-spacing:1px;">당신의 진짜 궤적을 읽어냅니다.</p>
         </div>
         
         <div class="input-card">
-            <div class="form-group"><label>이름</label><input type="text" id="user-name" class="form-control" placeholder="홍길동"></div>
-            <div class="form-group"><label>생년월일</label>
-                <div class="grid-row"><select id="user-year" class="form-control"></select><select id="user-month" class="form-control"></select><select id="user-day" class="form-control"></select></div>
+            <div class="form-group">
+                <label>이름 / 별명</label>
+                <input type="text" id="user-name" class="form-control" placeholder="홍길동">
+            </div>
+            <div class="form-group">
+                <label>생년월일</label>
+                <div class="grid-row">
+                    <select id="user-year" class="form-control"></select>
+                    <select id="user-month" class="form-control"></select>
+                    <select id="user-day" class="form-control"></select>
+                </div>
             </div>
             <div class="form-group grid-half">
-                <div><label>성별</label><select id="user-gender" class="form-control"><option value="male">남성</option><option value="female">여성</option></select></div>
-                <div><label>역법</label><select id="user-cal" class="form-control"><option value="solar">양력</option><option value="lunar">음력</option></select></div>
+                <div>
+                    <label>성별</label>
+                    <select id="user-gender" class="form-control">
+                        <option value="male">남성(男)</option>
+                        <option value="female">여성(女)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>역법</label>
+                    <select id="user-cal" class="form-control">
+                        <option value="solar">양력</option>
+                        <option value="lunar">음력</option>
+                    </select>
+                </div>
             </div>
             <div class="form-group" style="margin-top:15px;">
-                <label>태어난 시각 <span style="font-size:0.8rem; font-weight:400; color:var(--gold-primary);">(정밀 분석 필수)</span></label>
+                <label>태어난 시각 <span style="font-size:0.85rem; font-weight:400; color:var(--gold-primary);">(정밀 통변 필수)</span></label>
                 <select id="user-time" class="form-control">
                     <option value="none">모름 / 미정 (3주 6자로 분석)</option>
-                    <option value="yaja">야자시 (23:30~)</option><option value="joja">조자시 (~01:29)</option>
-                    <option value="2">축시 (01:30~)</option><option value="4">인시 (03:30~)</option><option value="6">묘시 (05:30~)</option>
-                    <option value="8">진시 (07:30~)</option><option value="10">사시 (09:30~)</option><option value="12">오시 (11:30~)</option>
-                    <option value="14">미시 (13:30~)</option><option value="16">신시 (15:30~)</option><option value="18">유시 (17:30~)</option>
-                    <option value="20">술시 (19:30~)</option><option value="22">해시 (21:30~)</option>
+                    <option value="yaja">야자시 23:30~01:29 (子)</option>
+                    <option value="joja">조자시 00:00~01:29 (子)</option>
+                    <option value="2">축시 01:30~03:29 (丑)</option>
+                    <option value="4">인시 03:30~05:29 (寅)</option>
+                    <option value="6">묘시 05:30~07:29 (卯)</option>
+                    <option value="8">진시 07:30~09:29 (辰)</option>
+                    <option value="10">사시 09:30~11:29 (巳)</option>
+                    <option value="12">오시 11:30~13:29 (午)</option>
+                    <option value="14">미시 13:30~15:29 (未)</option>
+                    <option value="16">신시 15:30~17:29 (申)</option>
+                    <option value="18">유시 17:30~19:29 (酉)</option>
+                    <option value="20">술시 19:30~21:29 (戌)</option>
+                    <option value="22">해시 21:30~23:29 (亥)</option>
                 </select>
             </div>
-            <button class="btn-submit" onclick="SaaSFrontend.requestReport()">사주 분석 결과 보기</button>
+            <button class="btn-submit" onclick="SaaSFrontend.requestReport()">초정밀 운명 스캔 시작</button>
         </div>
     </div>
 
     <div id="report-view" style="display:none;">
         <div class="report-wrapper" id="capture-target">
             <div class="r-header">
-                <h2 id="r-title-name">사주 분석 리포트</h2>
+                <h2 id="r-title-name">운명 분석 리포트</h2>
                 <div class="date-box">
                     <p id="r-title-date-solar"></p>
                     <p id="r-title-date-lunar" class="lunar"></p>
@@ -186,28 +269,35 @@
             </div>
 
             <div class="bazi-grid" id="r-bazi-grid"></div>
-
-            <div class="element-chart-container" id="r-element-chart"></div>
             
             <div id="dynamic-sections"></div>
 
             <div id="cta-container"></div>
 
-            <div class="r-conclusion" id="r-conclusion-box"></div>
         </div>
 
         <div class="controls animate-fade">
             <button class="btn-tool" onclick="SaaSFrontend.shareLink()">🔗 사이트 링크 공유하기</button>
-            <button class="btn-home" onclick="SaaSFrontend.goHome()">🏠 홈으로 돌아가기</button>
+            <button class="btn-home" onclick="SaaSFrontend.goHome()">🏠 처음으로 돌아가기</button>
         </div>
     </div>
 </div>
 
 <script>
 /**
+ * UI 토글 동작 헬퍼
+ */
+function toggleProc(id){
+    const box = document.getElementById(id);
+    const btn = document.getElementById('btn-'+id);
+    if(!box || !btn) return;
+    box.classList.toggle('show');
+    btn.classList.toggle('open');
+}
+
+/**
  * ============================================================================
- * 🔒 [SERVER-SIDE CODE] : 백엔드 코어 엔진
- * - 방대한 명리학 텍스트 DB 복원 및 오행 밸런스 풀이 추가
+ * 🔒 [SERVER-SIDE CODE] : V56 초정밀 백엔드 코어 엔진
  * ============================================================================
  */
 const OrthodoxEngine = (() => {
@@ -222,80 +312,71 @@ const OrthodoxEngine = (() => {
         '寅': '+', '卯': '-', '巳': '+', '午': '-', '辰': '+', '戌': '+', '丑': '-', '未': '-', '申': '+', '酉': '-', '亥': '+', '子': '-'
     };
 
+    const HANGUL_MAP = {
+        '甲':'갑', '乙':'을', '丙':'병', '丁':'정', '戊':'무', '己':'기', '庚':'경', '辛':'신', '壬':'임', '癸':'계',
+        '子':'자', '丑':'축', '寅':'인', '卯':'묘', '辰':'진', '巳':'사', '午':'오', '未':'미', '申':'신', '酉':'유', '戌':'술', '亥':'해',
+        '木':'목', '火':'화', '土':'토', '金':'금', '水':'수'
+    };
+
     const HIDDEN_STEMS = {
-        '子': ['壬', '-', '癸'], '丑': ['癸', '辛', '己'], '寅': ['戊', '丙', '甲'], '卯': ['甲', '-', '乙'],
-        '辰': ['乙', '癸', '戊'], '巳': ['戊', '庚', '丙'], '午': ['丙', '己', '丁'], '未': ['丁', '乙', '己'],
-        '申': ['戊', '壬', '庚'], '酉': ['庚', '-', '辛'], '戌': ['辛', '丁', '戊'], '亥': ['戊', '甲', '壬']
+        '子': ['癸', '-', '壬'], '丑': ['己', '辛', '癸'], '寅': ['甲', '丙', '戊'], '卯': ['乙', '-', '甲'],
+        '辰': ['戊', '癸', '乙'], '巳': ['丙', '庚', '戊'], '午': ['丁', '己', '丙'], '未': ['己', '乙', '丁'],
+        '申': ['庚', '壬', '戊'], '酉': ['辛', '-', '庚'], '戌': ['戊', '丁', '辛'], '亥': ['壬', '甲', '戊']
     };
 
     const MAIN_QI = { '子':'癸', '丑':'己', '寅':'甲', '卯':'乙', '辰':'戊', '巳':'丙', '午':'丁', '未':'己', '申':'庚', '酉':'辛', '戌':'戊', '亥':'壬' };
 
     const RELATIONS = {
         '木': { gen: '火', ctrl: '土', ctrlBy: '金', genBy: '水' },
-        '火': { gen: '土', ctrl: '金', ctrlBy: '수', genBy: '목' },
-        '土': { gen: '金', ctrl: '수', ctrlBy: '목', genBy: '화' },
-        '金': { gen: '수', ctrl: '목', ctrlBy: '화', genBy: '토' },
-        '水': { gen: '목', ctrl: '화', ctrlBy: '토', genBy: '금' }
+        '火': { gen: '土', ctrl: '金', ctrlBy: '水', genBy: '木' },
+        '土': { gen: '金', ctrl: '水', ctrlBy: '木', genBy: '火' },
+        '金': { gen: '水', ctrl: '木', ctrlBy: '火', genBy: '土' },
+        '水': { gen: '木', ctrl: '火', ctrlBy: '土', genBy: '金' }
     };
 
     const TEN_GODS_NAME = {
-        same_same: '비견', same_diff: '겁재',
-        genBy_same: '편인', genBy_diff: '정인',
-        gen_same: '식신', gen_diff: '상관',
-        ctrlBy_same: '편관', ctrlBy_diff: '정관',
-        ctrl_same: '편재', ctrl_diff: '정재'
+        same_same: '비견', same_diff: '겁재', genBy_same: '편인', genBy_diff: '정인', gen_same: '식신', gen_diff: '상관',
+        ctrlBy_same: '편관', ctrlBy_diff: '정관', ctrl_same: '편재', ctrl_diff: '정재'
     };
+
+    const DB_HAP6 = { '子丑':'土', '寅亥':'木', '卯戌':'火', '辰酉':'金', '巳申':'水', '午未':'火' };
+    const DB_HAP3 = { '申子辰':'水','寅午戌':'火','巳酉丑':'金','亥卯未':'木' };
+    const DB_HAP_BANG = { '寅卯辰':'木','巳午未':'火','申酉戌':'金','亥子丑':'水' };
+    const DB_CHUNG = { '子':'午','午':'子','丑':'未','未':'丑','寅':'申','申':'寅','卯':'酉','酉':'卯','辰':'戌','戌':'辰','巳':'亥','亥':'巳' };
+    const DB_HYEONG = { '寅巳申':'무은지형','丑戌未':'지세지형','子卯':'무례지형','辰辰':'자형','午午':'자형','酉酉':'자형','亥亥':'자형' };
 
     const W12_MAP = {
-        '甲': ['亥','子','丑','寅','卯','辰','巳','오','미','신','유','술'], '丙': ['인','묘','진','사','오','미','신','유','술','해','자','축'],
-        '戊': ['인','묘','진','사','오','미','신','유','술','해','자','축'], '庚': ['사','오','미','신','유','술','해','자','축','인','묘','진'],
-        '壬': ['신','유','술','해','자','축','인','묘','진','사','오','미'], '乙': ['오','사','진','묘','인','축','자','해','술','유','신','미'],
-        '丁': ['유','신','미','오','사','진','묘','인','축','자','해','술'], '己': ['유','신','미','오','사','진','묘','인','축','자','해','술'],
-        '辛': ['자','해','술','유','신','미','오','사','진','묘','인','축'], '癸': ['묘','인','축','자','해','술','유','신','미','오','사','진']
+        '甲': ['亥','子','丑','寅','卯','辰','巳','午','未','申','酉','戌'], '丙': ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'],
+        '戊': ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'], '庚': ['巳','午','未','申','酉','戌','亥','子','丑','寅','卯','辰'],
+        '壬': ['申','酉','戌','亥','子','丑','寅','卯','辰','巳','午','未'], '乙': ['午','巳','辰','卯','寅','丑','子','亥','戌','酉','申','未'],
+        '丁': ['酉','申','未','午','巳','辰','卯','寅','丑','子','亥','戌'], '己': ['酉','申','未','午','巳','辰','卯','寅','丑','子','亥','戌'],
+        '辛': ['子','亥','戌','酉','申','未','午','巳','辰','卯','寅','丑'], '癸': ['卯','寅','丑','子','亥','戌','酉','申','未','午','巳','辰']
     };
+    
     const W12_NAMES = ['장생','목욕','관대','건록','제왕','쇠','병','사','묘','절','태','양'];
 
-    // 💡 방대한 명리학 텍스트 DB
-    const DB_JIGAN = {
-        "甲": "하늘을 향해 곧게 뻗어 나가는 거목처럼 굽히지 않는 자존심과 끝없는 향상심을 지니고 있습니다. 무리 속에서 자연스럽게 리더가 되려는 기질이 다분하며, 부러질지언정 꺾이지 않는 강직함이 돋보입니다. 남에게 기대기보다는 스스로 길을 개척하는 독립적인 성향입니다.",
-        "乙": "어떠한 척박한 환경에서도 살아남는 끈질긴 생명력을 지닌 덩굴 식물과 같습니다. 주변 상황에 맞춰 유연하게 적응하는 친화력과 생존력이 타의 추종을 불허하며, 부드러움 속에 꺾이지 않는 강인함이 숨어있습니다. 실속을 차리는 데 매우 능숙합니다.",
-        "丙": "온 세상을 비추는 태양처럼 거짓이 없고 솔직하며, 어디서든 시선을 사로잡는 강력한 발산의 에너지를 지녔습니다. 숨기는 것을 싫어하고 매사에 화끈하며 스케일이 큽니다. 뒤끝이 없는 쿨한 성격의 소유자입니다.",
-        "丁": "추운 밤을 밝히는 따뜻한 모닥불처럼 주변 사람의 마음을 세심하게 보살피는 온기와 예술적 영감이 뛰어납니다. 겉으론 고요해도 내면에는 언제든 폭발할 수 있는 뜨거운 불꽃과 지독한 집념이 타오르고 있습니다.",
-        "戊": "거대한 태산처럼 흔들림 없는 묵직함을 지녔으며, 모든 만물을 포용하는 넓은 마음으로 깊은 신뢰를 얻는 거대한 그릇입니다. 믿음직하고 과묵하며, 속을 쉽게 드러내지 않는 전형적인 중재자이자 리더의 표본입니다.",
-        "己": "만물을 길러내는 비옥한 텃밭처럼 실용적이고 세심하게 주변을 챙기고 기르는 능력이 탁월합니다. 꼼꼼하고 현실적인 감각이 매우 돋보이며 자기 식구를 아끼고 보호하려는 모성애적 성향이 강합니다.",
-        "庚": "제련되지 않은 거친 무쇠처럼 투박하지만 의리를 가장 중시하며, 한 번 결심한 것은 단칼에 맺고 끊는 무서운 결단력과 숙살지기(肅殺之氣)를 가졌습니다. 과정보다는 확실한 결과를 쟁취해 내는 파괴력이 있습니다.",
-        "辛": "섬세하게 세공된 보석처럼 예민하고 날카로운 통찰력을 지녔습니다. 자신만의 확고한 가치관과 완벽주의적 기질을 뽐내며, 한 분야의 최고 전문가가 되기에 손색이 없는 정밀함과 날카로움이 돋보입니다.",
-        "壬": "속을 알 수 없는 거대한 바다처럼 우주적인 스케일의 통찰력과 기획력을 숨기고 있습니다. 생각의 깊이가 남다르고 모든 것을 수용하는 지혜가 있으나, 때로는 비밀이 많아 보일 수 있는 신비로운 기질입니다.",
-        "癸": "메마른 대지를 적시는 고요한 봄비처럼 비상한 두뇌와 공감 능력으로 타인의 마음을 꿰뚫어 봅니다. 조용히 스며들어 거대한 변화를 만들어내는 부드러운 카리스마가 있으며, 정보 수집 능력이 아주 탁월합니다."
+    // 💡 [DB 완벽 복원] 방대한 통변 데이터베이스
+    const DB_AUSPICIOUS = {
+        '木': { dir: '동쪽(東)', color: '푸른색, 에메랄드, 청록색 계열', num: '3, 8', item: '나무 화분, 직사각형의 긴 오브제, 면/린넨 소재의 소품, 책이나 종이류' },
+        '火': { dir: '남쪽(南)', color: '붉은색, 자두색, 오렌지 계열', num: '2, 7', item: '조명 램프, 캔들, 뾰족하고 화려한 형태의 오브제, 태양이나 불을 상징하는 그림' },
+        '土': { dir: '중앙(中) 및 남서/북동', color: '황토색, 베이지, 딥 브라운', num: '5, 10', item: '도자기류, 흙으로 빚은 소품, 정사각형의 묵직한 오브제, 원석' },
+        '金': { dir: '서쪽(西)', color: '흰색, 순백, 은색 메탈 계열', num: '4, 9', item: '금속 액세서리, 태엽 시계, 둥근 형태의 차가운 메탈 오브제, 거울' },
+        '水': { dir: '북쪽(北)', color: '검은색, 네이비, 심해의 색', num: '1, 6', item: '작은 어항, 가습기, 비정형의 유려한 곡선을 띈 투명한 유리 오브제, 액체류' }
     };
 
     const DB_WOUNSUNG = {
-        "장생": "마치 갓 태어난 아기의 맑고 순수한 기운과 같습니다. 사람들의 호감을 쉽게 얻으며 윗사람이나 귀인의 전폭적인 보호와 지원을 받아 순조롭게 성장하는 길한 에너지입니다. 이 시기에는 스폰지처럼 배우고 흡수하는 능력이 탁월합니다.",
-        "목욕": "유행에 민감하고 자신을 뽐내고자 하는 도화(桃花)의 매력이 강력하게 발산되는 시기입니다. 시선을 사로잡는 재능이 폭발하지만 감정 기복이 출렁일 수 있고 반복적인 시행착오를 겪을 수 있으니 내면의 중심을 잡는 것이 중요합니다.",
-        "관대": "제복을 입고 당당히 세상에 나아가는 청년의 기운입니다. 투지와 굽히지 않는 자존심이 폭발하며 역경을 뚫고 크게 출세하려는 강한 상승 에너지를 품고 있습니다. 추진력이 뛰어난 만큼 타인과의 마찰에 유의해야 합니다.",
-        "건록": "온갖 풍파를 겪고 흔들림 없는 성숙을 이룬 완벽한 성인의 에너지입니다. 가장 안정적이고 이성적인 판단을 내릴 수 있으며, 독립심이 강해 자수성가와 성공을 보장하는 명리학 최고의 길성 중 하나입니다.",
-        "제왕": "드디어 왕좌에 군림하여 정점을 찍은 막강한 에너지입니다. 주변을 완벽하게 장악하는 압도적인 카리스마와 리더십을 뿜어내어 큰 조직을 이끌 수 있으나, 독단과 아집에 빠지지 않도록 굽히는 법을 배우는 것이 과제입니다.",
-        "쇠": "정점을 찍고 천천히 하산하며 노련함을 발휘하는 기운입니다. 무작정 앞장서기보다는 한 발 물러서서 상황을 관조하고, 무리한 확장보다는 타협하는 지혜를 발휘하여 그동안 모은 자산과 명예를 튼튼히 방어해 냅니다.",
-        "병": "육체적인 힘은 약해지지만, 그 반대급부로 영적이고 직관적인 에너지가 비정상적으로 극대화됩니다. 남다른 상상력과 동정심을 발휘하여 타인의 아픔을 깊이 공감하고 치유하는 힐러 혹은 철학자의 기운입니다.",
-        "사": "현실적인 물질적 욕심을 내려놓고 철학, 종교, 예술 등 순수한 정신의 세계로 깊숙이 진입하는 시기입니다. 끈기 있게 한 우물을 파고들어 남들이 범접할 수 없는 고도의 학문적, 예술적 천재성을 발휘하게 됩니다.",
-        "묘": "모든 에너지를 무덤(창고) 속으로 긁어모아 절대 밖으로 내어주지 않으려는 강한 축적과 수렴의 성향입니다. 낭비를 극도로 싫어하며 경제 관념이 뛰어나 저축과 자산 증식에 탁월할 소질을 보입니다.",
-        "절": "기존의 모든 인연과 환경이 끊어지고 완전히 텅 빈 무(無)의 상태입니다. 바닥을 치면 올라가듯, 벼랑 끝 절망 속에서도 완전히 새로운 방향으로 극적인 반전을 이뤄내는 가장 드라마틱한 재생의 기운입니다.",
-        "태": "새로운 생명이 엄마의 뱃속에 막 잉태된 연약하지만 신비로운 기운입니다. 아직 세상 밖으로 나오기 전이므로 무한한 가능성과 기획력, 호기심을 품고 있으며 무리한 실행보다는 조심스러운 보호와 치밀한 준비가 필요합니다.",
-        "양": "엄마 뱃속에서 무럭무럭 자라나는 평화롭고 원만한 성품의 기운입니다. 느긋하고 낙천적이며, 누군가에게 대가 없는 지원을 넉넉히 받아내며 순탄하고 안락하게 살아갈 수 있는 은은한 복을 타고났습니다."
-    };
-
-    const DB_SHINSAL = {
-        "백호대살": { n: "백호대살(白虎大殺)", d: "호랑이의 기운처럼 어떠한 극한의 위기나 피말리는 스트레스 앞에서도 절대 굴하지 않고 뚫고 나가는 폭발적인 돌파력과 프로페셔널한 기질을 지녔습니다. 남들이 포기하는 순간에 엄청난 기지를 발휘하여 판을 뒤집지만, 내면에 억눌린 분노가 쌓이면 한 번에 크게 폭발할 수 있으니 평소 멘탈 관리가 절대적입니다." },
-        "삼형살": { n: "삼형살(三刑殺)", d: "강력한 에너지가 서로 깎아내고 조정하는 날카로운 형국으로, 권력을 쥐거나 사람의 생명, 법, 규칙, 정밀한 기술을 다루는 분야(의료, 법조, 군경, 금융 등)에서 압도적인 능력을 발휘합니다. 칼자루를 내가 쥐고 휘두르는 긍정적이고 주도적인 방향으로 에너지를 승화시켜야 액운을 막을 수 있습니다." },
-        "원진살": { n: "원진살(怨嗔殺)", d: "사람과 사물의 이면을 예리하게 캐치하는 고도의 통찰력이 있으나, 가까운 사람과 까닭 없는 애증이나 오해가 발생하기 쉬운 예민한 기운입니다. 깊은 철학적 고뇌나 예술적 승화로 이어지면 남다른 천재성을 발휘하지만, 대인관계에서는 상대방과 적절한 심리적 거리를 두는 쿨한 태도가 필요합니다." },
-        "귀문관살": { n: "귀문관살(鬼門關殺)", d: "남들이 보지 못하는 것을 꿰뚫어 보는 비상한 영감과 고도의 직관력이 존재합니다. 남다른 아이디어, 기획, 창작, 심리 분석 분야에서 신의 경지에 오를 수 있는 놀라운 재능입니다. 다만 뇌의 회전이 멈추지 않아 신경이 예민해지고 불면증이 오기 쉬우니 충분한 휴식과 명상이 필요합니다." }
-    };
-
-    const DB_GONGMANG = {
-        "년지": "초년 환경에 공망이 들었음을 의미합니다. 조상의 혜택이나 부모의 품에서 일찍 벗어나 일찍부터 스스로 자립해야 하는 척박한 환경이 조성될 수 있으나, 역설적으로 이로 인해 남들보다 훨씬 일찍 강인한 독립심과 생활력을 키우게 됩니다.",
-        "월지": "직업과 사회적 활동 무대에 공망이 끼어 있습니다. 남들보다 뼈를 깎는 노력을 기울임에도 불구하고 청년기의 사회적 성취나 조직 내의 인정이 생각보다 지연될 수 있습니다. 단기적인 성과에 조급해하기보다, 긴 호흡으로 묵묵히 실력을 쌓는 인내가 필수적입니다.",
-        "일지": "자신의 내면과 배우자 자리에 공망이 들었습니다. 이상적인 완벽함을 상대에게 끝없이 기대하기보다는 다름을 쿨하게 인정하고 서로의 영역을 존중하며 약간의 거리를 두는 관계를 지향할 때, 오히려 가장 깊은 안정감과 해로를 얻게 됩니다.",
-        "시지": "인생의 후반부와 자녀, 부하 직원 자리에 공망이 발생했습니다. 노년에 모든 것을 쏟아부은 후 문득 헛헛함을 느낄 수 있으니, 타인에게 의지하기보다는 자신만의 확고한 취미와 철학적 수양을 통해 내면을 단단히 채워나가는 노후 대비가 가장 중요합니다."
+        "장생": "마치 갓 태어난 아기의 맑고 순수한 기운과 같습니다. 사람들의 호감을 쉽게 얻으며 윗사람이나 귀인의 전폭적인 보호와 지원을 받아 순조롭게 성장하는 길한 에너지입니다.",
+        "목욕": "유행에 민감하고 자신을 뽐내고자 하는 도화(桃花)의 매력이 강력하게 발산되는 시기입니다. 감정 기복이 출렁일 수 있으니 내면의 중심을 잡는 것이 중요합니다.",
+        "관대": "제복을 입고 당당히 세상에 나아가는 청년의 기운입니다. 투지와 굽히지 않는 자존심이 폭발하며 역경을 뚫고 크게 출세하려는 강한 상승 에너지를 품고 있습니다.",
+        "건록": "온갖 풍파를 겪고 흔들림 없는 성숙을 이룬 완벽한 성인의 에너지입니다. 가장 안정적이고 이성적인 판단을 내릴 수 있으며, 독립심이 강해 자수성가와 성공을 보장합니다.",
+        "제왕": "드디어 왕좌에 군림하여 정점을 찍은 막강한 에너지입니다. 주변을 장악하는 압도적인 카리스마를 뿜어내나, 독단에 빠지지 않도록 굽히는 법을 배워야 합니다.",
+        "쇠": "정점을 찍고 천천히 하산하며 노련함을 발휘하는 기운입니다. 무리한 확장보다는 타협하는 지혜를 발휘하여 그동안 모은 자산과 명예를 튼튼히 방어해 냅니다.",
+        "병": "육체적인 힘은 약해지지만, 반대급부로 영적이고 직관적인 에너지가 비정상적으로 극대화됩니다. 타인의 아픔을 깊이 공감하고 치유하는 힐러의 기운입니다.",
+        "사": "물질적 욕심을 내려놓고 철학, 종교, 예술 등 순수한 정신의 세계로 깊숙이 진입하는 시기입니다. 끈기 있게 한 우물을 파고들어 남들이 범접할 수 없는 천재성을 발휘합니다.",
+        "묘": "모든 에너지를 무덤(창고) 속으로 긁어모아 밖으로 내어주지 않으려는 축적의 성향입니다. 낭비를 극도로 싫어하며 경제 관념이 뛰어나 자산 증식에 탁월합니다.",
+        "절": "기존의 모든 인연과 환경이 끊어지고 완전히 텅 빈 무(無)의 상태입니다. 벼랑 끝 절망 속에서도 완전히 새로운 방향으로 반전을 이뤄내는 재생의 기운입니다.",
+        "태": "새로운 생명이 잉태된 연약하지만 신비로운 기운입니다. 무한한 가능성과 기획력을 품고 있으며 무리한 실행보다는 조심스러운 보호와 치밀한 준비가 필요합니다.",
+        "양": "엄마 뱃속에서 무럭무럭 자라나는 평화롭고 원만한 성품의 기운입니다. 느긋하고 낙천적이며, 누군가에게 지원을 받아내며 순탄하게 살아갈 수 있는 복을 타고났습니다."
     };
 
     const DB_GYUKGUK = {
@@ -315,72 +396,101 @@ const OrthodoxEngine = (() => {
         "水": { n: "수(水)", d: "스스로를 옭아매고 있는 굳어있는 사고방식을 당장 버리고, 흐르는 물처럼 한없이 유연하고 부드러워져야 합니다. 당장 눈앞의 이익에 집착하기보다 세상의 거대한 흐름을 조용히 관망하는 깊은 여유를 가져야 대성합니다." }
     };
 
+    const DB_DAEWOON_DESC = {
+        '비견': '독립과 경쟁의 10년입니다. 타인에게 의지하기보다 자신의 주관대로 밀어붙이는 에너지가 강해집니다. 동료나 곁에 있는 사람들과의 협력이 중요해지며, 치열한 경쟁 속에서 온전한 자아를 확립하게 되는 시기입니다.',
+        '겁재': '격렬한 경쟁과 재물 변동이 예상되는 10년입니다. 예상치 못한 경쟁자를 만나거나 재물의 지출이 발생할 수 있으니, 무리한 투자를 피하고 내실을 다지며 주변 사람들과의 마찰을 각별히 경계해야 합니다.',
+        '식신': '창조적 에너지가 솟아나고 의식주가 풍요로워지는 평온한 10년입니다. 자신의 재능을 갈고닦아 세상에 선보이기 좋으며, 새로운 일을 시작하거나 전문성을 기르기에 가장 쾌적하고 긍정적인 시기입니다.',
+        '상관': '기존의 틀을 깨고 과감한 변화를 추구하는 혁신의 10년입니다. 뛰어난 언변과 아이디어로 무대에서 주목받지만, 기존 조직이나 규칙과 마찰을 빚을 수 있으니 구설수를 조심하고 재능을 긍정적으로 승화시켜야 합니다.',
+        '편재': '활동 무대가 넓어지고 큰 재물의 흐름이 역동적으로 요동치는 10년입니다. 사업이나 투자의 기회가 수시로 찾아오지만, 리스크 관리와 감정 통제가 동반되지 않으면 롤러코스터 같은 금전적 기복을 겪을 수 있습니다.',
+        '정재': '고정적인 수입과 안정을 추구하는 가장 차분한 10년입니다. 착실하게 자산을 축적하고 가정의 안정을 이루기에 매우 좋은 시기이며, 모험보다는 현실적이고 안전한 선택이 큰 빛을 발합니다.',
+        '편관': '어려움을 극복하고 막강한 권위와 명예를 거머쥐는 투쟁의 10년입니다. 책임감과 압박감이 커지는 시련이 동반되나, 이 무게를 이겨내면 남들이 우러러보는 묵직한 권력을 얻게 됩니다.',
+        '정관': '사회적인 인정과 안정된 명예를 얻는 평탄한 10년입니다. 취업, 승진, 결혼 등 합법적이고 안정적인 틀 안에서 원하던 바를 순조롭게 성취하며 조직의 핵심 인재로 자리 잡습니다.',
+        '편인': '고독한 철학자처럼 내면을 탐구하고 독특한 전문성을 기르는 10년입니다. 대중적인 길보다는 종교, 학문, 기술, 예술 등 특수한 분야에서 두각을 나타내며 영적인 성숙과 멘탈의 강화를 이룹니다.',
+        '정인': '귀인의 도움을 받고 문서, 학문, 자격증으로 성취를 이루는 평온한 10년입니다. 윗사람의 전폭적인 인정을 받으며 지식을 흡수하기 좋고, 섣부른 행동보다는 신중한 계획과 배움이 큰 자산이 됩니다.'
+    };
+
+    const DB_JIGAN_LONG = {
+        "甲": "당신의 영혼은 하늘을 찌를 듯 솟아오르는 거대한 고목(巨木)의 파동을 띄고 있습니다. 남의 밑에 들어가기보다는 무리를 이끌고 자신만의 제국을 건설하려는 주도권에 대한 열망이 유전자 깊숙이 각인되어 있습니다. 부당한 압박 앞에서는 꺾일지언정 굽히지 않는 지독한 자존심이 당신의 가장 큰 무기이자 때로는 치명적인 독이 됩니다. 당신이 지닌 시작의 에너지는 죽어있는 대지 위에도 새로운 숲을 일궈내는 창조적 폭발력을 지녔습니다.",
+        "乙": "어둡고 습한 골짜기부터 깎아지른 절벽까지, 어디서든 끈질기게 뿌리를 내리고 기어코 꽃을 피워내는 덩굴(蔓草)의 처절하고도 아름다운 생명력이 당신의 본질입니다. 강풍이 불면 거목은 부러지지만, 당신은 유연하게 몸을 누이며 바람이 지나가길 기다립니다. 사람의 심리를 꿰뚫어 보고 상황에 맞춰 자신을 변형시키는 압도적인 유연성과 생존 본능은 타의 추종을 불허합니다.",
+        "丙": "온 세상을 집어삼킬 듯 타오르며 흑암을 찢어내는 거대한 태양(太陽)의 맹렬한 에너지가 당신을 감싸고 있습니다. 음침한 속임수와 뒤끝을 극도로 혐오하며, 매사에 화끈하고 스케일이 웅장합니다. 당신이 머무는 공간은 순식간에 활기로 가득 차며, 사람들은 자연스럽게 당신이 내뿜는 카리스마와 따뜻한 빛에 이끌려 모여듭니다.",
+        "丁": "가장 깊은 어둠 속에서 은밀하게 길을 밝히는 촛불이자, 쇠를 녹여 기물을 만들어내는 용광로의 불꽃(燈火)입니다. 당신의 내면에는 타인의 영혼을 위로하는 지극한 온기와, 한 번 목표를 정하면 뼈를 깎아서라도 이뤄내고야 마는 무서운 집념이 공존합니다. 직관과 예술적 영감이 비정상적으로 발달해 있어, 남들이 보지 못하는 이면의 세계를 쉽게 꿰뚫어 봅니다.",
+        "戊": "어떠한 거센 폭풍우에도 결코 미동조차 하지 않는 거대하고 장엄한 산맥(泰山)의 형상을 띄고 있습니다. 당신의 마음속 깊은 곳에는 만물을 포용하려는 제왕적 중재자의 본능이 숨어있습니다. 사람들은 당신의 과묵함과 흔들림 없는 태도에서 절대적인 신뢰를 느끼며 기꺼이 의지하려 합니다. 한 번 믿음을 준 사람은 끝까지 지켜내는 의리의 표본입니다.",
+        "己": "모든 생명을 잉태하고 조용히 길러내는 비옥하고 은밀한 텃밭(田園)의 기운입니다. 대형 스케일의 허풍보다는 지금 내 손에 닿는 실질적이고 구체적인 결과물에 강한 집착을 보입니다. 대인관계에서 겉으로는 몹시 부드럽고 수용적이지만, 속으로는 치밀한 계산기가 돌아가고 있는 완벽주의자이며 웬만해선 자신의 진짜 속내를 100% 꺼내 보이지 않습니다.",
+        "庚": "아직 채 가공되지 않은 거칠고 차가운 무쇠검(鐵器)의 서늘한 기운을 품고 있습니다. 맺고 끊음이 소름 돋을 정도로 확실하며, 불의나 불합리 앞에서는 칼집에서 검을 뽑는 것을 결코 주저하지 않습니다. 복잡하게 얽힌 문제들을 단칼에 베어내고 본질만을 남기는 당신의 압도적인 결단력과 숙살지기(肅殺之氣)는 큰 성공을 쟁취하는 핵심 동력입니다.",
+        "辛": "수천 번의 담금질 끝에 완성된, 세상에서 가장 날카롭고 눈부신 보석(寶石)의 파동입니다. 극도로 예민하고 정교한 감각을 지녔으며, 미학적인 완벽함을 추구하는 성향이 뼈속까지 새겨져 있습니다. 남들이 혀를 내두를 정도의 디테일한 통찰력으로 한 분야의 독보적인 장인이 될 수 있는 자질을 타고났으나, 스스로를 옥죄는 완벽주의적 스트레스가 몹시 심한 편입니다.",
+        "壬": "속을 전혀 가늠할 수 없을 만큼 깊고 거대한 심연의 바다(大海)입니다. 모든 지식과 정보를 스펀지처럼 흡수하는 블랙홀 같은 수용력을 지녔으며, 시대의 흐름을 읽어내는 통찰력과 기획력은 우주적 스케일을 자랑합니다. 상황에 따라 고요한 호수처럼 머물다가도, 한 번 분노하면 모든 것을 집어삼키는 쓰나미로 돌변하는 무서운 가변성을 지녔습니다.",
+        "癸": "메마른 대지를 소리 없이 촉촉하게 적시는 안개와 봄비(雨露)의 은밀한 기운입니다. 타인의 감정선에 순식간에 동기화되는 천재적인 공감 능력을 지녔으며, 겉으로는 유약해 보여도 바위조차 뚫어내는 물방울의 지독한 끈기를 숨기고 있습니다. 지식과 비밀을 수집하는 데 천부적인 소질이 있으며, 보이지 않는 곳에서 상황을 쥐락펴락하는 무서운 지략가입니다."
+    };
+
     const DB_LIFETIME = {
         "e": { 
-            "木": "호기심이 매우 강해 스펀지처럼 다양한 지식을 흡수하는 역동적인 초년을 보냅니다. 새로운 환경에 끝없이 시도하며 쑥쑥 성장하는 에너지가 주를 이룬니다.<br><br>관심 분야가 자주 바뀌어 다소 산만해 보일 수 있으나, 이 시기의 잦은 방황과 수많은 경험조차도 향후 거대한 숲을 이루기 위한 긍정적이고 탄탄한 밑거름이 됩니다. 엄격한 통제보다는 자율적인 환경이 주어질 때 재능이 크게 만개합니다.", 
-            "火": "자신을 표현하고 드러내길 주저하지 않으며, 일찍부터 작은 무대에서라도 사람들의 이목과 스포트라이트를 받고자 하는 열정적인 성향이 짙습니다.<br><br>감수성이 예민하고 감정의 기복이 클 수 있어 빠른 성공과 실패를 동시에 맛보기도 합니다. 타인의 시선을 의식하는 만큼 빠른 성장을 이룩하지만, 내면의 화를 조절하는 법을 배우는 것이 초년의 핵심 과제입니다.", 
-            "土": "또래에 비해 생각이 매우 깊고 애어른 같으며, 환경의 변화나 유행에 크게 요동치지 않고 묵묵히 인생의 뼈대와 기초 공사를 다지는 진중한 시기입니다.<br><br>눈에 띄는 화려한 성취는 더딜 수 있으나, 이 시기에 쌓아 올린 지식과 끈기는 평생 무너지지 않는 거대한 성벽의 기초가 됩니다. 부모나 윗사람의 말을 잘 따르는 편입니다.", 
-            "金": "어린 시절부터 스스로의 깐깐한 규율을 엄격히 세우고, 주변 상황을 예리하게 관찰하며 절제되고 냉철한 성장을 이룹니다.<br><br>옳고 그름에 대한 가치관이 남들보다 일찍 확립되며 승부욕이 강해 학업이나 목표에서 뚜렷한 성과를 냅니다. 다만 지나치게 완벽을 추구하여 스스로 스트레스를 받을 수 있으니 마음을 이완시키는 법이 필요합니다.", 
-            "水": "보이지 않는 생각의 바다에 빠져 인생의 의미를 묻고 탐색하며, 풍부한 상상력으로 혼자만의 세계를 깊이 탐구하는 데 큰 흥미를 느낍니다.<br><br>지식을 스펀지처럼 조용히 흡수하는 능력이 탁월하며 창의적인 영감이 넘칩니다. 외부 활동보다는 내면의 정서를 채우는 것을 중시하며, 자신을 완벽히 이해해 주는 멘토를 만날 때 잠재력이 크게 폭발합니다." 
+            "木": "호기심이 매우 강해 스펀지처럼 다양한 지식을 흡수하는 역동적인 초년을 보냅니다. 새로운 환경에 끝없이 시도하며 쑥쑥 성장하는 에너지가 주를 이룹니다. 이 시기의 잦은 방황조차도 거대한 숲을 이루기 위한 탄탄한 밑거름이 됩니다.", 
+            "火": "일찍부터 작은 무대에서라도 사람들의 이목을 받고자 하는 열정적인 성향이 짙습니다. 감수성이 예민하여 빠른 성공과 실패를 동시에 맛보기도 합니다. 내면의 불꽃을 조절하는 법을 배우는 것이 초년의 핵심 과제입니다.", 
+            "土": "또래에 비해 생각이 매우 깊고 애어른 같으며, 유행에 요동치지 않고 인생의 뼈대와 기초 공사를 다지는 진중한 시기입니다. 화려한 성취는 더딜 수 있으나 평생 무너지지 않는 성벽의 기초가 됩니다.", 
+            "金": "어린 시절부터 스스로의 규율을 엄격히 세우고, 예리하게 관찰하며 절제되고 냉철한 성장을 이룹니다. 승부욕이 강해 성과를 내지만, 지나친 완벽주의 스트레스를 이완시키는 법이 필요합니다.", 
+            "水": "보이지 않는 생각의 바다에 빠져 상상력으로 혼자만의 세계를 깊이 탐구하는 데 큰 흥미를 느낍니다. 지식을 스펀지처럼 조용히 흡수하며, 자신을 이해해 주는 멘토를 만날 때 잠재력이 크게 폭발합니다." 
         },
         "m": { 
-            "木": "그동안 축적해온 아이디어를 본격적으로 현실의 실행에 옮기며, 두려움 없이 자신의 영역을 사방으로 뻗어나가며 세력을 무섭게 확장하는 황금기입니다.<br><br>멈추지 않는 도전 정신과 기획력으로 새로운 길을 개척하며, 여러 사람들을 이끄는 리더의 위치에 서게 됩니다. 뻗어나가는 기운이 너무 강해 중간 점검을 잊을 수 있으니 내실을 함께 다지는 것이 중요합니다.", 
-            "火": "내면의 열정과 잠재력이 최고조에 달하여 사회적 무대 중심에서 화려하게 능력을 입증하고 빛을 발하는 멈출 수 없는 전성기입니다.<br><br>당신의 이름이 널리 알려지며 폭발적인 성취를 이룹니다. 하지만 지나친 확장과 과로는 금물이며, 타오르는 불꽃이 한순간에 꺼지지 않도록 체력을 안배하고 성과를 안전한 자산으로 묻어두는 지혜가 필수입니다.", 
-            "土": "인간관계의 거대한 중심축이 되어 다양한 부류의 사람들을 포용하고 깊은 신뢰를 쌓아가며, 어떠한 풍파에도 무너지지 않는 삶의 확고한 경제적/심리적 안정망을 구축합니다.<br><br>신용과 믿음을 바탕으로 실물 자산을 크게 획득하며 사회적으로 묵직한 권위를 인정받습니다. 변화보다는 현재의 거대한 파이를 튼튼하게 지켜내는 수성(守城)의 지혜가 빛을 발합니다.", 
-            "金": "치밀하게 축적된 실력과 냉혹한 원칙을 바탕으로 치열한 경쟁 상황에서 완벽하게 승리하며, 뿌려둔 씨앗에 대한 보상을 명확한 결과물과 지위로 쟁취하는 시기입니다.<br><br>감정을 배제한 이성적이고 예리한 판단이 인생의 여러 갈림길에서 정답을 찾아냅니다. 맺고 끊음이 확실하여 불필요한 인연과 자본의 누수를 완벽히 차단하고 알짜배기 실속을 챙깁니다.", 
-            "水": "가장 뛰어난 유연한 대처 능력과 고도의 통찰력을 발휘하여, 어떠한 난관이나 위기 상황도 부드럽게 넘기며 보이지 않는 곳에서 거대한 기회를 선점하고 쟁취합니다.<br><br>경계가 없는 사고방식으로 시대의 흐름과 트렌드를 가장 먼저 읽어내어 부와 명예를 유동적으로 불려 나갑니다. 주변 사람들의 갈등을 해결해 주는 지혜로운 멘토의 역할을 톡톡히 해냅니다." 
+            "木": "그동안 축적해온 아이디어를 현실의 실행에 옮기며 영역을 사방으로 뻗어나가는 황금기입니다. 멈추지 않는 기획력으로 새로운 길을 개척하며 리더의 위치에 섭니다. 내실을 다지는 것이 중요합니다.", 
+            "火": "내면의 열정이 최고조에 달하여 무대 중심에서 화려하게 능력을 입증하는 전성기입니다. 폭발적인 성취를 이루지만 체력을 안배하고 성과를 안전한 자산으로 묻어두는 지혜가 필수입니다.", 
+            "土": "인간관계의 중심축이 되어 깊은 신뢰를 쌓아가며, 확고한 경제적/심리적 안정망을 구축합니다. 실물 자산을 획득하며 사회적으로 묵직한 권위를 인정받는 수성(守城)의 지혜가 빛을 발합니다.", 
+            "金": "치밀하게 축적된 실력과 원칙을 바탕으로 경쟁에서 승리하며, 뿌려둔 씨앗에 대한 보상을 명확히 쟁취하는 시기입니다. 맺고 끊음이 확실하여 불필요한 누수를 막고 알짜배기 실속을 챙깁니다.", 
+            "水": "유연한 대처 능력과 고도의 통찰력을 발휘하여 위기 상황을 부드럽게 넘기고 보이지 않는 기회를 선점합니다. 시대의 흐름을 가장 먼저 읽어내어 부와 명예를 유동적으로 불려 나갑니다." 
         },
         "l": { 
-            "木": "자신이 평생 동안 쌓아온 귀중한 경험과 지적 자산을 아낌없이 후학에게 베풀며 존경받는 평온하고 정신적으로 몹시 풍요로운 말년을 보내게 됩니다.<br><br>세속적인 욕심에서 한 걸음 벗어나 자연과 가까이하며, 배움에 대한 끈을 놓지 않고 끊임없이 마음의 양식을 채우는 고상한 황혼을 즐깁니다.", 
-            "火": "나이가 들어도 결코 식지 않는 활력과 호기심으로 취미, 대외 활동, 각종 모임을 적극적으로 주도하며 누구보다 화려하고 생기 넘치는 황혼을 맞이합니다.<br><br>은퇴 후에도 멈추지 않고 새로운 것을 시도하며 사람들에게 에너지를 불어넣는 등대의 역할을 합니다. 다채롭고 지루할 틈 없는 유쾌한 말년입니다.", 
-            "土": "젊은 시절 묵묵히 단단하게 모아둔 물질적 자산과 끈끈한 인맥을 바탕으로 외부의 흔들림에 전혀 영향받지 않는 궁극의 안락함과 최고의 여유를 누립니다.<br><br>집안의 어른이자 지역 사회의 든든한 버팀목으로서, 모든 이들이 당신의 지혜와 넓은 품에 기대려 합니다. 가장 흔들림 없고 평화로운 말년의 표본입니다.", 
-            "金": "세월이 흘러도 스스로 세운 원칙과 품위를 잃지 않으며, 흐트러짐 없는 꼿꼿하고 고고한 권위와 명예를 죽는 날까지 철저히 유지하는 존경받는 시기입니다.<br><br>불필요한 인간관계는 말끔히 정리하고 오직 진정으로 결이 맞는 소수의 사람들과 깊고 깔끔한 교류를 이어가며, 경제적으로도 한 치의 오차가 없는 완벽한 노후를 보냅니다.", 
-            "水": "복잡한 세상의 이치를 완전히 깨닫고 세속적 욕심을 초월하여, 깊은 철학적 통찰력으로 길을 잃은 사람들에게 올바른 해답을 내려주는 지혜로운 멘토이자 현자로 거듭납니다.<br><br>물질의 많고 적음을 떠나 정신적인 자유로움의 극치를 맛보게 되며, 세상 만물을 관조하며 조용하고 영적인 충만함을 누리는 아름다운 황혼기입니다." 
+            "木": "평생 쌓아온 지적 자산을 후학에게 아낌없이 베풀며 존경받는 평온한 말년을 보냅니다. 자연과 가까이하며 끊임없이 마음의 양식을 채우는 고상한 황혼을 즐깁니다.", 
+            "火": "나이가 들어도 식지 않는 활력으로 다양한 모임을 주도하며 화려하고 생기 넘치는 황혼을 맞이합니다. 사람들에게 에너지를 불어넣는 등대 역할을 하는 유쾌한 말년입니다.", 
+            "土": "단단하게 모아둔 물질적 자산과 인맥을 바탕으로 최고의 여유를 누립니다. 집안의 어른이자 지역 사회의 버팀목으로서 평화로운 말년의 표본을 보여줍니다.", 
+            "金": "원칙과 품위를 잃지 않으며 고고한 권위와 명예를 철저히 유지하는 존경받는 시기입니다. 진정으로 결이 맞는 소수의 사람들과 깊은 교류를 이어가며 완벽한 노후를 보냅니다.", 
+            "水": "복잡한 세상의 이치를 깨닫고 세속적 욕심을 초월하여 멘토이자 현자로 거듭납니다. 세상 만물을 관조하며 정신적인 자유로움과 영적인 충만함을 누리는 아름다운 황혼기입니다." 
         },
         "w": { 
-            "木": "무에서 유를 창조하는 일, 즉 새로운 프로젝트를 기획하거나 참신한 아이디어를 내고, 지식을 가공하여 전달하는(교육/창작) 분야에서 멈추지 않는 재물이 창출됩니다.<br><br>남들이 시작하지 않은 새로운 밭을 일구는 선구자적 재능이 곧 막대한 돈으로 연결됩니다. 단기적인 투기보다는 무럭무럭 자라나는 가치 투자나 지식 기반 사업이 가장 유리합니다.", 
-            "火": "자신의 이름과 브랜드를 널리 알리고 대중의 시선을 강하게 끌어당기는 엔터테인먼트, 방송, 마케팅 등의 무대에서 활동할 때 폭발적인 부가 따릅니다.<br><br>당신의 매력과 화려한 화술이 곧 막대한 자본으로 치환되는 구조입니다. 돈이 들어올 때 빠져나가는 속도도 빠르므로, 화려하게 번 돈을 조용히 부동산 등으로 묶어두는 전략이 필수입니다.", 
-            "土": "변하지 않는 신용을 바탕으로 한 중개업이나, 땅과 건물을 다루는 부동산 등 실체가 있고 묵직하게 가치가 상승하는 실물 자산 분야에서 거대한 재물을 모읍니다.<br><br>일확천금을 좇는 단타 매매보다는, 시간이 갈수록 눈덩이처럼 불어나는 복리의 재물운을 타고났습니다. 한 번 쌓인 부는 어지간한 태풍에도 쉽게 무너지지 않는 튼튼한 성벽이 됩니다.", 
-            "金": "숫자와 팩트에 근거한 금융, 기계, 정밀한 기술이나 단호하고 과감한 결단력이 필요한 전문 분야에서 큰 돈의 흐름을 장악하고 통제하는 막강한 권력을 쥡니다.<br><br>감정을 완벽히 배제한 당신의 냉혹한 계산력과 승부사적 기질이 곧 당신을 거부(巨富)로 만들어 주는 튼튼한 사다리가 됩니다. 손절과 익절의 타이밍을 잡는 감각이 타의 추종을 불허합니다.", 
-            "水": "국경과 한계가 없는 해외, 무역, 유통 플랫폼, IT 등 정보와 자본의 흐름이 매우 빠르고 유동적인 분야에서 남들이 보지 못하는 미세한 흐름에 올라타 막대한 부를 쌓습니다.<br><br>고인 물을 박차고 나가 새로운 조류에 유연하게 탑승할 때 금전운이 극적으로 폭발합니다. 돈의 길목을 미리 내다보고 그물을 치는 지혜와 유연성이 당신의 가장 큰 무기입니다." 
+            "木": "기획, 교육, 창작 분야에서 멈추지 않는 재물이 창출됩니다. 남들이 시작하지 않은 밭을 일구는 선구자적 재능이 돋보이며 길게 보는 가치 투자가 가장 유리합니다.", 
+            "火": "방송, 마케팅 등 대중의 시선을 당기는 활동을 할 때 폭발적인 부가 따릅니다. 돈이 드나드는 속도가 매우 빠르므로 부동산 등 무거운 자산으로 묶어두는 전략이 필수입니다.", 
+            "土": "신용을 바탕으로 한 중개업이나 부동산 등 실물 자산 분야에서 거대한 재물을 모읍니다. 시간이 갈수록 눈덩이처럼 불어나는 복리의 재물운을 타고나 쉽게 무너지지 않습니다.", 
+            "金": "금융, 정밀 기술 등 단호한 결단력이 필요한 분야에서 큰 돈의 흐름을 장악합니다. 냉혹한 계산력과 승부사적 기질, 손절과 익절의 타이밍 감각이 타의 추종을 불허합니다.", 
+            "水": "해외, 무역, IT 등 정보와 자본의 흐름이 빠르고 유동적인 분야에서 미세한 흐름에 올라타 막대한 부를 쌓습니다. 새로운 조류에 탑승하는 지혜가 무기입니다." 
         },
         "c": { 
-            "木": "기획자, 교육자, 디자이너, 건축가, 혹은 혁신적인 IT 스타트업 창업가 등 끝없는 생장성과 창의성이 돋보이는 직군에서 당신의 아이디어가 세상을 변화시키며 크게 성공합니다.", 
-            "火": "방송인, 스타 강사, 전문 마케터, 인플루언서, 예술가 등 자신을 적극적으로 대중에게 드러내고 뜨거운 열정을 표현하여 타인의 마음을 뒤흔드는 직군이 매우 유리합니다.", 
-            "土": "심리 상담가, 중간 관리자, 공무원, 부동산 및 금융 관리업 등 이질적인 요소들 간의 갈등을 부드럽게 중재하고 조직의 안정을 묵묵히 이끌어가는 직군에서 가장 큰 인정을 받습니다.", 
-            "金": "군인, 경찰, 펀드매니저, 외과의사, 고급 엔지니어 등 예리한 판단력과 엄격한 원리원칙, 한 치의 오차도 허용하지 않는 완벽함이 고도로 요구되는 직군이 당신의 탁월한 천직입니다.", 
-            "水": "무역업자, IT 기획자, 외교관, 심리학자, 심층 연구원 등 고도의 지혜를 요구하며 이동성과 상황 변화에 대한 임기응변, 유연성이 극도로 필요한 트렌디한 직군이 찰떡같이 어울립니다." 
+            "木": "기획자, 교육자, 디자이너, 건축가, 혁신적인 창업가 등 창의성이 돋보이는 직군에서 성공합니다.", 
+            "火": "방송인, 강사, 마케터, 예술가 등 자신을 드러내어 타인의 마음을 움직이는 직군이 유리합니다.", 
+            "土": "상담가, 관리자, 공무원, 부동산 및 금융업 등 갈등을 중재하고 안정을 이끌어가는 직군이 맞습니다.", 
+            "金": "군인, 경찰, 펀드매니저, 의사 등 예리한 판단력과 오차 없는 완벽함이 요구되는 직군이 천직입니다.", 
+            "水": "무역업자, 기획자, 외교관, 연구원 등 고도의 지혜와 임기응변, 유연성이 필요한 직군이 어울립니다." 
         },
         "l_v": { 
-            "木": "상대방의 상처를 챙겨주고 너그럽게 보듬어주려는 헌신적인 성향이 강해, 따뜻하고 포용력 있는 마치 든든한 보호자와도 같은 연애를 지향합니다. 다만 상대의 영역에 대한 지나친 간섭은 피하는 지혜가 필요합니다.", 
-            "火": "감정 표현이 숨김없이 솔직하고 뜨거우며, 데이트의 분위기를 적극적으로 리드하며 한시도 지루할 틈을 주지 않는 화려한 연애를 즐깁니다. 금방 타오른 감정이 금방 식지 않도록 서로의 템포를 조절하는 노력이 필요합니다.", 
-            "土": "불타오르기보다는 진중하고 듬직하게 상대를 기다려주는 편이며, 가벼운 만남보다는 변치 않는 깊은 신뢰를 최우선으로 하는 매우 성숙한 연애를 선호합니다. 한 번 굳은 믿음을 주면 끝까지 책임지려 하는 로맨티스트입니다.", 
-            "金": "본인의 깐깐한 기준에 미치지 못하면 맺고 끊음이 차가울 정도로 확실하며, 서로 배울 점이 명확히 있고 각자의 사생활과 룰을 존중하는 세련되고 이성적인 연애를 원합니다. 집착을 가장 싫어합니다.", 
-            "水": "상대방의 복잡한 내면을 깊이 공감하고 이해하려 애쓰며, 단순한 외모나 육체적 끌림보다는 대화의 깊이가 통하고 영혼이 교감하는 정신적인 주파수를 맞추는 것을 모든 조건 중 가장 중요하게 여깁니다." 
+            "木": "상대방의 상처를 보듬어주려는 성향이 강해 든든한 보호자와 같은 연애를 지향합니다. 다만 상대의 영역에 대한 지나친 간섭과 통제는 피하는 지혜가 필요합니다.", 
+            "火": "감정 표현이 솔직하고 뜨거우며 분위기를 주도하는 화려한 연애를 즐깁니다. 금방 타오른 감정이 훅 식지 않도록 템포를 천천히 조절하는 노력이 무엇보다 중요합니다.", 
+            "土": "진중하고 듬직하게 상대를 기다려주는 편이며, 가벼운 만남보다는 변치 않는 깊은 신뢰를 최우선으로 하는 성숙한 로맨티스트입니다. 굳은 믿음을 주면 끝까지 책임집니다.", 
+            "金": "기준에 미치지 못하면 맺고 끊음이 확실하며, 서로 배울 점이 명확히 있고 사생활을 철저히 존중하는 세련되고 이성적인 연애를 원합니다. 집착을 가장 혐오합니다.", 
+            "水": "상대의 복잡한 내면을 공감하려 애쓰며, 단순한 외모보다는 대화의 깊이가 통하고 영혼이 교감하는 정신적인 주파수를 맞추는 것을 가장 중요한 조건으로 여깁니다." 
         },
         "f": { 
-            "木": "가족 구성원들에게 가장 다정다감하며 집안 전체의 성장과 화목을 실질적으로 이끄는 따뜻한 기둥 역할을 기꺼이 자처합니다. 가족 전체를 자신의 품 안에 완벽히 감싸 안고 보호하려는 책임감이 대단합니다.", 
-            "火": "침체된 가족 관계에 언제나 밝은 활력과 예기치 못한 즐거운 이벤트를 불어넣지만, 간혹 서로의 감정선이 강하게 부딪혀 욱하는 다툼이 일어날 수 있으니 한 템포 쉬어가는 온화한 언행이 가정의 평화에 필수적입니다.", 
-            "土": "자신을 묵묵히 희생하여 가족을 뒷받침하며, 가족 구성원 간의 크고 작은 갈등을 말없이 중재해 내는 가장 든든하고 넓은 울타리 역할을 담당합니다. 온 가족이 당신의 넓은 품에 심리적으로 크게 의존하고 있습니다.", 
-            "金": "가족이라는 좁은 울타리 안에서도 마땅히 지켜야 할 선과 예의를 엄격하게 중시하며, 가장 혹은 구성원으로서 무거운 책임감과 원칙을 끝까지 완수하려는 가장의 의무감이 타의 추종을 불허할 정도로 강합니다.", 
-            "水": "어떤 심각하고 골치 아픈 문제가 가정 내에 발생해도 당신의 지혜로운 조언과 깊은 이해로 갈등의 매듭을 부드럽게 풀어나가며, 가족 구성원 모두가 기대고 의지하는 완벽한 정신적인 지주가 되어줍니다." 
+            "木": "가족 구성원들에게 다정다감하며 집안 전체의 성장과 화목을 실질적으로 이끄는 기둥 역할을 자처합니다.", 
+            "火": "침체된 가족 관계에 밝은 활력을 불어넣지만, 간혹 감정선이 부딪혀 욱하는 다툼이 일어날 수 있으니 온화한 언행이 필요합니다.", 
+            "土": "자신을 묵묵히 희생하여 가족을 뒷받침하며 갈등을 중재해 내는 가장 든든하고 넓은 울타리 역할을 담당합니다.", 
+            "金": "가족이라는 울타리 안에서도 마땅히 지켜야 할 선을 중시하며 가장으로서의 묵직한 책임감과 의무감이 매우 강합니다.", 
+            "水": "심각한 문제가 발생해도 지혜로운 조언과 깊은 이해로 갈등을 부드럽게 풀어나가는 정신적인 지주가 되어줍니다." 
         },
         "h": { 
-            "木": "간, 담, 그리고 자율신경계의 피로가 남들보다 빠르게 누적되기 쉽습니다. 스마트폰과 PC 시청을 대폭 줄여 눈의 피로를 풀고, 경직된 근육을 수시로 부드럽게 풀어주는 잦은 스트레칭과 산림욕이 최고의 보약입니다.", 
-            "火": "심장 펌핑, 혈액순환, 시력 보호에 각별히 신경 써야 하는 체질입니다. 완벽을 추구하는 스트레스로 쌓인 내면의 뜨거운 열기를 가라앉히는 조용한 명상과, 절대적인 수면 시간의 엄격한 확보가 심혈관 건강에 매우 중요합니다.", 
-            "土": "위장, 비장 등 소화기 계통이 매우 예민해져 스트레스를 받으면 위장병이나 잦은 체증이 생기기 쉬운 구조입니다. 과식과 폭식을 절대 금하고, 규칙적이고 소식하는 식습관 유지와 식후 30분 가벼운 산책이 필수적입니다.", 
-            "金": "폐, 대장, 호흡기 및 민감한 피부 질환에 매우 취약할 수 있습니다. 밀폐되고 건조한 환경을 피하고 실내 습도를 잘 맞추며, 주말에는 맑고 서늘한 공기를 깊이 들이마시는 등산이나 강도 높은 유산소 운동이 큰 도움이 됩니다.", 
-            "水": "신장, 방광, 자궁 등 하복부 생식기 계통을 일년 내내 항상 따뜻하게 보호해야 하며, 몸이 냉해지는 차가운 음식과 습한 환경을 극도로 피하고 일상생활 속에서 적절한 수분 밸런스를 일정하게 유지하는 것이 모든 면역력의 기본입니다." 
+            "木": "간, 담, 자율신경계의 피로가 남들보다 빠르게 누적되기 쉽습니다. 스마트폰 시청을 줄이고 경직된 근육을 수시로 풀어주는 스트레칭과 산림욕이 최고의 보약입니다.", 
+            "火": "심장 펌핑, 혈액순환에 신경 써야 합니다. 스트레스로 쌓인 내면의 열기를 가라앉히는 조용한 명상과 충분한 수면 시간의 확보가 필수적입니다.", 
+            "土": "소화기 계통이 예민해져 스트레스를 받으면 위장병이 생기기 쉽습니다. 과식을 피하고 규칙적이고 소식하는 식습관 유지와 가벼운 산책이 매우 중요합니다.", 
+            "金": "폐, 대장, 호흡기 및 피부 질환에 취약할 수 있습니다. 건조한 환경을 피하고 실내 습도를 잘 맞추며 맑은 공기를 들이마시는 유산소 운동이 큰 도움이 됩니다.", 
+            "水": "신장, 방광 등 하복부 생식기 계통을 항상 따뜻하게 보호해야 강한 면역력을 유지할 수 있으며, 차가운 음식을 피하고 수분 밸런스를 맞춰야 합니다." 
         }
     };
 
-    // 💡 오행 및 십신 로직
+    // 3. 엔진 핵심 연산 함수 모음
     const getTenGod = (dayMaster, targetChar) => {
         if (!dayMaster || !targetChar || targetChar === '-' || dayMaster === '-') return '-';
-        const dmEl = ELEMENTS[dayMaster], tgEl = ELEMENTS[targetChar];
+        const dmEl = ELEMENTS[dayMaster]; const dPol = YIN_YANG[dayMaster];
+        let tgEl, tgPol;
+        if (ELEMENTS[targetChar] && !MAIN_QI[targetChar]) { tgEl = ELEMENTS[targetChar]; tgPol = YIN_YANG[targetChar]; } 
+        else if (MAIN_QI[targetChar]) { const mainQi = MAIN_QI[targetChar]; tgEl = ELEMENTS[mainQi]; tgPol = YIN_YANG[mainQi]; } 
+        else { return '-'; }
         if (!dmEl || !tgEl) return '-';
-        const sameYinYang = YIN_YANG[dayMaster] === YIN_YANG[targetChar];
-        const suffix = sameYinYang ? 'same' : 'diff';
+        const suffix = (dPol === tgPol) ? 'same' : 'diff';
         if (dmEl === tgEl) return TEN_GODS_NAME[`same_${suffix}`];
         if (RELATIONS[dmEl].genBy === tgEl) return TEN_GODS_NAME[`genBy_${suffix}`];
         if (RELATIONS[dmEl].gen === tgEl) return TEN_GODS_NAME[`gen_${suffix}`];
@@ -389,28 +499,40 @@ const OrthodoxEngine = (() => {
         return '-';
     };
 
+    const MultiplierEngine = {
+        getWangSang(monthEl, targetEl) {
+            if (!monthEl || !targetEl) return 1.0;
+            const rel = RELATIONS[monthEl];
+            if (monthEl === targetEl) return 2.0; 
+            if (rel.gen === targetEl) return 1.5; 
+            if (rel.genBy === targetEl) return 0.8; 
+            if (rel.ctrlBy === targetEl) return 0.5; 
+            if (rel.ctrl === targetEl) return 0.2; 
+            return 1.0;
+        }
+    };
+
     const calculateOhaengScores = (bazi) => {
         let scores = { '木': 0, '火': 0, '土': 0, '金': 0, '水': 0 };
+        const monthEl = ELEMENTS[MAIN_QI[bazi.monthZhi]]; 
         const addScore = (char, weight) => {
             if(!char || char === '-') return;
             const el = ELEMENTS[char];
-            if(el) scores[el] += weight;
+            if(el) scores[el] += (weight * MultiplierEngine.getWangSang(monthEl, el));
         };
-        addScore(bazi.stems[0], 10); addScore(bazi.stems[1], 10); 
-        addScore(bazi.stems[2], 10); addScore(bazi.stems[3], 10);
+        addScore(bazi.stems[0], 10); addScore(bazi.stems[1], 10); addScore(bazi.stems[2], 10); addScore(bazi.stems[3], 10);
         bazi.branches.forEach((b, i) => {
             if (b === '-') return;
-            let weight = 10;
-            if (i === 1) weight = 35; // 월지 
-            else if (i === 2) weight = 15;
-            addScore(MAIN_QI[b] || b, weight);
+            addScore(MAIN_QI[b], i === 1 ? 35 : 15);
+            const hidden = HIDDEN_STEMS[b];
+            if(hidden) { if(hidden[0] !== '-') addScore(hidden[0], 2); if(hidden[1] !== '-') addScore(hidden[1], 4); }
         });
         const total = Object.values(scores).reduce((a,b)=>a+b, 0) || 1;
         for (let key in scores) scores[key] = Math.round((scores[key] / total) * 100);
         return scores;
     };
 
-    // 💡 오행 밸런스 통변 생성기 (강점/약점 모두 포함)
+    // 💡 결단력 텍스트 수정 적용 완료
     const getOhaengDesc = (scores) => {
         let maxEl = '', minEl = '', maxSc = -1, minSc = 999;
         for(let el in scores) {
@@ -418,79 +540,153 @@ const OrthodoxEngine = (() => {
             if(scores[el] < minSc) { minSc = scores[el]; minEl = el; }
         }
         const O_DESC = {
-            '木': { 
-                max: "위로 뻗어 나가는 강한 추진력과 호기심, 생장하는 에너지가 탁월합니다. 무에서 유를 창조하는 기획력이 당신의 가장 큰 무기입니다.<br>다만, 뚫고 나가는 고집이 과도하여 유연성을 잃을 수 있으니 타협하는 법을 배워야 부러지지 않습니다.", 
-                min: "시작하는 추진력이나 호기심이 부족할 수 있습니다. 기획 단계에서의 무기력함을 극복하고 새로운 것에 흥미를 가지려는 의식적인 노력이 필요합니다." 
-            },
-            '火': { 
-                max: "세상을 밝히는 열정과 화려함, 타인을 매료시키는 표현력이 압도적입니다. 주변을 따뜻하게 만들고 분위기를 주도하는 카리스마가 있습니다.<br>다만, 감정 기복이 극한을 달릴 수 있으니 성급함을 죽이고 물처럼 차분히 기다리는 인내심 수양이 절대적으로 시급합니다.", 
-                min: "매사에 열정이 부족하거나 자신을 세상에 표현하는 데 두려움을 느낄 수 있습니다. 긍정적이고 밝은 마인드를 강제로라도 주입하여 활동성을 높여야 합니다." 
-            },
-            '土': { 
-                max: "흔들림 없는 안정감과 모든 것을 포용하는 넓은 마음으로 타인의 신뢰를 한 몸에 받는 든든한 그릇입니다.<br>다만, 엄청난 고집과 보수적인 성향으로 인해 융통성이 떨어지고 답답해 보일 수 있습니다. 변화를 적극적으로 수용해야 합니다.", 
-                min: "삶의 뿌리가 흔들리듯 안착하지 못하고 방황하거나 줏대가 부족해질 수 있습니다. 묵직하게 한 곳에 정착하여 끈기 있게 신뢰를 쌓는 훈련이 필수적입니다." 
-            },
-            '金': { 
-                max: "불의를 참지 않는 정의감과, 한 번 결심한 것을 끝까지 해내는 무서운 결단력과 실행력이 돋보입니다.<br>다만, 예리한 칼날처럼 타인에게 상처를 주는 직설적인 언행과 지나친 완벽주의로 스스로를 피곤하게 만들 수 있습니다. 부드러운 포용력이 요구됩니다.", 
-                min: "맺고 끊는 결단력이 약하고 우유부단하여 다 잡은 기회를 놓치기 쉽습니다. 정에 이끌리지 말고 이성적으로 끊어내는 단호함이 필요합니다." 
-            },
-            '水': { 
-                max: "어떤 환경에도 스며드는 극강의 유연함과, 남들이 보지 못하는 이면을 꿰뚫어 보는 깊은 지혜를 갖추었습니다.<br>다만, 생각이 너무 깊어져 우울감이나 비밀주의로 빠지기 쉽습니다. 행동력은 떨어지고 생각만 많아지니 무조건 몸을 움직여 활동해야 합니다.", 
-                min: "유연함과 수용력이 떨어지고 경직된 사고를 하기 쉽습니다. 지식을 꾸준히 흡수하고 남의 의견을 스펀지처럼 받아들이는 여유를 가져야 합니다." 
-            }
+            '木': { max: "위로 뻗어 나가는 강한 추진력과 호기심, 생장하는 에너지가 탁월합니다.", min: "새로운 시작을 주도하는 추진력과 호기심이 살아나 생동감을 얻게 됩니다." },
+            '火': { max: "세상을 밝히는 열정과 화려함, 타인을 매료시키는 표현력이 압도적입니다.", min: "숨겨진 열정이 깨어나고 자신을 밖으로 표현하는 데 자신감이 생깁니다." },
+            '土': { max: "흔들림 없는 안정감과 모든 것을 포용하는 넓은 마음으로 신뢰를 얻습니다.", min: "방황을 멈추고 삶의 든든한 중심과 안정감을 찾게 됩니다." },
+            '金': { max: "불의를 참지 않는 정의감과 결단력, 예리한 실행력이 돋보입니다.", min: "단호한 결단력이 생겨 우유부단함과 인간관계의 피로에서 벗어날 수 있습니다." }, 
+            '水': { max: "어떤 환경에도 스며드는 유연함과 타인을 이해하는 깊은 지혜를 갖추었습니다.", min: "상황에 대처하는 유연함과 타인을 수용하는 넓은 지혜를 갖추게 됩니다." }
         };
-        return `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 오행 밸런스 정밀 측정 결과, 가장 발달한 핵심 에너지는 <b>${maxEl}(${maxSc}%)</b>이며 가장 결핍된 에너지는 <b>${minEl}(${minSc}%)</b>로 판정되었습니다.</div>당신을 지배하는 기운과 부족한 기운의 상호작용은 다음과 같은 강력한 심리적 기질을 만들어냅니다.<br><br><b>[가장 발달한 ${maxEl}의 긍정적 잠재력 및 경계점]</b><br>${O_DESC[maxEl].max}<br><br><b>[가장 결핍된 ${minEl} 보완 시 얻게 될 효과]</b><br>${O_DESC[minEl].min}`;
+        return `당신을 지배하는 가장 강력한 기운과 가장 부족한 기운의 극명한 대비는, 삶을 관통하는 다음과 같은 심리적 기질을 만들어냅니다.<br><br><b>[가장 발달한 ${maxEl}(${HANGUL_MAP[maxEl]})의 긍정적 잠재력 및 경계점]</b><br>${O_DESC[maxEl].max}<br><br><b>[가장 결핍된 ${minEl}(${HANGUL_MAP[minEl]}) 보완 시 얻게 될 효과]</b><br>${O_DESC[minEl].min}`;
     };
 
+    const applyHapAndChung = (branches, monthZhi, scObj) => {
+        const b = branches.filter(x => x !== '-');
+        const hapList = []; const cspList = []; const usedChars = new Set();
+        const mEl = ELEMENTS[MAIN_QI[monthZhi]]; let sc = { ...scObj };
+
+        for (const [combo, resEl] of Object.entries(DB_HAP_BANG)) {
+            const cs = combo.split('');
+            if (cs.every(c => b.includes(c))) {
+                cs.forEach(c => { usedChars.add(c); });
+                hapList.push({ type: '방합(方合)', chars: combo.split('').map(x=>`${x}(${HANGUL_MAP[x]})`).join(''), result: `${resEl}(${HANGUL_MAP[resEl]})` });
+            }
+        }
+        for (const [combo, resEl] of Object.entries(DB_HAP3)) {
+            const cs = combo.split('');
+            if (cs.length === 3 && cs.every(c => b.includes(c) && !usedChars.has(c))) {
+                cs.forEach(c => { usedChars.add(c); });
+                hapList.push({ type: '삼합(三合)', chars: combo.split('').map(x=>`${x}(${HANGUL_MAP[x]})`).join(''), result: `${resEl}(${HANGUL_MAP[resEl]})` });
+            }
+        }
+        for (let i = 0; i < b.length; i++) {
+            for (let j = i + 1; j < b.length; j++) {
+                const c1 = b[i], c2 = b[j];
+                if (usedChars.has(c1) || usedChars.has(c2)) continue;
+                const resEl = DB_HAP6[c1 + c2] || DB_HAP6[c2 + c1];
+                if (resEl) {
+                    const isHwa = (mEl === resEl) || (sc[resEl] > 25);
+                    if (isHwa) hapList.push({ type: '육합(합화)', chars: `${c1}(${HANGUL_MAP[c1]})${c2}(${HANGUL_MAP[c2]})`, result: `${resEl}(${HANGUL_MAP[resEl]})` });
+                    else hapList.push({ type: '육합(기반)', chars: `${c1}(${HANGUL_MAP[c1]})${c2}(${HANGUL_MAP[c2]})`, result: '무효' });
+                    usedChars.add(c1); usedChars.add(c2);
+                }
+            }
+        }
+        const chungUsed = new Set();
+        for (let i = 0; i < b.length; i++) {
+            for (let j = i + 1; j < b.length; j++) {
+                const c1 = b[i], c2 = b[j];
+                if (DB_CHUNG[c1] === c2 && !chungUsed.has(c1+c2)) {
+                    if (usedChars.has(c1) || usedChars.has(c2)) cspList.push({ type: '충(해소)', chars: `${c1}↔${c2}`, desc: '합(合)으로 묶여 충이 무효화(탐합망충) 되었습니다.', severity: 'low' });
+                    else cspList.push({ type: '충(沖)', chars: `${c1}↔${c2}`, desc: `정면으로 상충합니다. 극적인 변동성이 나타납니다.`, severity: 'high' });
+                    chungUsed.add(c1+c2); chungUsed.add(c2+c1);
+                }
+            }
+        }
+        return { hapList, cspList };
+    };
+
+    const calcYearScore = (bazi, yongEl, kiEl, birthYear, daewoons) => {
+        const curYr = new Date().getFullYear();
+        const graph = [];
+        for (let yr = curYr - 2; yr <= curYr + 8; yr++) {
+            let ipDate = new Date(yr, 1, 4); 
+            try { const terms = window.Solar.fromYmd(yr, 2, 1).getTermsInYear(); if(terms){ const ip = terms.find(t=>t.getName()==='立春'); if(ip) ipDate = new Date(ip.getYear(), ip.getMonth()-1, ip.getDay()); } } catch(e){}
+            
+            const seunL = window.Lunar.fromDate(new Date(ipDate.getTime() + 864e5));
+            const sg = seunL.getYearGan(), sz = seunL.getYearZhi();
+            const sEl = ELEMENTS[sg], sZEl = ELEMENTS[sz];
+            const age = yr - birthYear;
+            const currentDw = daewoons.find(d => age >= d.startAge && age <= d.endAge) || daewoons[0];
+            const dwEl = ELEMENTS[currentDw.zhi];
+
+            let bonus = 0;
+            if (sEl === yongEl) bonus += 15; if (sZEl === yongEl) bonus += 15;
+            if (sEl === kiEl) bonus -= 15; if (sZEl === kiEl) bonus -= 15;
+            if (dwEl === yongEl && sZEl === yongEl) bonus += 10;
+            if (dwEl === kiEl && sZEl === kiEl) bonus -= 10;
+            if (DB_CHUNG[currentDw.zhi] === sz) bonus -= 12; 
+            
+            const sajuB = bazi.branches.filter(x => x !== '-');
+            sajuB.forEach(b => { if (DB_CHUNG[b] === sz) bonus -= 8; });
+            
+            const score = Math.round(Math.max(10, Math.min(93, 50 + bonus)));
+            graph.push({ year: yr, score, isBroken: score < 33, isPeak: score >= 68, seunGan: sg, seunZhi: sz, ipchunDate: `${ipDate.getMonth()+1}/${ipDate.getDate()}` });
+        }
+        return graph;
+    };
+
+    // 💡 에러의 원인이었던 명식 구조 도출 함수!
     const determineStructure = (bazi) => {
         const hidden = HIDDEN_STEMS[bazi.monthZhi];
         if(!hidden) return { name: "불명격", basis: "월지가 불분명하여 격을 잡기 어렵습니다.", type: "-" };
         let projectingChar = null;
-        for (let hs of [hidden[2], hidden[1], hidden[0]]) { 
-            if (hs !== '-' && bazi.stems.includes(hs)) { projectingChar = hs; break; }
-        }
-        if (!projectingChar) projectingChar = hidden[2];
+        for (let hs of [hidden[2], hidden[1], hidden[0]]) { if (hs !== '-' && bazi.stems.includes(hs)) { projectingChar = hs; break; } }
+        if (!projectingChar) projectingChar = MAIN_QI[bazi.monthZhi]; 
         const tg = getTenGod(bazi.dayGan, projectingChar);
         
-        let basis = `월지 <b>${bazi.monthZhi}</b>의 지장간 중 가장 뚜렷하게 천간으로 투출된 <b>${projectingChar}</b>이(가) 일간 <b>${bazi.dayGan}</b>와(과) 작용하여 <b>${tg}</b>의 기운을 사주 전체에 가장 강력하게 뿜어내고 있습니다. 이것이 당신의 타고난 사회적 그릇입니다.`;
+        let basis = `월지 <b>${bazi.monthZhi}(${HANGUL_MAP[bazi.monthZhi]})</b>의 지장간 중 핵심 세력인 <b>${projectingChar}(${HANGUL_MAP[projectingChar]})</b>이(가) 일간과 작용하여 <b>${tg}</b>의 기운을 가장 강력하게 뿜어냅니다.`;
         
         let typeGroup = "-";
-        if (tg === '비견' || tg === '겁재') typeGroup = "비겁";
-        else if (tg === '식신' || tg === '상관') typeGroup = "식상";
-        else if (tg === '정재' || tg === '편재') typeGroup = "재성";
-        else if (tg === '정관' || tg === '편관') typeGroup = "관성";
-        else if (tg === '정인' || tg === '편인') typeGroup = "인성";
+        if (tg.includes('비견') || tg.includes('겁재')) typeGroup = "비겁";
+        else if (tg.includes('식신') || tg.includes('상관')) typeGroup = "식상";
+        else if (tg.includes('정재') || tg.includes('편재')) typeGroup = "재성";
+        else if (tg.includes('정관') || tg.includes('편관')) typeGroup = "관성";
+        else if (tg.includes('정인') || tg.includes('편인')) typeGroup = "인성";
 
         if (tg === '비견') return { name: "건록격", basis, type: typeGroup };
         if (tg === '겁재') return { name: "양인격", basis, type: typeGroup };
         if (tg !== '-') return { name: `${tg}격`, basis, type: typeGroup };
+        return { name: "중화잡격", basis: "오행이 고르게 섞여 밸런스를 맞춘 구조입니다.", type: "-" };
+    };
+
+    const determineYongshin = (bazi, scores) => {
+        const dmEl = ELEMENTS[bazi.dayGan] || '木';
+        const isWinter = ['亥', '子', '丑'].includes(bazi.monthZhi);
+        const isSummer = ['巳', '午', '未'].includes(bazi.monthZhi);
         
-        return { name: "중화잡격", basis: "어느 한 기운에 치우치지 않고 오행이 고르게 섞여 완벽한 밸런스를 맞춘 흔치 않은 중화 구조입니다.", type: "-" };
+        if (isWinter) return { el: '火', ki: '水', method: '조후(調候)', reason: '혹한기 사주로 얼어붙은 기운을 녹이는 화(火) 보완이 최우선입니다.', isStrong: null };
+        if (isSummer) return { el: '水', ki: '火', method: '조후(調候)', reason: '폭염기 사주로 극악한 열기를 식히는 수(水) 보완이 최우선입니다.', isStrong: null };
+        
+        const dmScore = scores[dmEl] || 0;
+        const isStrong = dmScore > 22;
+        if (isStrong) return { el: RELATIONS[dmEl].ctrlBy || '金', ki: dmEl, method: '억부(抑扶)', reason: `강한 일간 에너지를 적절히 통제하는 기운이 유리합니다.`, isStrong };
+        else return { el: RELATIONS[dmEl].genBy || '水', ki: RELATIONS[dmEl].ctrlBy, method: '억부(抑扶)', reason: `약한 일간 에너지를 든든하게 생부(生扶)해 주는 기운이 유리합니다.`, isStrong };
     };
 
-    const determineYongshin = (bazi) => {
-        const dmEl = ELEMENTS[bazi.dayGan] || '목';
-        const isWinter = ['해', '자', '축'].includes(bazi.monthZhi);
-        const isSummer = ['사', '오', '미'].includes(bazi.monthZhi);
-        if (isWinter) return { el: '화' };
-        if (isSummer) return { el: '수' };
-        return { el: RELATIONS[dmEl].genBy || '수' };
-    };
-
-    const scanShinsal = (stems, branches, dZ) => {
+    const scanShinsal = (stems, branches, dZ, dG) => {
         const abyss = [];
         const pillars = [stems[0]+branches[0], stems[1]+branches[1], stems[2]+branches[2], stems[3]+branches[3]];
         const BAEKHO = ['甲辰','乙未','丙戌','丁丑','戊辰','壬戌','癸丑'];
         const SAMHYUNG = [['寅','巳','申'], ['丑','戌','未']];
         const WONJIN = ['子未','丑午','寅酉','卯申','辰亥','巳戌','午丑','未子','申卯','酉寅','戌巳','亥辰'];
-        const GWIMUN = ['子酉','丑午','寅未','卯申','辰亥','巳戌','酉子','오축','미인','신묘','해진','술사'];
+        const GWIMUN = ['子酉','丑午','寅未','卯申','辰亥','巳戌','酉子','午丑','未寅','申卯','亥辰','戌巳'];
+        const GOEGANG = ['庚辰','庚戌','壬辰','壬戌','戊戌'];
 
-        if(pillars.some(p => BAEKHO.includes(p))) abyss.push('백호대살');
-        if(SAMHYUNG.some(set => set.every(z => branches.includes(z)))) abyss.push('삼형살');
+        if(pillars.some(p => BAEKHO.includes(p))) abyss.push({name:'백호대살(白虎大殺)', desc:'극한의 위기나 피말리는 스트레스 앞에서도 절대 굴하지 않고 뚫고 나가는 폭발적인 돌파력과 프로페셔널한 기질을 지녔습니다. 억눌린 분노 관리가 필수적입니다.'});
+        if(pillars.some(p => GOEGANG.includes(p))) abyss.push({name:'괴강살(魁罡殺)', desc:'무리를 뚫고 우두머리가 되려는 압도적인 기백과 총명함이 깃들어 있습니다. 타인의 지배를 받기 싫어하며 독립적으로 판을 뒤집는 카리스마를 발산합니다.'});
+        if(SAMHYUNG.some(set => set.every(z => branches.includes(z)))) abyss.push({name:'삼형살(三刑殺)', desc:'강력한 에너지가 서로 깎아내고 조정하는 날카로운 형국으로, 법, 규칙, 정밀한 기술 분야에서 압도적인 능력을 발휘하는 양날의 검입니다.'});
+        
+        const hasYeongma = branches.some(z => ['寅','申','巳','亥'].includes(z));
+        if(hasYeongma) abyss.push({name:'역마살(驛馬殺)', desc:'한 곳에 정체되는 것을 극도로 거부하며, 역동적인 이동과 변화 속에서 오히려 큰 기회와 재물을 마주하게 되는 활동적 에너지입니다.'});
+        const hasDohwa = branches.some(z => ['子','午','卯','酉'].includes(z));
+        if(hasDohwa) abyss.push({name:'도화살(桃花殺)', desc:'가만히 있어도 타인의 시선과 관심을 강하게 끌어당기는 치명적인 매력이 잠재되어 있습니다. 이 에너지를 무대 위나 대인관계에서 긍정적으로 발산하면 엄청난 무기가 됩니다.'});
+        const hasHwagae = branches.some(z => ['辰','戌','丑','未'].includes(z));
+        if(hasHwagae) abyss.push({name:'화개살(華蓋殺)', desc:'화려함을 덮고 고독한 내면 세계로 파고드는 깊은 사색의 기운입니다. 철학, 예술, 종교 등 남들이 범접할 수 없는 깊이 있는 영적/학문적 천재성을 폭발시킬 수 있습니다.'});
+
         branches.forEach(z => {
             if (z !== '-' && dZ !== z) {
-                if (WONJIN.includes(dZ+z) && !abyss.includes('원진살')) abyss.push('원진살');
-                if (GWIMUN.includes(dZ+z) && !abyss.includes('귀문관살')) abyss.push('귀문관살');
+                if (WONJIN.includes(dZ+z) && !abyss.some(a=>a.name.includes('원진'))) abyss.push({name:'원진살(怨嗔殺)', desc:'사물의 이면을 예리하게 캐치하는 고도의 통찰력이 있으나, 가까운 사람과 까닭 없는 애증이 발생하기 쉬운 예민한 기운입니다.'});
+                if (GWIMUN.includes(dZ+z) && !abyss.some(a=>a.name.includes('귀문'))) abyss.push({name:'귀문관살(鬼門關殺)', desc:'남들이 보지 못하는 것을 꿰뚫어 보는 비상한 영감과 고도의 직관력이 존재합니다. 아이디어 기획 분야에서 신의 경지에 오를 수 있습니다.'});
             }
         });
         return abyss;
@@ -498,221 +694,393 @@ const OrthodoxEngine = (() => {
 
     const getWounsung = (dayGan, zhi) => {
         if (!dayGan || !zhi || zhi === '-') return '-';
-        const w12Arr = W12_MAP[dayGan];
-        if (!w12Arr) return '-';
-        const idx = w12Arr.indexOf(zhi);
-        return idx !== -1 ? W12_NAMES[idx] : '-';
+        const w12Arr = W12_MAP[dayGan]; if (!w12Arr) return '-';
+        const idx = w12Arr.indexOf(zhi); return idx !== -1 ? W12_NAMES[idx] : '-';
     };
 
     const getGongmang = (dayGan, dayZhi) => {
         const ganIdx = '甲乙丙丁戊己庚辛壬癸'.indexOf(dayGan);
         const zhiIdx = '子丑寅卯辰巳午未申酉戌亥'.indexOf(dayZhi);
         if(ganIdx===-1 || zhiIdx===-1) return [];
-        let diff = zhiIdx - ganIdx;
-        if(diff < 0) diff += 12;
+        let diff = zhiIdx - ganIdx; if(diff < 0) diff += 12;
         const branches = '子丑寅卯辰巳午未申酉戌亥';
         return [branches.charAt((diff+10)%12), branches.charAt((diff+11)%12)];
     };
+    const generateHapChungStory = (stems, branches) => {
+        const findings = [];
+        const stemHap = { '甲己':'천간합', '乙庚':'천간합', '丙辛':'천간합', '丁壬':'천간합', '戊癸':'천간합' };
+        const branchChung = ['子午', '丑未', '寅申', '卯酉', '辰戌', '巳亥'];
 
-    return { analyze: async (req) => {
-        const { y, m, d, h, cal, name } = req;
-        let hr = 12, min = 0; if(h === 'yaja') hr = 23; else if(h === 'joja') hr = 0; else if(h !== 'none' && !isNaN(parseInt(h))) hr = parseInt(h);
-        
-        let lun, sol;
-        try {
-            if(cal === 'solar'){ sol = window.Solar.fromYmdHms(y,m,d,hr,min,0); lun = sol.getLunar(); } 
-            else { lun = window.Lunar.fromYmdHms(y,m,d,hr,min,0); sol = lun.getSolar(); } 
-            if(!lun || lun.getYear() === -1) throw new Error();
-        } catch(e) { throw new Error("달력 변환에 실패했습니다."); }
+        const dayGan = stems[2], dayZhi = branches[2];
 
-        const baziData = lun.getEightChar();
-        const bazi = { 
-            dayGan: baziData.getDayGan(), dayZhi: baziData.getDayZhi(), monthZhi: baziData.getMonthZhi(),
-            stems: [baziData.getYearGan(), baziData.getMonthGan(), baziData.getDayGan(), h!=='none'?baziData.getTimeGan():'-'], 
-            branches: [baziData.getYearZhi(), baziData.getMonthZhi(), baziData.getDayZhi(), h!=='none'?baziData.getTimeZhi():'-']
-        };
-
-        const structData = determineStructure(bazi);
-        const yongshin = determineYongshin(bazi);
-        const ohaengScores = calculateOhaengScores(bazi);
-        const shinsal = scanShinsal(bazi.stems, bazi.branches, bazi.dayZhi);
-        const dmEl = ELEMENTS[bazi.dayGan] || '木';
-
-        // 십이운성 
-        const wYear = getWounsung(bazi.dayGan, bazi.branches[0]);
-        const wMonth = getWounsung(bazi.dayGan, bazi.branches[1]);
-        const wDay = getWounsung(bazi.dayGan, bazi.branches[2]);
-        const wTime = getWounsung(bazi.dayGan, bazi.branches[3]);
-
-        // 공망
-        const gmChars = getGongmang(bazi.dayGan, bazi.dayZhi);
-        const gmPos = [];
-        if(bazi.branches[0]!=='-' && gmChars.includes(bazi.branches[0])) gmPos.push('년지');
-        if(bazi.branches[1]!=='-' && gmChars.includes(bazi.branches[1])) gmPos.push('월지');
-        if(bazi.branches[3]!=='-' && gmChars.includes(bazi.branches[3])) gmPos.push('시지');
-
-        // Bazi Grid
-        const buildBaziCol = (pos, gan, zhi, w) => {
-            return { pos, gan, zhi, ganTen: getTenGod(bazi.dayGan, gan), zhiTen: zhi !== '-' ? getTenGod(bazi.dayGan, MAIN_QI[zhi]) : '-', w };
-        };
-        const baziGridData = [
-            buildBaziCol('시주', bazi.stems[3]||'-', bazi.branches[3]||'-', wTime),
-            buildBaziCol('일주', bazi.stems[2]||'-', bazi.branches[2]||'-', wDay),
-            buildBaziCol('월주', bazi.stems[1]||'-', bazi.branches[1]||'-', wMonth),
-            buildBaziCol('년주', bazi.stems[0]||'-', bazi.branches[0]||'-', wYear)
-        ];
-        baziGridData[1].ganTen = '일간(나)';
-
-        // 🚀 양음력 동시 표기 (안전 처리 - isLeap 제거)
-        const timeStr = h === 'none' ? '시간모름' : (h === 'yaja' ? '야자시(23:30~)' : (h === 'joja' ? '조자시(~01:29)' : `${hr}시 00분`));
-        const solarStr = `양력: ${sol.getYear()}년 ${sol.getMonth()}월 ${sol.getDay()}일 ${timeStr}`;
-        const lunarMonth = Math.abs(lun.getMonth()); 
-        const lunarStr = `음력: ${lun.getYear()}년 ${lunarMonth}월 ${lun.getDay()}일`;
-
-        // 🚀 8대 운세 조립 (볼륨 폭발)
-        let sections = [];
-        
-        // 0. 오행 밸런스 통변
-        sections.push({
-            title: "오행 밸런스 정밀 분석",
-            paragraphs: [ getOhaengDesc(ohaengScores) ]
+        stems.forEach((gan, idx) => {
+            if (idx !== 2 && gan !== '-') {
+                if (stemHap[dayGan + gan] || stemHap[gan + dayGan]) findings.push({ type: '합', target: idx === 0 ? '초년/조상' : (idx === 1 ? '사회/부모' : '말년/자식') });
+            }
         });
 
-        // 1. 우주적 명식의 뼈대 (정통 명리 섹션 추가)
-        sections.push({
-            title: "우주적 명식의 뼈대 (정통 격국)",
-            paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> ${structData.basis}</div>`,
-                `당신의 사주 격국은 <b>[${structData.name}]</b> 입니다.<br><br>${DB_GYUKGUK[structData.type] ? DB_GYUKGUK[structData.type].d : DB_GYUKGUK['-'].d}`
-            ]
+        branches.forEach((zhi, idx) => {
+             if (idx !== 2 && zhi !== '-') {
+                 const pair = dayZhi + zhi;
+                 if (branchChung.includes(pair) || branchChung.includes(zhi + dayZhi)) findings.push({ type: '충', target: idx === 0 ? '초년/조상' : (idx === 1 ? '사회/부모' : '말년/자식') });
+             }
         });
 
-        // 2. 운명을 여는 마스터키 (용신 처방)
-        sections.push({
-            title: "운명을 여는 마스터키 (용신 처방)",
-            paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 사주의 온도(조후)와 세력의 강약(억부)을 정밀 계산하여, 현재 밸런스를 가장 이상적으로 맞춰줄 수 있는 핵심 수호 기운을 도출했습니다.</div>`,
-                `당신의 운로를 뚫어줄 절대적인 용신(用神)은 <b>[${DB_YONGSHIN[yongshin.el]?.n || yongshin.el}]</b> 기운입니다.<br><br>${DB_YONGSHIN[yongshin.el]?.d || ''}`
-            ]
-        });
-
-        // 3. 기초 기질 
-        sections.push({
-            title: "나의 본질과 코어 에너지",
-            paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 당신의 영혼의 바코드이자 핵심 정체성을 나타내는 일간(日干) <b>${bazi.dayGan}</b>의 고유 기질을 스캔했습니다.</div>`,
-                DB_JIGAN[bazi.dayGan]?.desc || "스스로의 주관을 믿고 나아가는 흔들림 없는 에너지를 지녔습니다."
-            ]
-        });
-
-        // 4. 초년운
-        sections.push({
-            title: "초년운 (기반 형성기)",
-            paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 10~20대의 환경을 관장하는 년주에 <b>${baziGridData[3].ganTen}</b>과 <b>${baziGridData[3].zhiTen}</b>이 자리하고 있으며, 일간 대비 <b>${wYear}</b>의 십이운성 에너지가 뻗치고 있습니다.</div>`,
-                DB_LIFETIME.e[dmEl],
-                wYear !== '-' && DB_WOUNSUNG[wYear] ? `<br><b>[초년의 심리 모드: ${wYear}]</b><br>${DB_WOUNSUNG[wYear]}` : ''
-            ]
-        });
-        
-        // 5. 중년운
-        sections.push({
-            title: "중년운 (사회적 확장기)",
-            paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 인생의 전성기를 상징하는 월주의 격국이 <b>${structData.name}</b>으로 확정되었고, <b>${wMonth}</b>의 에너지가 사회적 활동성을 강하게 뒷받침하고 있습니다.</div>`,
-                DB_LIFETIME.m[dmEl],
-                wMonth !== '-' && DB_WOUNSUNG[wMonth] ? `<br><b>[중년의 심리 모드: ${wMonth}]</b><br>${DB_WOUNSUNG[wMonth]}` : ''
-            ]
-        });
-
-        // 6. 말년운 (시간 모름 예외 처리 추가)
-        let lateLifeBasis;
-        if (baziGridData[0].ganTen === '-' || baziGridData[0].zhiTen === '-') {
-            lateLifeBasis = `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 태어난 시(時)를 알 수 없어 삼주(三柱)의 전반적인 에너지 흐름과 일간 <b>${bazi.dayGan}</b>의 특성을 종합하여 말년의 방향성을 유추했습니다.</div>`;
-        } else {
-            lateLifeBasis = `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 인생의 결실이자 노년을 상징하는 시주에 <b>${baziGridData[0].ganTen}</b>과 <b>${baziGridData[0].zhiTen}</b>이 배치되어 있으며, <b>${wTime}</b>의 십이운성 기운으로 최종 안정을 도모합니다.</div>`;
+        if(findings.length === 0) {
+            return "당신의 궤적은 큰 요동이나 파괴 없이, 깊고 고요한 강물처럼 묵직한 안정감을 유지하며 흘러갑니다. 극적인 위기가 적은 대신 스스로 변화를 주도해야 하는 사명감을 쥐고 있습니다.";
         }
-        sections.push({
-            title: "말년운 (안정 및 수렴기)",
-            paragraphs: [
-                lateLifeBasis,
-                DB_LIFETIME.l[dmEl],
-                wTime !== '-' && DB_WOUNSUNG[wTime] ? `<br><b>[말년의 심리 모드: ${wTime}]</b><br>${DB_WOUNSUNG[wTime]}` : ''
-            ]
-        });
-
-        // 7. 직업/재물/가족/연애/건강
-        sections.push({
-            title: "직업운 (타고난 사회적 무기)",
-            paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 명식의 핵심 뼈대인 <b>${structData.name}</b>가 지향하는 최적의 업무 환경과 일간 ${dmEl}의 역량 발휘 스펙트럼을 분석했습니다.</div>`,
-                DB_LIFETIME.c[dmEl]
-            ]
-        });
-        sections.push({
-            title: "재물운 (부의 창출 알고리즘)",
-            paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 일간 ${dmEl}의 활동 방향성과, 명식 내에서 재물(재성)을 통제하고 거대한 부를 끌어당기는 구조적 메커니즘을 분석했습니다.</div>`,
-                DB_LIFETIME.w[dmEl]
-            ]
-        });
-        sections.push({
-            title: "가족운 (내부 결속의 힘)",
-            paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 부모궁(월지)과 자녀궁(시지) 사이에서 당신의 포지션을 결정하는 에너지 밸런스와 심리적 유대감을 측정했습니다.</div>`,
-                DB_LIFETIME.f[dmEl]
-            ]
-        });
-        sections.push({
-            title: "연애운 (관계의 주파수)",
-            paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 일간 고유의 감정적 기질과, 배우자 궁인 일지에 깔린 <b>${baziGridData[1].zhiTen}</b> 및 <b>${wDay !== '-' ? wDay : ''}</b> 기운을 바탕으로 이성 관계의 패턴을 파악했습니다.</div>`,
-                DB_LIFETIME.l_v[dmEl]
-            ]
-        });
         
-        let weakEl = '木'; let minScore = 999;
-        for (let [el, score] of Object.entries(ohaengScores)) { if (score < minScore) { minScore = score; weakEl = el; } }
-        sections.push({
-            title: "건강운 (신체 에너지 밸런스)",
-            paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 오행 분석 결과, 밸런스 점수가 상대적으로 가장 낮아 병목 현상이 발생하기 쉬운 취약 오행(<b>${weakEl}</b>)을 중심으로 스캔했습니다.</div>`,
-                DB_LIFETIME.h[dmEl]
-            ]
+        let story = "과거의 기억과 앞으로 다가올 시간들을 짚어보면, 당신의 운명에는 강렬한 끌림과 피할 수 없는 부딪힘이 교차하는 드라마틱한 변곡점들이 짙게 새겨져 있습니다.<br><br>";
+        findings.forEach(f => {
+            if(f.type === '합') story += `<b>[운명적 결속 : ${f.target}과의 합]</b><br>마치 자석의 양극이 만나듯, 당신의 이성과 목표는 특정 시기와 인연에 불가항력적으로 묶여 들어가는 깊은 서사를 지니고 있습니다. 이는 단순한 우연이 아니라, 당신의 영혼이 진정으로 갈망하는 방향으로 삶의 닻을 내리려는 묵직한 이끌림입니다.<br><br>`;
+            if(f.type === '충') story += `<b>[피할 수 없는 격랑 : ${f.target}과의 충]</b><br>잔잔한 수면에 거대한 바위가 떨어지듯, 당신이 굳게 뿌리내린 현실의 환경에서 예기치 못한 강렬한 충돌이 일어나는 순간이 존재합니다. 하지만 이 부서짐은 결코 파멸을 의미하지 않습니다. 낡고 굳어버린 껍데기를 깨부수고 나와, 완전히 새로운 세계를 맞이하기 위해 당신이 반드시 겪어내야만 했던 눈부신 성장의 진통입니다.<br><br>`;
         });
+        return story;
+    };
 
-        // 8. 특수 기운 및 공망 (상세화)
-        let shinsalGongmang = [];
-        if(shinsal.length > 0) {
-            let sText = shinsal.map(s => `<b>[${DB_SHINSAL[s]?.n || s}]</b><br>${DB_SHINSAL[s]?.d || ''}`).join('<br><br>');
-            shinsalGongmang.push(`<b>[특수 흉살 및 길살 스캔]</b><br><br>${sText}`);
-        } else {
-            shinsalGongmang.push(`<b>[특수 신살 스캔]</b><br>명식 내에 극단적으로 치우치거나 예민한 특수 흉살이 감지되지 않아, 다른 사람들에 비해 평온하고 안정적인 심리 상태를 유지하기 매우 유리한 모범적인 구조입니다.`);
+    // 💡 [동적 텍스트 결합 로직]
+    const dynamicReading = (bazi, scores, struct, yong, category) => {
+        const dmEl = ELEMENTS[bazi.dayGan];
+        const isStrong = yong.isStrong;
+        const tgStr = struct.type;
+
+        let content = "";
+
+        if (category === 'early') {
+            content += `당신의 유년과 청년기를 지배하는 에너지는 <b>${bazi.stems[0]}(${HANGUL_MAP[bazi.stems[0]]})</b>와 <b>${bazi.branches[0]}(${HANGUL_MAP[bazi.branches[0]]})</b>의 파동입니다. 이 시기에는 환경의 변화에 몹시 민감하게 반응하며, 내면에 깃든 ${HANGUL_MAP[dmEl]}의 본능이 처음으로 세상을 향해 껍질을 깨고 나오는 진통을 겪습니다.<br><br>`;
+            if (isStrong) content += `자아(自我)의 기운이 강하게 타고났기에, 남들의 간섭이나 엄격한 규율 속에서는 오히려 반항심이 커지고 재능이 억눌립니다. 스스로 부딪히고 실패하며 깨달음을 얻는 자율적인 방목형 환경이 주어졌을 때 비로소 내재된 천재성이 발현되기 시작합니다. 일찍부터 승부욕과 주관이 확고해져 또래 사이에서 묘한 리더십을 발휘했을 가능성이 높습니다.<br><br>`;
+            else content += `자아의 기운이 세상을 향해 조심스럽게 나아가는 형태이기에, 초년기에는 주변 환경이나 멘토(부모, 스승)의 질적인 수준이 당신의 가치관 형성에 절대적인 영향을 미칩니다. 타인의 감정을 예민하게 읽어내는 스펀지 같은 수용력이 돋보이며, 자신을 안전하게 보호해 주는 울타리 안에서 내면의 깊고 풍요로운 상상력을 키워나가는 은밀한 시기입니다.<br><br>`;
+            content += DB_LIFETIME.e[dmEl] + `<br><br>인생의 첫 단추를 채우는 이 시기에 마주한 수많은 콤플렉스와 결핍감조차도, 당신의 거대한 운명의 수레바퀴를 굴리기 위해 뼈대에 새겨넣은 필연적인 담금질의 과정이었습니다.`;
         }
-
-        if(gmPos.length > 0) {
-            let gmText = gmPos.map(pos => `<b>[${pos} 공망]</b><br>${DB_GONGMANG[pos]}`).join('<br><br>');
-            shinsalGongmang.push(`<br><br><b>[공망(空亡) 스캔 - 내면의 결핍]</b><br>당신의 명식 중 <b>${gmPos.join(', ')}</b> 자리에 밑 빠진 독을 의미하는 공망이 들었습니다. 이것이 내면의 채워지지 않는 결핍으로 작용합니다.<br><br>${gmText}`);
-        } else {
-            shinsalGongmang.push(`<br><br><b>[공망(空亡) 스캔]</b><br>명식 내에 비어있는 기운(공망)이 단 하나도 존재하지 않아, 자신이 노력한 만큼의 결과를 중간에 훼손되는 일 없이 온전히 거둬들일 수 있는 꽉 찬 그릇입니다.`);
+        else if (category === 'mid') {
+            content += `청년을 지나 사회의 한복판으로 뛰어드는 이 시기, 당신의 운명은 월주(月柱)에 각인된 <b>${struct.name}</b>의 거대한 지배를 받으며 폭발적으로 확장됩니다. 이제 무대는 준비되었고, 당신이 품어온 야심을 현실의 물질과 권력으로 치환해 내야 하는 치열한 전투가 시작됩니다.<br><br>`;
+            if (tgStr === '식상' || tgStr === '재성') content += `당신의 능력은 고여있지 않고 세상을 향해 거칠게 뻗어 나갑니다. 타인의 니즈를 읽고 새로운 가치를 창출하는 감각이 절정에 달하며, 이 과정에서 필연적으로 다양한 인간 군상과 얽히게 됩니다. 재물의 흐름이 가장 역동적으로 요동치는 시기이며, 이때 쟁취한 결과물이 남은 인생의 등급을 결정짓는 잣대가 됩니다.<br><br>`;
+            else if (tgStr === '관성' || tgStr === '인성') content += `당신은 무질서한 세상 속에서 확고한 자신의 자리를 세우는 데 모든 에너지를 쏟아붓습니다. 뼈를 깎는 수양과 인내를 통해 사회적 시스템 안에서 남들이 함부로 대할 수 없는 묵직한 권력을 손에 쥐게 됩니다. 찰나의 화려함보다는 늙지 않는 불멸의 가치와 명예를 축적하는 숭고한 시기입니다.<br><br>`;
+            else content += `누구에게도 의존하지 않고 오직 나의 주먹과 실력만으로 척박한 땅을 개척해 나갑니다. 치열한 경쟁 속에서 수차례 엎어지고 다시 일어나는 과정에서, 세상 그 누구도 꺾을 수 없는 강철 같은 자생력이 완성됩니다.<br><br>`;
+            content += DB_LIFETIME.m[dmEl] + `<br><br>이 시기의 가장 큰 과제는 <b>용신인 ${yong.el}(${HANGUL_MAP[yong.el]})</b>의 기운을 삶 속에 적극적으로 끌어들여, 폭주하는 에너지를 제어하고 스스로의 멘탈을 다스리는 것입니다.`;
         }
+        else if (category === 'late') {
+            content += `모든 전투가 끝난 후, 인생의 황혼을 관장하는 시주(時柱)의 기운이 묵직하게 내려앉습니다. 세파에 시달리며 단단해진 당신의 영혼은 물질적 집착을 넘어 정신적인 해탈과 완성을 향해 방향을 틉니다.<br><br>`;
+            if (yong.el === dmEl || yong.el === RELATIONS[dmEl].genBy) content += `젊은 시절 세상을 향해 끝없이 퍼주었던 에너지가 마침내 당신에게 돌아와 평온한 안식처를 제공합니다. 주변의 자잘한 풍파에 흔들리지 않으며, 그동안 축적한 깊은 철학적 지혜를 무기로 타인에게 존경받는 평화롭고 고즈넉한 노후를 맞이합니다.<br><br>`;
+            else content += `나이가 무색할 만큼 마지막 순간까지도 세상을 향한 호기심과 영향력을 놓지 않습니다. 뒷방으로 물러나기보다는 당신이 이룩한 제국을 통제하고 권위 있는 멘토로서 남은 여생을 화려하고 꼿꼿하게 불태웁니다.<br><br>`;
+            content += DB_LIFETIME.l[dmEl] + `<br><br>이 시기 당신이 남기는 족적은 곧 다음 세대에게 이정표가 될 것입니다.`;
+        }
+        else if (category === 'career') {
+            content += `직업은 당신의 운명을 깎아내는 가장 예리한 조각칼입니다. 사주의 뼈대인 <b>${struct.name}</b>의 성향이 당신의 일터에서 가장 완벽한 형태로 투영될 때, 당신의 사회적 가치는 상상을 초월하게 증폭됩니다.<br><br>`;
+            if (tgStr === '비겁') content += `당신은 프리랜서, 전문기술직, 자영업 등 '내가 곧 회사'가 되는 독립적인 환경에서 신의 능력을 발휘합니다. 위계질서가 강한 곳에서는 숨이 막힙니다. 스스로 룰을 세우고 돌파하십시오.<br><br>`;
+            else if (tgStr === '식상') content += `언론, 미디어, 예술, 기획, IT개발 등 세상에 없는 무언가를 빚어내는 크리에이터의 직군이 천직입니다. 당신의 아이디어가 억눌리지 않는 자율적인 무대가 필수적입니다.<br><br>`;
+            else if (tgStr === '재성') content += `금융, 회계, 무역, 사업, 유통 등 실물 경제의 피냄새를 맡고 자본의 흐름을 조종하는 곳에서 당신의 후각이 빛을 발합니다. 숫자를 다루고 결과를 도출하는 일에서 희열을 느낍니다.<br><br>`;
+            else if (tgStr === '관성') content += `법조계, 군경, 공직, 대기업 관리직 등 엄격한 시스템과 규율을 통제하는 곳에서 무서운 두각을 나타냅니다. 남을 지휘하고 카리스마로 조직을 이끄는 리더의 자리에 올라야 직성이 풀립니다.<br><br>`;
+            else content += `교육, 학문, 종교, 연구, 심리상담 등 보이지 않는 정신세계를 파고들어 사람들을 계몽하고 지혜를 보존하는 일에서 독보적인 학자의 권위를 쌓아 올립니다.<br><br>`;
+            content += DB_LIFETIME.c[dmEl] + `<br><br>무엇보다 당신의 직장 환경에 용신 <b>${yong.el}</b>의 속성(색상, 방위, 오행)을 스며들게 하는 것이 출세를 앞당기는 가장 확실한 영적 부스터(Booster)가 될 것입니다.`;
+        }
+        else if (category === 'wealth') {
+            content += `재물은 당신이 세상과 투쟁하여 얻어낸 에너지의 결정체입니다. 일간 ${HANGUL_MAP[dmEl]}의 입장에서 재성을 어떻게 장악하고 다루느냐가 당신의 부의 크기를 결정짓습니다.<br><br>`;
+            const rePct = scores[RELATIONS[dmEl].ctrl] || 0;
+            if (rePct > 20) content += `당신의 명식 내부에는 이미 재물을 움켜쥐려는 욕망과 감각(재성 비율 ${rePct}%)이 매우 강하게 소용돌이치고 있습니다. 돈 냄새를 맡는 감각이 짐승처럼 예리하여 큰 판을 벌려 거대한 부를 쓸어 담을 자질이 충분합니다. 단, 에너지가 흩어지면 돈을 벌고도 건강이나 명예를 잃을 수 있으니 들어온 돈을 묵직한 실물 자산으로 단단히 묶어두는 통제력이 필수적입니다.<br><br>`;
+            else content += `당신의 명식에서 재물을 상징하는 기운이 겉으로 강하게 드러나 있지는 않습니다. 이는 돈 자체가 인생의 일순위 목표가 아님을 의미합니다. 일확천금을 노리는 투기나 섣부른 확장은 당신의 운로를 꼬이게 만듭니다. 당신은 본연의 압도적인 전문성(자격증, 지식, 기술)을 무기 삼아 명예를 먼저 쟁취할 때, 재물은 그 뒤를 그림자처럼 불어나 따라붙는 고결한 부자의 형상을 띄고 있습니다.<br><br>`;
+            content += DB_LIFETIME.w[dmEl] + `<br><br>돈이 샌다고 느껴질 때는 주저 없이 수호 기운을 일상에 들이십시오. 보이지 않는 주파수를 맞추는 자만이 진정한 억만장자의 궤도에 오를 수 있습니다.`;
+        }
+        else if (category === 'family') {
+            content += `가족이라는 끈끈하고도 잔혹한 혈연의 굴레 속에서 당신은 어떤 포지션을 취해야 할까요? 당신의 부모궁(월지)과 자녀궁(시지)의 암투를 스캔했습니다.<br><br>`;
+            content += DB_LIFETIME.f[dmEl] + `<br><br>가족과의 관계에서 파음(破音)이 날 때, 명식 내의 충돌을 무효화 시키기 위한 은밀한 비방이 필요합니다. 각자의 사생활을 존중하는 심리적 거리두기가 때로는 최고의 액뜸(厄除)이 됩니다.`;
+        }
+        else if (category === 'love') {
+            content += `연인과 배우자, 당신의 삶에 가장 깊숙이 개입하는 이성과의 관계 주파수를 스캔했습니다.<br><br>`;
+            if (isStrong) content += `당신의 강력한 자아 에너지는 연애에서도 고스란히 드러납니다. 주도권을 쥐어야 직성이 풀리며 상대를 내 울타리 안에 두고 보호하려는 헌신이 강합니다. 하지만 그 에너지가 상대에게는 족쇄처럼 느껴질 수 있습니다. 사랑할수록 상대와 나의 경계를 긋고 쿨하게 놓아주는 법을 배워야만 파국을 막을 수 있습니다.<br><br>`;
+            else content += `당신은 관계 속에서 안정감을 얻고 상대를 통해 내면의 결핍을 채우려는 의존적 낭만주의자의 기질을 지녔습니다. 겉으로는 맞춰주는 듯 하지만, 상대가 내 기준에 도달하지 못하면 서늘하게 마음을 닫아버립니다. 소울메이트를 만나면 세상 누구보다 헌신하지만, 그 기준이 너무 높아 인연이 닿기까지 시간이 걸릴 수 있습니다.<br><br>`;
+            content += DB_LIFETIME.l_v[dmEl] + `<br><br>가장 좋은 배우자의 조건은 당신의 용신인 <b>${yong.el}</b>의 에너지를 듬뿍 가진 사람을 만나는 것입니다.`;
+        }
+        return content;
+    };
 
-        sections.push({
-            title: "특수 기운 및 내면의 결핍(공망) 스캔",
-            paragraphs: [
-                `<div class="basis-box"><span class="magnify">🔍</span><strong>[분석 근거]</strong> 일간/일주를 기준으로 원국 내에 강하게 뭉친 신살 에너지와, 짝을 이루지 못해 에너지가 누수되는 공망(空亡) 지대를 정밀 추적했습니다.</div>`,
-                ...shinsalGongmang
-            ]
-        });
+    // 💡 [엔진 결합] V56 종합 분석 파이프라인 (최종 조립)
+    return { 
+        analyze: async (req) => {
+            const { y, m, d, h, cal, name, gender } = req;
+            let hr = 12, min = 0; if(h === 'yaja') hr = 23; else if(h === 'joja') hr = 0; else if(h !== 'none' && !isNaN(parseInt(h))) hr = parseInt(h);
+            let lun, sol;
+            try {
+                if(cal === 'solar'){ sol = window.Solar.fromYmdHms(y,m,d,hr,min,0); lun = sol.getLunar(); } 
+                else { lun = window.Lunar.fromYmdHms(y,m,d,hr,min,0); sol = lun.getSolar(); } 
+                if(!lun || lun.getYear() === -1) throw new Error();
+            } catch(e) { throw new Error("달력 변환에 실패했습니다."); }
 
-        const reportJSON = {
-            meta: { name: name || "고객", baziGridData, ohaengScores, yongshinEl: yongshin.el, solarStr, lunarStr },
-            sections: sections,
-            conclusion: "명리학은 결정된 미래를 점치는 미신이 아니라, 나에게 주어진 기운의 분포를 완벽하게 이해하고 최적의 환경을 선택하기 위한 '인생 내비게이션'입니다. 위 분석의 방대한 데이터를 거울삼아, 당신만의 위대한 궤도를 확신을 가지고 그려나가십시오."
-        };
+            const baziData = lun.getEightChar();
+            const bazi = { 
+                dayGan: baziData.getDayGan(), dayZhi: baziData.getDayZhi(), monthZhi: baziData.getMonthZhi(),
+                stems: [baziData.getYearGan(), baziData.getMonthGan(), baziData.getDayGan(), h!=='none'?baziData.getTimeGan():'-'], 
+                branches: [baziData.getYearZhi(), baziData.getMonthZhi(), baziData.getDayZhi(), h!=='none'?baziData.getTimeZhi():'-']
+            };
 
-        return { statusCode: 200, data: reportJSON };
-    }};
+            const structData = determineStructure(bazi);
+            const ohaengScores = calculateOhaengScores(bazi);
+            const yongshin = determineYongshin(bazi, ohaengScores);
+            const { hapList, cspList } = applyHapAndChung(bazi.branches, bazi.monthZhi, ohaengScores);
+            const dmEl = ELEMENTS[bazi.dayGan] || '木';
+
+            const shinsal = scanShinsal(bazi.stems, bazi.branches, bazi.dayZhi, bazi.dayGan);
+            const wYear = getWounsung(bazi.dayGan, bazi.branches[0]);
+            const wMonth = getWounsung(bazi.dayGan, bazi.branches[1]);
+            const wDay = getWounsung(bazi.dayGan, bazi.branches[2]);
+            const wTime = getWounsung(bazi.dayGan, bazi.branches[3]);
+
+            const buildBaziCol = (pos, gan, zhi, w) => {
+                return { pos, gan, zhi, ganTen: getTenGod(bazi.dayGan, gan), zhiTen: zhi !== '-' ? getTenGod(bazi.dayGan, MAIN_QI[zhi] || zhi) : '-', w };
+            };
+            const baziGridData = [
+                buildBaziCol('시주', bazi.stems[3]||'-', bazi.branches[3]||'-', wTime),
+                buildBaziCol('일주', bazi.stems[2]||'-', bazi.branches[2]||'-', wDay),
+                buildBaziCol('월주', bazi.stems[1]||'-', bazi.branches[1]||'-', wMonth),
+                buildBaziCol('년주', bazi.stems[0]||'-', bazi.branches[0]||'-', wYear)
+            ];
+            baziGridData[1].ganTen = '일간(나)';
+
+            const timeStr = h === 'none' ? '시간모름' : (h === 'yaja' ? '야자시(23:30~)' : (h === 'joja' ? '조자시(~01:29)' : `${hr}시 00분`));
+            const solarStr = `양력: ${sol.getYear()}년 ${sol.getMonth()}월 ${sol.getDay()}일 ${timeStr}`;
+            const lunarStr = `음력: ${lun.getYear()}년 ${Math.abs(lun.getMonth())}월 ${lun.getDay()}일`;
+
+            const genderReq = gender === 'male' ? 1 : 0;
+            const daYunObj = baziData.getYun(genderReq); 
+            const daYunList = daYunObj.getDaYun();
+            
+            const currentYear = new Date().getFullYear();
+            const currentAge = currentYear - y + 1;
+
+            let daewoons = [];
+            let daewunHtml = `<div class="daewun-scroll">`;
+            let curDaewoonText = "";
+            
+            let activeDwIndex = 1;
+            for (let i = 1; i <= 8; i++) {
+                const start = daYunList[i].getStartAge();
+                const end = i < 8 ? daYunList[i+1].getStartAge() - 1 : start + 9;
+                if (currentAge >= start && currentAge <= end) {
+                    activeDwIndex = i;
+                }
+            }
+            if (currentAge < daYunList[1].getStartAge()) activeDwIndex = 1;
+            if (currentAge > daYunList[8].getStartAge() + 9) activeDwIndex = 8;
+
+            for (let i = 1; i <= 8; i++) {
+                const curDaYun = daYunList[i]; 
+                const dAge = curDaYun.getStartAge(); 
+                const dGanZhi = curDaYun.getGanZhi();
+                const isCurrent = (i === activeDwIndex);
+                
+                daewoons.push({ startAge: dAge, endAge: dAge + 9, gan: dGanZhi.charAt(0), zhi: dGanZhi.charAt(1) });
+                
+                if (isCurrent) {
+                    const dwEl = ELEMENTS[dGanZhi.charAt(1)];
+                    const dwTen = getTenGod(bazi.dayGan, MAIN_QI[dGanZhi.charAt(1)] || dGanZhi.charAt(1));
+                    let dwLuck = "";
+                    if (dwEl === yongshin.el) dwLuck = `이 10년의 거대한 기후는 당신의 수호 기운인 <b>${dwEl}(${HANGUL_MAP[dwEl]})</b>을 완벽하게 등지고 부는 강력한 순풍입니다. 돛을 올리고 거침없이 나아가십시오. 막혔던 문제들이 풀리며 폭발적인 성취를 거머쥘 수 있는 황금기입니다.`;
+                    else if (dwEl === yongshin.ki) dwLuck = `아쉽게도 이 10년의 배경은 당신의 기운을 깎아먹는 <b>${dwEl}(${HANGUL_MAP[dwEl]})</b>의 거센 역풍이 불고 있습니다. 무리하게 창을 휘두를 때가 아니라 방패를 견고하게 세우고 수성(守城)하며 다음을 기약해야 하는 시기입니다. 섣부른 확장은 금물입니다.`;
+                    else dwLuck = `큰 파도도 없지만 큰 순풍도 없는 평탄한 과도기의 10년입니다. 환경에 기대기보다 스스로의 피나는 노력과 치밀한 계획만이 운명을 이끌어가는 원동력이 됩니다.`;
+                    
+                    const cleanTen = dwTen.replace(/편관|정관|편재|정재|식신|상관|비견|겁재|편인|정인/, match => match);
+                    const tenDesc = DB_DAEWOON_DESC[cleanTen] || "새로운 환경과 마주하며 운명의 흐름이 전환되는 역동적인 시기입니다.";
+                    
+                    curDaewoonText = `현재 당신은 <b>${dGanZhi} 대운(大運)</b>을 걷고 있습니다. 이 10년의 핵심 테마는 <b>${dwTen}</b>입니다.<br><br><b>[${dwTen} 대운의 흐름]</b><br>${tenDesc}<br><br><b>[에너지 길흉]</b><br>${dwLuck}`;
+                }
+
+                daewunHtml += `
+                    <div class="daewun-card ${isCurrent ? 'active' : ''}">
+                        <span class="d-age">${dAge}세 시작</span>
+                        <div class="d-char">${dGanZhi.charAt(0)}<span class="d-char-kr">${HANGUL_MAP[dGanZhi.charAt(0)]}</span>${dGanZhi.charAt(1)}<span class="d-char-kr">${HANGUL_MAP[dGanZhi.charAt(1)]}</span></div>
+                        <span class="d-ten">${getTenGod(bazi.dayGan, dGanZhi.charAt(0))}·${getTenGod(bazi.dayGan, MAIN_QI[dGanZhi.charAt(1)] || dGanZhi.charAt(1))}</span>
+                    </div>
+                `;
+            }
+            daewunHtml += `</div>`;
+            const graphData = calcYearScore(bazi, yongshin.el, yongshin.ki, y, daewoons);
+
+            const formatTitle = (main, sub) => `${main}<br><span style="font-size:0.75em; color:var(--text-muted); font-weight:normal; letter-spacing:0px;">${sub}</span>`;
+            const proc = (id, content) => `<button class="proc-toggle basis-btn" onclick="toggleProc('${id}')" id="btn-${id}">🔍 V56 엔진 도출 근거 보기</button><div class="proc-box" id="${id}">${content}</div>`;
+            const term = (id, items) => `<button class="proc-toggle term-btn" onclick="toggleProc('${id}')" id="btn-${id}">📖 용어 해설 보기</button><div class="proc-box" id="${id}">${items.map(([k,v])=>`<div class="term-row"><span class="term-key">${k}</span><span class="term-val">${v}</span></div>`).join('')}</div>`;
+
+            let sections = [];
+            
+            sections.push({
+                title: formatTitle("나의 본질과 코어 에너지", ""),
+                paragraphs: [
+                    term('term-1', [['日干 일간','팔자에서 "나"를 상징하는 가장 핵심이 되는 글자.'], ['陰陽 음양','우주 만물을 이루는 두 가지 상반된 기운의 조화.']]),
+                    DB_JIGAN_LONG[bazi.dayGan] || "스스로의 주관을 믿고 나아가는 흔들림 없는 에너지를 지녔습니다."
+                ]
+            });
+
+            sections.push({
+                title: formatTitle("오행 밸런스 정밀 분석", "(에너지의 과유불급)"),
+                paragraphs: [ 
+                    proc('proc-ohaeng', `<b>오행 밸런스 측정</b><br>월령(태어난 계절)의 기운을 고려한 왕상휴수사 가중치를 곱하여 에너지의 질량을 산출했습니다.`),
+                    `<div id="r-element-chart"></div>`,
+                    getOhaengDesc(ohaengScores) 
+                ]
+            });
+
+            sections.push({
+                title: formatTitle("우주적 명식의 뼈대", "(정통 격국)"),
+                paragraphs: [
+                    proc('proc-gyuk', `<b>V56 지장간 기반 격국 도출</b><br>${structData.basis}<br>격국: <b>${structData.name}</b>`),
+                    term('term-2', [['格局 격국','사주의 전체 구조와 유형. 직업적 방향성과 삶의 무대를 셋팅합니다.'], ['透出 투출','지지(땅)에 숨어있던 기운이 천간(하늘)으로 뚜렷하게 솟아올라 세력을 형성한 상태.']]),
+                    `당신의 영혼이 깃든 사주의 뼈대(격국)는 <b>[${structData.name}]</b> 입니다.<br><br>${DB_GYUKGUK[structData.type] ? DB_GYUKGUK[structData.type].d : DB_GYUKGUK['-'].d}`
+                ]
+            });
+            
+            sections.push({
+                title: formatTitle("운명의 10년 주기", "(대운 환경)"),
+                paragraphs: [ 
+                    proc('proc-daewun', `<b>절기 역산 대운 도출</b><br>태어난 절기와 성별 음양 교차점을 계산하여 10년 단위의 환경 변화를 정밀 산출했습니다.`),
+                    term('term-3', [['大運 대운','10년 단위로 바뀌는 거대한 환경적 운의 파동. 기후와도 같습니다.'], ['交運 교운','대운이 바뀌는 환절기. 이 시기에는 인생에 큰 혼란과 변동이 옵니다.']]),
+                    curDaewoonText,
+                    daewunHtml 
+                ]
+            });
+
+            sections.push({
+                title: formatTitle("세운", "(1년 단위 운세 파동)"),
+                paragraphs: [
+                    proc('proc-year', `<b>V56 3중 교차 연산 스캔</b><br>원국(사주팔자) 위에 대운(10년 환경)을 얹고, 세운(올해 간지)을 충돌시켜 도출한 입체적 에너지 스코어입니다.`),
+                    `해마다 들어오는 세운(歲運)은 대운이라는 거대한 기후 속에서 내리는 그 해의 '날씨'와 같습니다. 그래프의 수치가 솟아오를 때는 공격적인 배팅을, 수치가 꺾일 때는 완벽한 웅크림을 택하십시오.`,
+                    `<div class="chart-wrap"><canvas id="yearChart"></canvas></div><div id="yr-grid-container"></div>`
+                ],
+                graphData: graphData
+            });
+
+            sections.push({
+                title: formatTitle("운명의 서사 1막", "(초년운)"),
+                paragraphs: [ 
+                    proc('proc-early', `<b>초년운 판독</b><br>년주(10~20대 환경) ${baziGridData[3].ganTen}, ${baziGridData[3].zhiTen} 및 12운성 ${wYear}의 작용을 스캔했습니다.`),
+                    dynamicReading(bazi, ohaengScores, structData, yongshin, 'early') 
+                ]
+            });
+            sections.push({
+                title: formatTitle("운명의 서사 2막", "(중년운)"),
+                paragraphs: [ 
+                    proc('proc-mid', `<b>중년운 판독</b><br>월주(사회적 전성기) 격국 ${structData.name} 및 12운성 ${wMonth}의 작용을 스캔했습니다.`),
+                    dynamicReading(bazi, ohaengScores, structData, yongshin, 'mid') 
+                ]
+            });
+            sections.push({
+                title: formatTitle("운명의 서사 3막", "(말년운)"),
+                paragraphs: [ 
+                    proc('proc-late', `<b>말년운 판독</b><br>시주(노년/결실) ${baziGridData[0].ganTen}, ${baziGridData[0].zhiTen} 및 12운성 ${wTime}의 작용을 스캔했습니다.`),
+                    dynamicReading(bazi, ohaengScores, structData, yongshin, 'late') 
+                ]
+            });
+
+            sections.push({
+                title: formatTitle("직업운", "(사회적 무기와 생존법)"),
+                paragraphs: [ 
+                    proc('proc-career', `<b>직업성 판독</b><br>격국 ${structData.name}과 일간 ${HANGUL_MAP[dmEl]}의 상관관계를 심층 스캔했습니다.`),
+                    dynamicReading(bazi, ohaengScores, structData, yongshin, 'career') 
+                ]
+            });
+            const rePct = ohaengScores[RELATIONS[dmEl].ctrl] || 0;
+            sections.push({
+                title: formatTitle("재물운", "(부의 창출 알고리즘)"),
+                paragraphs: [ 
+                    proc('proc-wealth', `<b>재물운 판독</b><br>명식 내 재성(財星) 비율 ${rePct}% 및 용신/기신 융합 스캔 완료.`),
+                    dynamicReading(bazi, ohaengScores, structData, yongshin, 'wealth') 
+                ]
+            });
+            sections.push({
+                title: formatTitle("가족운", "(내부 결속의 힘)"),
+                paragraphs: [ 
+                    proc('proc-family', `<b>가족운 판독</b><br>월지(부모궁)와 시지(자녀궁)의 에너지 밸런스를 분석했습니다.`),
+                    dynamicReading(bazi, ohaengScores, structData, yongshin, 'family') 
+                ]
+            });
+            sections.push({
+                title: formatTitle("연애운", "(관계의 주파수)"),
+                paragraphs: [ 
+                    proc('proc-love', `<b>연애운 판독</b><br>일지(배우자궁)에 깔린 ${baziGridData[1].zhiTen} 및 12운성 ${wDay}의 심리를 분석했습니다.`),
+                    dynamicReading(bazi, ohaengScores, structData, yongshin, 'love') 
+                ]
+            });
+            
+            let weakEl = '木'; let minScore = 999;
+            for (let [el, score] of Object.entries(ohaengScores)) { if (score < minScore) { minScore = score; weakEl = el; } }
+            sections.push({
+                title: formatTitle("건강운", "(신체 에너지 밸런스)"),
+                paragraphs: [
+                    proc('proc-health', `<b>취약 오행 판독</b><br>오행 밸런스 중 가장 취약한 오행(<b>${weakEl}</b>)과 일간(<b>${dmEl}</b>)의 생극제화 상관관계를 스캔했습니다.`),
+                    DB_LIFETIME.h[dmEl] + `<br><br>가장 점수가 낮은 <b>${weakEl}(${HANGUL_MAP[weakEl]})</b> 기운이 상징하는 장기(장부)의 건강도 함께 체크해야 합니다. 스트레스가 극에 달할 때 가장 먼저 타격을 받는 약한 고리입니다.`
+                ]
+            });
+
+            let cspHtml = '';
+            if (hapList.length > 0 || cspList.length > 0) {
+                cspHtml += `<table class="csp-table"><thead><tr><th>종류</th><th>해당 글자</th><th>강도</th><th>해석</th></tr></thead><tbody>`;
+                hapList.forEach(h => {
+                    const cls = h.type.includes('기반') ? 'cb-kiban' : 'cb-hap';
+                    cspHtml += `<tr><td><span class="csp-badge ${cls}">${h.type}</span></td><td><b>${h.chars}<br>→ ${h.result}</b></td><td>-</td><td>${h.type.includes('기반') ? '서로 묶여 힘을 온전히 쓰지 못합니다.' : '기운이 강력하게 하나로 변환됩니다.'}</td></tr>`;
+                });
+                cspList.forEach(c => {
+                    const cls = c.type.includes('해소') ? 'cb-kiban' : c.type.includes('충') ? 'cb-chung' : 'cb-hyeong';
+                    const sev = c.severity==='high'?'⚠ 강':c.severity==='medium'?'◎ 중':'○ 약';
+                    cspHtml += `<tr><td><span class="csp-badge ${cls}">${c.type}</span></td><td><b>${c.chars}</b></td><td>${sev}</td><td>${c.desc}</td></tr>`;
+                });
+                cspHtml += `</tbody></table>`;
+            } else {
+                cspHtml = `<div class="basis-box" style="border-left-color:var(--color-wood);">사주 내 충돌 구조가 발견되지 않아 비교적 안정적인 평온한 흐름을 유지합니다.</div>`;
+            }
+            sections.push({
+                title: formatTitle("내면의 서사", "(합화 및 형충파해)"),
+                paragraphs: [ 
+                    proc('proc-hap', `<b>V56 트랜잭션 및 탐합망충 판독</b><br>명식 내부 글자들이 끌어당기는 합화(合化)와 합거(合去), 합이 충을 막아주는 탐합망충의 복잡한 룰셋을 스캔했습니다.`),
+                    term('term-4', [['合化 합화','두 기운이 강렬하게 만나 원래의 성질을 완전히 잃고 새로운 파동으로 변하는 마법.'], ['合去 합거(기반)','에너지가 부족하여 변하지는 못하고, 서로 끈적하게 묶여 답답해지는 현상.'], ['貪合忘沖 탐합망충','합(合)을 탐하느라 충(沖)을 잊었다. 끔찍한 충돌을 합이 막아주는 일종의 방어 기제.']]),
+                    cspHtml 
+                ]
+            });
+
+            let shinsalGongmang = [];
+            if(shinsal.length > 0) {
+                let sText = shinsal.map(s => `<b>[${s.name}]</b><br>${s.desc}`).join('<br><br>');
+                shinsalGongmang.push(`<b>[특수 흉살 및 길살 스캔]</b><br><br>${sText}`);
+            } else {
+                shinsalGongmang.push(`<b>[특수 신살 스캔]</b><br>치우친 신살이 없어 안정적인 심리 멘탈을 지녔습니다.`);
+            }
+            const gmChars = getGongmang(bazi.dayGan, bazi.dayZhi);
+            const gmPos = [];
+            if(bazi.branches[0]!=='-' && gmChars.includes(bazi.branches[0])) gmPos.push('년지(초년/조상)');
+            if(bazi.branches[1]!=='-' && gmChars.includes(bazi.branches[1])) gmPos.push('월지(청년/사회)');
+            if(bazi.branches[3]!=='-' && gmChars.includes(bazi.branches[3])) gmPos.push('시지(말년/자식)');
+            if(gmPos.length > 0) {
+                shinsalGongmang.push(`<br><br><b>[공망(空亡) 스캔 - 내면의 밑빠진 독]</b><br>명식 중 <b>${gmPos.join(', ')}</b> 자리에 비어있는 공망 지대가 발견되었습니다. 채워도 채워지지 않는 이 갈증을 외부의 물질이 아닌 내면의 철학으로 채워야만 영혼이 구원받습니다.`);
+            } else {
+                shinsalGongmang.push(`<br><br><b>[공망(空亡) 스캔]</b><br>에너지가 누수되는 공망 지대가 없습니다. 노력한 만큼 온전히 열매를 수확하는 꽉 찬 그릇입니다.`);
+            }
+            sections.push({
+                title: formatTitle("특수 기운 및 내면의 결핍", "(공망)"),
+                paragraphs: [ 
+                    proc('proc-shinsal', `<b>V56 특수 흉길살 딥스캔</b><br>백호, 괴강, 삼형, 원진, 귀문, 역마, 도화, 화개 등 사주 내부에 은밀하게 도사린 극단적인 파동을 모두 색출했습니다.`),
+                    ...shinsalGongmang 
+                ]
+            });
+
+            const aus = DB_AUSPICIOUS[yongshin.el];
+            sections.push({
+                title: formatTitle("✨ 운명을 여는 마스터키", "(용신 처방)"),
+                paragraphs: [
+                    proc('proc-yong', `<b>V56 조후/억부 파이프라인 가동</b><br>추출 알고리즘: <b>${yongshin.method}</b><br>판단 근거: ${yongshin.reason}`),
+                    `수만 가지 변수를 뚫고 계산해 낸, 당신의 꼬인 운로를 시원하게 폭발시킬 절대적인 수호 기운은 <b>[${DB_YONGSHIN[yongshin.el]?.n || yongshin.el}]</b> 파동입니다.<br><br>${DB_YONGSHIN[yongshin.el]?.d || ''}`,
+                    `<div class="lucky-grid">
+                        <div class="lucky-item"><span class="lucky-icon">🧭</span><div class="lucky-title">에너지가 흐르는 방위</div><div class="lucky-val">${aus.dir}</div></div>
+                        <div class="lucky-item"><span class="lucky-icon">🎨</span><div class="lucky-title">행운을 부르는 색상 파동</div><div class="lucky-val" style="font-size:0.9rem;">${aus.color}</div></div>
+                        <div class="lucky-item"><span class="lucky-icon">🔢</span><div class="lucky-title">비밀의 주파수 숫자</div><div class="lucky-val">${aus.num}</div></div>
+                        <div class="lucky-item"><span class="lucky-icon">🏺</span><div class="lucky-title">운의 흐름을 돕는 물성</div><div class="lucky-val" style="font-size:0.85rem;">${aus.item.split(',')[0]}</div></div>
+                    </div>`
+                ]
+            });
+
+            const reportJSON = {
+                meta: { name: name || "고객", baziGridData, ohaengScores, yongshinEl: yongshin.el, solarStr, lunarStr, ausItem: aus.item },
+                sections: sections
+            };
+            return { statusCode: 200, data: reportJSON };
+        } 
+    }; 
 })();
 
 /**
@@ -724,6 +1092,12 @@ window.MockAPI = { post: async (endpoint, payload) => { if(endpoint === '/api/an
 
 const SaaSFrontend = (() => {
 
+    let chartInst = null;
+    const HANGUL_MAP = {
+        '甲':'갑', '乙':'을', '丙':'병', '丁':'정', '戊':'무', '己':'기', '庚':'경', '辛':'신', '壬':'임', '癸':'계',
+        '子':'자', '丑':'축', '寅':'인', '卯':'묘', '辰':'진', '巳':'사', '午':'오', '未':'미', '申':'신', '酉':'유', '戌':'술', '亥':'해'
+    };
+
     const safeText = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
 
     const showMsg = (msg, isError = false) => {
@@ -733,46 +1107,20 @@ const SaaSFrontend = (() => {
         if(msgEl) msgEl.textContent = msg;
         const titleEl = document.getElementById('modal-title');
         if(titleEl) {
-            titleEl.textContent = isError ? '시스템 오류' : '알림';
+            titleEl.textContent = isError ? 'SYSTEM ERROR' : '알림';
             titleEl.style.color = isError ? 'var(--color-danger)' : 'var(--gold-primary)';
         }
         modal.style.display = 'block';
-        if(!isError) setTimeout(()=>modal.style.display='none', 3000);
     };
 
     const isValidDate = (y, m, d) => { const date = new Date(y, m - 1, d); return date.getFullYear() === y && date.getMonth() === (m - 1) && date.getDate() === d; };
 
-    // 🚀 <br> 오류 완벽 해결: 더 강력해진 createSafeDOM 파서
     const createSafeDOM = (htmlString) => {
-        const p = document.createElement('p');
-        // <br>, <br/>, <br > 모두 분리 패턴에 포함
-        const parts = htmlString.split(/(<div class="basis-box">.*?<\/div>|<b>.*?<\/b>|<br\s*\/?>|\n)/gi);
-        
-        parts.forEach(part => {
-            if (!part) return;
-            const lower = part.toLowerCase();
-            
-            if (lower === '\n' || lower === '<br>' || lower === '<br/>' || lower === '<br >') { 
-                p.appendChild(document.createElement('br')); 
-            }
-            else if (lower.startsWith('<div class="basis-box">')) { 
-                const div = document.createElement('div');
-                div.className = 'basis-box';
-                // basis-box 내부의 br 처리
-                const inner = part.slice(23, -6).replace(/<br\s*\/?>/gi, '<br>');
-                div.innerHTML = inner; 
-                p.appendChild(div);
-            }
-            else if (lower.startsWith('<b>')) { 
-                const b = document.createElement('strong'); 
-                b.textContent = part.slice(3, -4); 
-                p.appendChild(b); 
-            }
-            else { 
-                p.appendChild(document.createTextNode(part)); 
-            }
-        });
-        return p;
+        const div = document.createElement('div');
+        div.className = 'r-text-block';
+        div.style.marginBottom = '22px';
+        div.innerHTML = htmlString;
+        return div;
     };
 
     const renderBaziGrid = (gridData) => {
@@ -785,10 +1133,14 @@ const SaaSFrontend = (() => {
                 <div class="bazi-col">
                     <div class="bazi-header">${col.pos}</div>
                     <div class="bazi-ten">${col.ganTen !== '-' ? col.ganTen : '&nbsp;'}</div>
-                    <div class="bazi-char ${isDayMaster ? 'bazi-day-master' : ''}">${col.gan}</div>
-                    <div class="bazi-char">${col.zhi}</div>
+                    <div class="bazi-char ${isDayMaster ? 'bazi-day-master' : ''}">
+                        ${col.gan}<span class="bazi-char-kr">${HANGUL_MAP[col.gan]||''}</span>
+                    </div>
+                    <div class="bazi-char">
+                        ${col.zhi}<span class="bazi-char-kr">${HANGUL_MAP[col.zhi]||''}</span>
+                    </div>
                     <div class="bazi-ten">${col.zhiTen !== '-' ? col.zhiTen : '&nbsp;'}</div>
-                    <div class="bazi-hidden" style="margin-top:2px;"><span>운성: ${col.w}</span></div>
+                    <div class="bazi-hidden"><span>12운성: ${col.w}</span></div>
                 </div>
             `;
         });
@@ -815,37 +1167,72 @@ const SaaSFrontend = (() => {
         });
     };
 
-    // 🚀 스텔스 쿠파스 1개 집중 CTA (Sub ID: destinyroot 링크 반영)
-    const renderCTA = (yongshinEl) => {
+    // 💡 돋보기 아이콘과 새로운 문구가 반영된 스텔스 CTA 렌더링 함수
+    const renderStealthCTA = (yongshinEl) => {
         const wrap = document.createElement('div');
-        wrap.className = 'cta-box';
-        
         let targetUrl = 'https://link.coupang.com/a/eu5td7'; 
-        let label = '✨ 나의 부족한 기운을 채워줄 시크릿 행운템 확인하기';
-
-        // 1. 부족한 기운 보완: 木, 火
-        if (yongshinEl === '木' || yongshinEl === '火') {
-            targetUrl = 'https://link.coupang.com/a/eu5td7';
-            label = '🍀 나의 부족한 기운을 채워줄 행운템 확인하기';
-        } 
-        // 2. 재물/성공 기원: 土, 金
-        else if (yongshinEl === '土' || yongshinEl === '金') {
-            targetUrl = 'https://link.coupang.com/a/eu5uLR';
-            label = '💰 나의 재물운을 빛내줄 행운템 확인하기';
-        } 
-        // 3. 건강/수호 아이템: 水
-        else {
-            targetUrl = 'https://link.coupang.com/a/eu5vYe';
-            label = '🛡️ 나의 안녕을 지켜줄 수호 행운템 확인하기';
-        }
+        
+        if (yongshinEl === '木' || yongshinEl === '火') targetUrl = 'https://link.coupang.com/a/eu5td7';
+        else if (yongshinEl === '土' || yongshinEl === '金') targetUrl = 'https://link.coupang.com/a/eu5uLR';
+        else targetUrl = 'https://link.coupang.com/a/eu5vYe';
 
         wrap.innerHTML = `
-            <a href="${targetUrl}" target="_blank" class="btn-coupang">
-                ${label}
+            <a href="${targetUrl}" target="_blank" class="proc-toggle term-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: flex-start; margin-top: 30px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(212,175,55,0.15);">
+                <span style="font-size:0.75rem; transition: transform 0.3s;">▼</span>
+                <span style="font-weight:700; letter-spacing:0.5px;">🔍 나의 행운템 보기</span>
             </a>
-            <p style="margin-top:15px; font-size:0.75rem; color:rgba(255,255,255,0.2);">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
+            <p style="text-align:center; font-size:0.75rem; color:rgba(255,255,255,0.15); margin-top:0px; margin-bottom:30px;">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
         `;
         return wrap;
+    };
+
+    const renderChartAndGrid = (graphData) => {
+        const ctx = document.getElementById('yearChart');
+        if(ctx) {
+            if(chartInst) chartInst.destroy();
+            chartInst = new Chart(ctx.getContext('2d'), {
+                type:'line',
+                data:{
+                    labels: graphData.map(g=>`${g.year}`),
+                    datasets:[{
+                        label:'에너지 파동',
+                        data: graphData.map(g=>g.score),
+                        borderColor: '#d4af37',
+                        backgroundColor: 'rgba(212,175,55,0.08)',
+                        pointBackgroundColor: graphData.map(g=>g.isBroken?'#f85149':g.year===new Date().getFullYear()?'#4ade80':'#d4af37'),
+                        pointRadius: graphData.map(g=>g.year===new Date().getFullYear()?7:4),
+                        pointBorderWidth: 2, pointBorderColor: '#0a0e14',
+                        fill: true, tension: 0.45, borderWidth: 2
+                    }]
+                },
+                options:{
+                    maintainAspectRatio: false,
+                    plugins:{ legend:{ display: false } },
+                    scales:{
+                        y:{ min: 0, max: 100, grid:{ color: 'rgba(255,255,255,0.03)' }, ticks:{ color: '#8b949e', font:{ size: 10 } } },
+                        x:{ grid:{ color: 'rgba(255,255,255,0.03)' }, ticks:{ color: '#8b949e', font:{ size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        const gridWrap = document.getElementById('yr-grid-container');
+        if(gridWrap && graphData) {
+            let html = `<div class="yr-grid">`;
+            graphData.forEach(g => {
+                const isNow = g.year === new Date().getFullYear();
+                const color = g.isBroken ? '#f85149' : g.isPeak ? '#4ade80' : '#d4af37';
+                html += `
+                <div class="yr-cell ${isNow ? 'now' : ''}">
+                    <div class="yc-yr">${g.year}${isNow ? ' ★' : ''}</div>
+                    <div class="yc-bar"><div class="yc-fill" style="width:${g.score}%; background:${color}"></div></div>
+                    <div class="yc-num" style="color:${color}">${g.score}</div>
+                    <div class="yc-ganzhi" style="color:${color}">${g.seunGan}(${HANGUL_MAP[g.seunGan]})<br>${g.seunZhi}(${HANGUL_MAP[g.seunZhi]})</div>
+                </div>`;
+            });
+            html += `</div>`;
+            gridWrap.innerHTML = html;
+        }
     };
 
     const renderReportTarget = (resData) => {
@@ -853,19 +1240,21 @@ const SaaSFrontend = (() => {
         if(!wrap) return;
         wrap.innerHTML = '';
         
-        safeText('r-title-name', `${String(resData.meta.name).replace(/[&<>"']/g, '')} 님의 사주 분석 리포트`);
+        safeText('r-title-name', `${String(resData.meta.name).replace(/[&<>"']/g, '')} 님의 운명 리포트`);
         safeText('r-title-date-solar', resData.meta.solarStr);
         safeText('r-title-date-lunar', resData.meta.lunarStr);
 
         renderBaziGrid(resData.meta.baziGridData);
-        renderOhaengChart(resData.meta.ohaengScores);
-
+        
         const mainFrag = document.createDocumentFragment();
+        let graphDataToRender = null;
 
         resData.sections.forEach(sec => {
             const secDiv = document.createElement('div');
             secDiv.className = 'r-section';
-            const title = document.createElement('h3'); title.textContent = sec.title;
+            
+            const title = document.createElement('h3'); 
+            title.innerHTML = sec.title; 
             secDiv.appendChild(title);
             
             const content = document.createElement('div'); 
@@ -874,51 +1263,48 @@ const SaaSFrontend = (() => {
             sec.paragraphs.forEach(p => { content.appendChild(createSafeDOM(p)); });
             secDiv.appendChild(content);
             mainFrag.appendChild(secDiv);
+
+            if(sec.graphData) graphDataToRender = sec.graphData;
         });
 
         wrap.appendChild(mainFrag);
 
-        const concWrap = document.getElementById('r-conclusion-box');
-        if(concWrap) {
-            concWrap.innerHTML = `<h3>📍 최종 전문가 제언</h3>`;
-            concWrap.appendChild(createSafeDOM(resData.conclusion));
-        }
+        if(graphDataToRender) setTimeout(() => renderChartAndGrid(graphDataToRender), 150);
+        setTimeout(() => renderOhaengChart(resData.meta.ohaengScores), 150); 
     };
 
     const requestReport = () => {
         const nameEl = document.getElementById('user-name');
         const name = nameEl ? nameEl.value.trim() : "고객";
-        
         const y = parseInt(document.getElementById('user-year').value), m = parseInt(document.getElementById('user-month').value), d = parseInt(document.getElementById('user-day').value);
         if (!isValidDate(y, m, d)) { showMsg("유효하지 않은 날짜입니다.", true); return; }
 
         const h = document.getElementById('user-time').value, cal = document.getElementById('user-cal').value, gender = document.getElementById('user-gender').value;
-        
-        if(typeof window.Lunar === 'undefined') { showMsg("명리 코어 모듈을 불러오지 못했습니다. 새로고침 해주세요.", true); return; }
+        if(typeof window.Lunar === 'undefined') { showMsg("코어 모듈 접속 지연. 새로고침 해주세요.", true); return; }
 
         const loader = document.getElementById('loader');
         const loaderText = document.querySelector('.loading-txt');
         if(loader) loader.style.display = 'flex';
 
-        const loaderMsgs = ["사주 명식 추출 중...", "12운성 및 공망 딥스캔 중...", "흉살/길살 정밀 판정 중...", "생애 주기 통변 알고리즘 가동...", "방대한 분석 리포트 컴파일 중..."];
+        const loaderMsgs = ["과거의 궤적을 스캔 중...", "월령 승수 기반 오행 가중치 연산...", "은밀한 흉살과 공망 추적 중...", "원국/대운/세운 3중 궤적 교차...", "거대한 운명 텍스트 생성 중..."];
         let msgIdx = 0; 
         if(loaderText) loaderText.textContent = loaderMsgs[msgIdx];
         const msgInterval = setInterval(() => { 
             msgIdx = (msgIdx + 1) % loaderMsgs.length; 
             if(loaderText) loaderText.textContent = loaderMsgs[msgIdx]; 
-        }, 700);
+        }, 900);
 
         setTimeout(async () => {
             try {
                 const response = await window.MockAPI.post('/api/analyze', {y, m, d, h, cal, gender, name});
-                if(!response || response.statusCode !== 200) throw new Error("엔진 연산 에러");
+                if(!response || response.statusCode !== 200) throw new Error("엔진 파괴 오류");
 
                 renderReportTarget(response.data);
                 
                 const ctaContainer = document.getElementById('cta-container');
                 if(ctaContainer) {
                     ctaContainer.innerHTML = '';
-                    ctaContainer.appendChild(renderCTA(response.data.meta.yongshinEl));
+                    ctaContainer.appendChild(renderStealthCTA(response.data.meta.yongshinEl));
                 }
 
                 clearInterval(msgInterval);
@@ -934,34 +1320,28 @@ const SaaSFrontend = (() => {
                 console.error(e);
                 clearInterval(msgInterval);
                 if(loader) loader.style.display = 'none';
-                showMsg(e.message || "서버 통신에 실패했습니다. 나중에 다시 시도해주세요.", true);
+                showMsg(e.message || "서버 통신에 실패했습니다.", true);
             }
-        }, 3500); 
+        }, 5000); 
     };
 
-    // 🚀 앱 띄우기 방식 공유 (Web Share API)
     const shareLink = async () => {
         const url = 'https://chomibinine.github.io/destinyroot/';
-        const shareData = { title: '운명뿌리 - 사주 분석', text: '정통 명리 데이터 기반의 소름 돋는 내 사주 리포트를 지금 바로 확인해보세요.', url: url };
+        const shareData = { title: '운명뿌리 | 사주 분석', text: '정통 명리 데이터 기반의 내 사주 리포트를 확인해보세요.', url: url };
         
         if (navigator.share) {
-            try { 
-                await navigator.share(shareData); 
-            } catch (err) { 
-                console.error("Share canceled or failed.", err); 
-            }
+            try { await navigator.share(shareData); } catch (err) { console.error("Share canceled", err); }
         } else {
             const dummy = document.createElement('input');
             document.body.appendChild(dummy);
             dummy.value = url;
-            dummy.select();
-            document.execCommand('copy');
+            dummy.select(); document.execCommand('copy');
             document.body.removeChild(dummy);
-            showMsg('사이트 주소가 복사되었습니다. 카카오톡 등에서 붙여넣기 하세요.');
+            showMsg('사이트 주소가 복사되었습니다.');
         }
     };
 
-    const goHome = () => { window.location.href = 'https://chomibinine.github.io/destinyroot/'; };
+    const goHome = () => { window.location.reload(); };
 
     const init = () => {
         const ys = document.getElementById('user-year'), ms = document.getElementById('user-month'), ds = document.getElementById('user-day');
