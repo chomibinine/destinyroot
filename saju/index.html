@@ -1188,7 +1188,7 @@ const SaaSFrontend = (() => {
         }, 100);
     };
 
-    // 💡 [RESTORED] 원본 스텔스 쿠팡 CTA 렌더링 함수 완벽 복구
+    // 💡 [RESTORED] 원본 스텔스 쿠팡 CTA 렌더링 함수
     const renderStealthCTA = (yongshinEl) => {
         const wrap = document.createElement('div');
         let targetUrl = 'https://link.coupang.com/a/eu5td7'; 
@@ -1202,7 +1202,7 @@ const SaaSFrontend = (() => {
                 <span style="font-size:0.75rem; transition: transform 0.3s;">🔍</span>
                 <span style="font-weight:700; letter-spacing:0.5px;"> 나의 행운템 보기</span>
             </a>
-            <p style="text-align:center; font-size:0.75rem; color:rgba(255,255,255,0.15); margin-top:0px; margin-bottom:30px;">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
+            <p style="text-align:center; font-size:0.75rem; color:rgba(255,255,255,0.15); margin-top:0px; margin-bottom:10px;">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
         `;
         return wrap;
     };
@@ -1265,6 +1265,7 @@ const SaaSFrontend = (() => {
         safeText('r-title-date-solar', resData.meta.solarStr);
         safeText('r-title-date-lunar', resData.meta.lunarStr);
 
+        // 실시간 날씨 테마(Glow) 적용
         if (weatherObj && weatherObj.condition) {
             const bgGlowMap = {
                 '맑음': 'radial-gradient(circle at top, rgba(251,146,60,0.1), #0a0e14)',
@@ -1301,7 +1302,7 @@ const SaaSFrontend = (() => {
         setTimeout(() => renderOhaengChart(resData.meta.ohaengScores, weatherObj ? weatherObj.condition : null), 150); 
     };
 
-    // 기상청 격자 변환
+    // 💡 기상청 격자 변환 함수
     const dfs_xy_conv = (code, v1, v2) => {
         const RE = 6371.00877; const GRID = 5.0; const SLAT1 = 30.0; const SLAT2 = 60.0;
         const OLON = 126.0; const OLAT = 38.0; const XO = 43; const YO = 136;
@@ -1320,7 +1321,7 @@ const SaaSFrontend = (() => {
         return rs;
     };
 
-    // 실시간 기상청 API
+    // 💡 실시간 기상청 API
     const fetchRealTimeWeather = async (lat, lon) => {
         const API_KEY = "1ddcc7f0063f3f004733b2651211cfe7ae0b11cc01f584205c1546bab1858c60";
         const grid = dfs_xy_conv("toXY", lat, lon);
@@ -1347,7 +1348,7 @@ const SaaSFrontend = (() => {
         }
     };
 
-    // 브이월드(V-World) + OSM 하이브리드 위치 변환
+    // 💡 브이월드(V-World) + OSM 하이브리드 위치 변환 (무적 우회)
     const fetchRegionName = async (lat, lon) => {
         const VWORLD_KEY = "5B0D3660-9AA8-3DEC-BDB4-BE8463D07762";
         try {
@@ -1411,6 +1412,7 @@ const SaaSFrontend = (() => {
 
         const executeScan = async (lat, lon) => {
             try {
+                // 실시간 기상/위치 공공데이터 동시 호출
                 const [liveWeather, regionName] = await Promise.all([
                     fetchRealTimeWeather(lat, lon),
                     fetchRegionName(lat, lon)
@@ -1426,12 +1428,16 @@ const SaaSFrontend = (() => {
 
                 renderReportTarget(response.data, liveWeather);
                 
-                // 💡 [RESTORED] 스텔스 CTA 컨테이너에 렌더링 함수 결합
-                const ctaContainer = document.getElementById('cta-container');
-                if(ctaContainer) {
-                    ctaContainer.innerHTML = '';
-                    ctaContainer.appendChild(renderStealthCTA(response.data.meta.yongshinEl));
+                // 💡 [UPDATE] 스텔스 CTA를 '용신 처방' 박스(마지막 .r-content) 안쪽으로 쏙 집어넣습니다.
+                const rContents = document.querySelectorAll('.r-content');
+                if (rContents.length > 0) {
+                    const lastContent = rContents[rContents.length - 1]; // 마지막 섹션(용신 처방)
+                    lastContent.appendChild(renderStealthCTA(response.data.meta.yongshinEl));
                 }
+
+                // 기존 바깥쪽에 있던 빈 껍데기 컨테이너는 초기화
+                const ctaContainer = document.getElementById('cta-container');
+                if(ctaContainer) ctaContainer.innerHTML = '';
                 
                 clearInterval(msgInterval);
                 if(loader) loader.style.display = 'none';
@@ -1451,8 +1457,9 @@ const SaaSFrontend = (() => {
         };
     };
 
+    // 💡 [UPDATE] 공유 주소를 Vercel 링크로 완벽 적용
     const shareLink = async () => {
-        const url = 'https://chomibinine.github.io/destinyroot/';
+        const url = 'https://destinyroot.vercel.app/saju/';
         
         const docText = document.getElementById('dynamic-sections')?.innerText || '';
         let region = "내 위치";
@@ -1487,7 +1494,7 @@ const SaaSFrontend = (() => {
         }
     };
 
-    // 💡 최상단 경로(랜딩 페이지)로 이동하도록 수정 완료
+    // 💡 [UPDATE] 처음으로 돌아가기를 루트 랜딩페이지로 이동하도록 변경
     const goHome = () => { window.location.href = '/'; };
 
     const init = () => {
@@ -1506,5 +1513,3 @@ const SaaSFrontend = (() => {
 
 window.onload = SaaSFrontend.init;
 </script>
-</body>
-</html>
