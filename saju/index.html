@@ -178,7 +178,7 @@
 
 <div id="loader">
     <div class="spinner"></div>
-    <div id="loader-text" class="loading-txt">V56 운명 궤적 추적 중...</div>
+    <div id="loader-text" class="loading-txt"> 운명 궤적 추적 중...</div>
 </div>
 
 <div id="custom-modal" class="modal">
@@ -892,7 +892,7 @@ const OrthodoxEngine = (() => {
             // 💡 [NEW] 실시간 기상 스캔 섹션 (리포트 최상단 배치)
             if(weather && region) {
                 sections.push({
-                    title: formatTitle("🔴 [LIVE] 실시간 기상 에너지 스캔",
+                    title: formatTitle("🔴 [LIVE] 실시간 기상 에너지 스캔")
                     paragraphs: [
                         proc('proc-live', `<b>실시간 API 파이프라인 연동</b><br>현재 시간의 기상/위치 데이터를 호출하여 당신의 수호 오행(<b>${yongshin.el}</b>)과 교차 연산했습니다.`),
                         `운명은 정지해 있지 않으며, 환경에 의해 실시간으로 요동칩니다. 지금 당장 창밖의 날씨가 당신의 사주에 미치는 영향을 스캔했습니다.`,
