@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>운명뿌리 | 초정밀 사주 분석</title>
+    <title>운명뿌리 | 초정밀 사주 & 기상 스캔</title>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954282181306694" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.min.js"></script>
@@ -23,7 +23,7 @@
             --text-muted: #8b949e; 
             --color-danger: #f85149; 
             --color-info: #58a6ff;
-            /* 오행 컬러 (Dark Theme) */
+            /* 오행 컬러 */
             --color-wood: #4ade80; 
             --color-fire: #fb923c; 
             --color-earth: #fbbf24; 
@@ -41,11 +41,11 @@
         body { background: radial-gradient(circle at top, #080b12, #020305); color: var(--text-main); line-height: 1.8; font-size: 16px; overflow-x: hidden; min-height: 100vh;}
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
         .fade-in { animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
         .app-container { max-width: 800px; margin: 0 auto; padding: 50px 20px 120px; position: relative; z-index: 1; }
         
-        /* ── 홈 화면 UI ── */
         .hero { text-align: center; margin-bottom: 40px; padding: 20px 0;}
         .hero h1 { color: var(--gold-light); font-size: 3.2rem; font-weight: 900; letter-spacing: -2px; margin: 0; text-shadow: 0 0 20px rgba(212,175,55,0.2);}
         
@@ -60,8 +60,7 @@
         .btn-submit { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--gold-primary), #b8860b); color: #000; padding: 20px; border-radius: 12px; font-weight: 900; border: none; width: 100%; cursor: pointer; margin-top: 35px; font-size: 1.25rem; transition: 0.3s; box-shadow: 0 10px 20px rgba(212,175,55,0.2);}
         .btn-submit:hover { background: var(--gold-light); transform: translateY(-3px); box-shadow: 0 15px 30px rgba(212,175,55,0.3); }
 
-        /* ── 리포트 래퍼 ── */
-        .report-wrapper { background: var(--bg-report); border: 1px solid var(--border-line); border-radius: 20px; padding: 50px 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); margin-bottom: 30px; position: relative; overflow:hidden;}
+        .report-wrapper { background: var(--bg-report); border: 1px solid var(--border-line); border-radius: 20px; padding: 50px 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); margin-bottom: 30px; position: relative; overflow:hidden; transition: background 1.5s ease;}
         
         .r-header { text-align: center; margin-bottom: 45px; padding-bottom: 35px; border-bottom: 1px solid var(--border-line); }
         .r-header h2 { font-size: 2.4rem; font-weight: 900; color: #fff; letter-spacing: -1px; margin-bottom: 15px;}
@@ -69,7 +68,6 @@
         .date-box p { color: var(--gold-primary); font-size: 1.05rem; font-weight: 700; margin: 3px 0; letter-spacing: 0.5px;}
         .date-box .lunar { color: var(--text-muted); font-size: 0.95rem; }
 
-        /* ── 명식 테이블 ── */
         .bazi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 35px; background: rgba(0,0,0,0.4); padding: 25px 15px; border-radius: 16px; border: 1px solid var(--border-line); }
         .bazi-col { text-align: center; display: flex; flex-direction: column; gap: 6px;}
         .bazi-header { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; font-weight: 700;}
@@ -80,19 +78,17 @@
         .bazi-day-master { border-color: var(--gold-primary) !important; background: rgba(212,175,55,0.08) !important; color: var(--gold-light) !important; }
         .bazi-day-master .bazi-char-kr { color: rgba(212,175,55,0.6); }
 
-        /* ── 오행 바 차트 ── */
         .bar-wrap { display: flex; align-items: center; margin-bottom: 15px; gap: 15px; }
-        .bar-label { width: 60px; font-weight: 900; font-size: 1.05rem; text-align: left; }
+        .bar-label { width: 60px; font-weight: 900; font-size: 1.05rem; text-align: left; display: flex; align-items: center; white-space: nowrap;}
         .bar-bg { flex: 1; height: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; overflow: hidden; position: relative; }
-        .bar-fill { height: 100%; border-radius: 10px; transition: width 1.5s ease-out; }
-        .bar-val { width: 45px; text-align: right; font-size: 0.95rem; color: var(--text-muted); font-weight: 700;}
-        .fill-wood { background: var(--color-wood); box-shadow: 0 0 10px rgba(74, 222, 128, 0.4); } 
-        .fill-fire { background: var(--color-fire); box-shadow: 0 0 10px rgba(251, 146, 60, 0.4); } 
-        .fill-earth { background: var(--color-earth); box-shadow: 0 0 10px rgba(251, 191, 36, 0.4); } 
-        .fill-metal { background: var(--color-metal); box-shadow: 0 0 10px rgba(203, 213, 225, 0.4); } 
-        .fill-water { background: var(--color-water); box-shadow: 0 0 10px rgba(96, 165, 250, 0.4); }
+        .bar-fill { height: 100%; border-radius: 10px; transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .bar-val { width: 55px; text-align: right; font-size: 0.95rem; color: var(--text-muted); font-weight: 700;}
+        .fill-wood { background: var(--color-wood); } 
+        .fill-fire { background: var(--color-fire); } 
+        .fill-earth { background: var(--color-earth); } 
+        .fill-metal { background: var(--color-metal); } 
+        .fill-water { background: var(--color-water); }
 
-        /* ── 통변 섹션 ── */
         .r-section { background: rgba(255,255,255,0.015); border: 1px solid var(--border-line); border-radius: 20px; padding: 40px 35px; margin-bottom: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
         .r-section h3 { font-size: 1.45rem; color: #fff; margin-bottom: 25px; display: flex; align-items: flex-start; gap: 12px; font-weight: 900; border-bottom: 1px solid var(--border-line); padding-bottom: 18px; line-height:1.4;}
         .r-section h3::before { content: ''; display:inline-block; width:6px; height:22px; background:var(--gold-primary); border-radius:3px; margin-top:5px;}
@@ -100,7 +96,6 @@
         .r-content p { margin-bottom: 22px; }
         .r-content strong { color: #fff; font-weight: 800; background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;}
 
-        /* ── 토글 박스 (도출 근거 & 용어 해설) ── */
         .proc-toggle { width: 100%; padding: 16px 22px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-line); border-radius: 10px; text-align: left; font-size: 0.95rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 12px; font-weight: 700; transition: 0.2s; margin-bottom: 20px; }
         .proc-toggle:hover { background: rgba(255,255,255,0.05); border-color: var(--border-light); color:#fff;}
         .proc-toggle.term-btn { border-left: 3px solid var(--gold-primary); color:var(--gold-light); background:rgba(212,175,55,0.03);}
@@ -111,27 +106,24 @@
         .proc-box { display: none; background: rgba(0,0,0,0.4); border: 1px solid var(--border-line); border-radius: 10px; padding: 25px; margin-bottom: 25px; font-size: 0.95rem; line-height: 1.8; color: var(--text-muted); }
         .proc-box.show { display: block; animation: fadeIn 0.4s ease; }
         .proc-box code { background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 6px; color: #fff; font-family: monospace; font-size:0.9rem;}
-
         .term-row { display: flex; gap: 15px; padding: 12px 0; border-bottom: 1px dashed var(--border-line); align-items: flex-start; }
         .term-row:last-child { border-bottom: none; padding-bottom: 0; }
         .term-key { font-weight: 900; color: var(--gold-light); min-width: 90px; font-size: 0.95rem; letter-spacing:1px;}
         .term-val { color: var(--text-main); font-size: 0.95rem; line-height: 1.7; }
 
-        /* ── 대운 스크롤 & 세운 차트 ── */
         .daewun-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 10px 0 25px 0; scroll-snap-type: x mandatory; }
         .daewun-scroll::-webkit-scrollbar { height: 6px; }
         .daewun-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
         .daewun-scroll::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); border-radius: 10px; }
-        .daewun-card { flex: 0 0 125px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-line); border-radius: 14px; padding: 25px 10px; text-align: center; scroll-snap-align: start; transition: 0.3s; position: relative;}
+        .daewun-card { flex: 0 0 100px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-line); border-radius: 14px; padding: 25px 5px; text-align: center; scroll-snap-align: start; transition: 0.3s; position: relative;}
         .daewun-card.active { border-color: var(--gold-primary); background: linear-gradient(145deg, rgba(212,175,55,0.15), rgba(0,0,0,0.7)); box-shadow: 0 10px 30px rgba(212,175,55,0.25); transform: translateY(-5px); }
         .daewun-card.active::before { content: '현재 대운'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--gold-primary); color: #000; font-size: 0.75rem; font-weight: 900; padding: 4px 12px; border-radius: 20px; white-space: nowrap;}
-        .d-age { font-size: 0.85rem; color: var(--text-muted); font-weight: 700; margin-bottom: 10px; display: block; }
+        .d-age { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; margin-bottom: 10px; display: block; }
         .d-char { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: 2px; text-shadow: 0 2px 15px rgba(0,0,0,0.6); display:flex; flex-direction:column;}
         .d-char-kr {font-size:0.8rem; color:var(--text-muted); font-weight:600; letter-spacing:4px;}
-        .d-ten { font-size: 0.85rem; color: var(--gold-light); margin-top: 12px; display: block; font-weight: 700; }
+        .d-ten { font-size: 0.8rem; color: var(--gold-light); margin-top: 12px; display: block; font-weight: 700; }
 
         .chart-wrap { position: relative; height: 280px; margin: 30px 0; }
-        
         .yr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 10px; margin-top: 25px; }
         .yr-cell { text-align: center; padding: 15px 8px; border: 1px solid var(--border-line); border-radius: 10px; background: rgba(0,0,0,0.4); position: relative; }
         .yr-cell.now { border-color: var(--gold-primary); background: rgba(212,175,55,0.08); }
@@ -141,7 +133,6 @@
         .yc-num { font-size: 1rem; font-weight: 900; }
         .yc-ganzhi { font-size: 0.85rem; font-weight: 700; margin-top: 5px; color: #fff;}
 
-        /* ── 형충파해 테이블 ── */
         .csp-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 20px; }
         .csp-table th { background: rgba(0,0,0,0.6); color: var(--gold-light); padding: 15px; text-align: left; font-weight: 800; border-bottom: 1px solid var(--border-line); font-size: 0.9rem;}
         .csp-table td { padding: 16px 15px; border-bottom: 1px solid var(--border-line); vertical-align: top; line-height: 1.7; }
@@ -153,21 +144,18 @@
         .cb-hap { background: var(--wood-bg); color: var(--color-wood); border: 1px solid var(--color-wood); }
         .cb-kiban { background: rgba(139,148,158,0.1); color: var(--text-muted); border: 1px solid var(--border-light); }
 
-        /* ── 행운 요소 박스 ── */
         .lucky-grid { display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin: 25px 0;}
         .lucky-item { background: rgba(255,255,255,0.02); border:1px solid var(--border-line); padding:20px; border-radius:12px; text-align:center;}
         .lucky-icon { font-size: 2rem; margin-bottom:10px; display:block;}
         .lucky-title { font-size:0.85rem; color:var(--text-muted); font-weight:700; margin-bottom:5px; letter-spacing:2px;}
         .lucky-val { font-size:1.1rem; color:#fff; font-weight:900;}
 
-        /* ── 하단 버튼 ── */
         .controls { display: flex; flex-direction: column; gap: 15px; margin-top: 40px; }
         .btn-tool { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); color: #fff; padding: 22px; border-radius: 14px; font-size: 1.15rem; font-weight: 700; border: 1px solid var(--border-line); cursor: pointer; transition: 0.3s; width: 100%;}
         .btn-tool:hover { background: rgba(255,255,255,0.08); border-color: var(--border-light);}
         .btn-home { display: flex; align-items: center; justify-content: center; background: var(--border-light); color: #fff; padding: 22px; border-radius: 14px; font-weight: 800; border: none; width: 100%; cursor: pointer; font-size: 1.2rem; transition: 0.3s; margin-top:10px;}
         .btn-home:hover { background: var(--text-muted); color:#000;}
 
-        /* ── 로더 ── */
         #loader { display: none; position: fixed; inset: 0; background: rgba(2,3,5,0.98); z-index: 100000; flex-direction: column; justify-content: center; align-items: center;} 
         .spinner { width: 60px; height: 60px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite; margin-bottom:30px;} 
         .loading-txt { color: var(--gold-light); font-size: 1.2rem; font-weight: 800; letter-spacing: 2px;}
@@ -203,7 +191,7 @@
     <div id="input-view">
         <div class="hero">
             <h1>운명뿌리</h1>
-            <p style="color:var(--text-muted); margin-top:15px; font-size:1.05rem; letter-spacing:1px;">당신의 진짜 궤적을 읽어냅니다.</p>
+            <p style="color:var(--text-muted); margin-top:15px; font-size:1.05rem; letter-spacing:1px;">실시간 기상 환경이 반영된 진짜 궤적을 읽어냅니다.</p>
         </div>
         
         <div class="input-card">
@@ -269,11 +257,8 @@
             </div>
 
             <div class="bazi-grid" id="r-bazi-grid"></div>
-            
             <div id="dynamic-sections"></div>
-
             <div id="cta-container"></div>
-
         </div>
 
         <div class="controls animate-fade">
@@ -282,11 +267,7 @@
         </div>
     </div>
 </div>
-
 <script>
-/**
- * UI 토글 동작 헬퍼
- */
 function toggleProc(id){
     const box = document.getElementById(id);
     const btn = document.getElementById('btn-'+id);
@@ -295,35 +276,26 @@ function toggleProc(id){
     btn.classList.toggle('open');
 }
 
-/**
- * ============================================================================
- * 🔒 [SERVER-SIDE CODE] : 초정밀 백엔드 코어 엔진
- * ============================================================================
- */
 const OrthodoxEngine = (() => {
 
     const ELEMENTS = {
         '甲': '木', '乙': '木', '丙': '火', '丁': '火', '戊': '土', '己': '土', '庚': '金', '辛': '金', '壬': '水', '癸': '水',
         '寅': '木', '卯': '木', '巳': '火', '午': '火', '辰': '土', '戌': '土', '丑': '土', '未': '土', '申': '金', '酉': '金', '亥': '水', '子': '水'
     };
-    
     const YIN_YANG = {
         '甲': '+', '乙': '-', '丙': '+', '丁': '-', '戊': '+', '己': '-', '庚': '+', '辛': '-', '壬': '+', '癸': '-',
         '寅': '+', '卯': '-', '巳': '+', '午': '-', '辰': '+', '戌': '+', '丑': '-', '未': '-', '申': '+', '酉': '-', '亥': '+', '子': '-'
     };
-
     const HANGUL_MAP = {
         '甲':'갑', '乙':'을', '丙':'병', '丁':'정', '戊':'무', '己':'기', '庚':'경', '辛':'신', '壬':'임', '癸':'계',
         '子':'자', '丑':'축', '寅':'인', '卯':'묘', '辰':'진', '巳':'사', '午':'오', '未':'미', '申':'신', '酉':'유', '戌':'술', '亥':'해',
         '木':'목', '火':'화', '土':'토', '金':'금', '水':'수'
     };
-
     const HIDDEN_STEMS = {
         '子': ['癸', '-', '壬'], '丑': ['己', '辛', '癸'], '寅': ['甲', '丙', '戊'], '卯': ['乙', '-', '甲'],
         '辰': ['戊', '癸', '乙'], '巳': ['丙', '庚', '戊'], '午': ['丁', '己', '丙'], '未': ['己', '乙', '丁'],
         '申': ['庚', '壬', '戊'], '酉': ['辛', '-', '庚'], '戌': ['戊', '丁', '辛'], '亥': ['壬', '甲', '戊']
     };
-
     const MAIN_QI = { '子':'癸', '丑':'己', '寅':'甲', '卯':'乙', '辰':'戊', '巳':'丙', '午':'丁', '未':'己', '申':'庚', '酉':'辛', '戌':'戊', '亥':'壬' };
 
     const RELATIONS = {
@@ -333,18 +305,15 @@ const OrthodoxEngine = (() => {
         '金': { gen: '水', ctrl: '木', ctrlBy: '火', genBy: '土' },
         '水': { gen: '木', ctrl: '火', ctrlBy: '土', genBy: '金' }
     };
-
     const TEN_GODS_NAME = {
         same_same: '비견', same_diff: '겁재', genBy_same: '편인', genBy_diff: '정인', gen_same: '식신', gen_diff: '상관',
         ctrlBy_same: '편관', ctrlBy_diff: '정관', ctrl_same: '편재', ctrl_diff: '정재'
     };
-
     const DB_HAP6 = { '子丑':'土', '寅亥':'木', '卯戌':'火', '辰酉':'金', '巳申':'水', '午未':'火' };
     const DB_HAP3 = { '申子辰':'水','寅午戌':'火','巳酉丑':'金','亥卯未':'木' };
     const DB_HAP_BANG = { '寅卯辰':'木','巳午未':'火','申酉戌':'金','亥子丑':'水' };
     const DB_CHUNG = { '子':'午','午':'子','丑':'未','未':'丑','寅':'申','申':'寅','卯':'酉','酉':'卯','辰':'戌','戌':'辰','巳':'亥','亥':'巳' };
-    const DB_HYEONG = { '寅巳申':'무은지형','丑戌未':'지세지형','子卯':'무례지형','辰辰':'자형','午午':'자형','酉酉':'자형','亥亥':'자형' };
-
+    
     const W12_MAP = {
         '甲': ['亥','子','丑','寅','卯','辰','巳','午','未','申','酉','戌'], '丙': ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'],
         '戊': ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'], '庚': ['巳','午','未','申','酉','戌','亥','子','丑','寅','卯','辰'],
@@ -352,10 +321,8 @@ const OrthodoxEngine = (() => {
         '丁': ['酉','申','未','午','巳','辰','卯','寅','丑','子','亥','戌'], '己': ['酉','申','未','午','巳','辰','卯','寅','丑','子','亥','戌'],
         '辛': ['子','亥','戌','酉','申','未','午','巳','辰','卯','寅','丑'], '癸': ['卯','寅','丑','子','亥','戌','酉','申','未','午','巳','辰']
     };
-    
     const W12_NAMES = ['장생','목욕','관대','건록','제왕','쇠','병','사','묘','절','태','양'];
 
-    // 💡 [DB 완벽 복원] 방대한 통변 데이터베이스
     const DB_AUSPICIOUS = {
         '木': { dir: '동쪽(東)', color: '푸른색, 에메랄드, 청록색 계열', num: '3, 8', item: '나무 화분, 직사각형의 긴 오브제, 면/린넨 소재의 소품, 책이나 종이류' },
         '火': { dir: '남쪽(南)', color: '붉은색, 자두색, 오렌지 계열', num: '2, 7', item: '조명 램프, 캔들, 뾰족하고 화려한 형태의 오브제, 태양이나 불을 상징하는 그림' },
@@ -397,16 +364,16 @@ const OrthodoxEngine = (() => {
     };
 
     const DB_DAEWOON_DESC = {
-        '비견': '독립과 경쟁의 10년입니다. 타인에게 의지하기보다 자신의 주관대로 밀어붙이는 에너지가 강해집니다. 동료나 곁에 있는 사람들과의 협력이 중요해지며, 치열한 경쟁 속에서 온전한 자아를 확립하게 되는 시기입니다.',
-        '겁재': '격렬한 경쟁과 재물 변동이 예상되는 10년입니다. 예상치 못한 경쟁자를 만나거나 재물의 지출이 발생할 수 있으니, 무리한 투자를 피하고 내실을 다지며 주변 사람들과의 마찰을 각별히 경계해야 합니다.',
-        '식신': '창조적 에너지가 솟아나고 의식주가 풍요로워지는 평온한 10년입니다. 자신의 재능을 갈고닦아 세상에 선보이기 좋으며, 새로운 일을 시작하거나 전문성을 기르기에 가장 쾌적하고 긍정적인 시기입니다.',
-        '상관': '기존의 틀을 깨고 과감한 변화를 추구하는 혁신의 10년입니다. 뛰어난 언변과 아이디어로 무대에서 주목받지만, 기존 조직이나 규칙과 마찰을 빚을 수 있으니 구설수를 조심하고 재능을 긍정적으로 승화시켜야 합니다.',
-        '편재': '활동 무대가 넓어지고 큰 재물의 흐름이 역동적으로 요동치는 10년입니다. 사업이나 투자의 기회가 수시로 찾아오지만, 리스크 관리와 감정 통제가 동반되지 않으면 롤러코스터 같은 금전적 기복을 겪을 수 있습니다.',
-        '정재': '고정적인 수입과 안정을 추구하는 가장 차분한 10년입니다. 착실하게 자산을 축적하고 가정의 안정을 이루기에 매우 좋은 시기이며, 모험보다는 현실적이고 안전한 선택이 큰 빛을 발합니다.',
-        '편관': '어려움을 극복하고 막강한 권위와 명예를 거머쥐는 투쟁의 10년입니다. 책임감과 압박감이 커지는 시련이 동반되나, 이 무게를 이겨내면 남들이 우러러보는 묵직한 권력을 얻게 됩니다.',
-        '정관': '사회적인 인정과 안정된 명예를 얻는 평탄한 10년입니다. 취업, 승진, 결혼 등 합법적이고 안정적인 틀 안에서 원하던 바를 순조롭게 성취하며 조직의 핵심 인재로 자리 잡습니다.',
-        '편인': '고독한 철학자처럼 내면을 탐구하고 독특한 전문성을 기르는 10년입니다. 대중적인 길보다는 종교, 학문, 기술, 예술 등 특수한 분야에서 두각을 나타내며 영적인 성숙과 멘탈의 강화를 이룹니다.',
-        '정인': '귀인의 도움을 받고 문서, 학문, 자격증으로 성취를 이루는 평온한 10년입니다. 윗사람의 전폭적인 인정을 받으며 지식을 흡수하기 좋고, 섣부른 행동보다는 신중한 계획과 배움이 큰 자산이 됩니다.'
+        '비견': '독립과 경쟁의 환경입니다. 타인에게 의지하기보다 자신의 주관대로 밀어붙이는 에너지가 강해집니다. 동료나 곁에 있는 사람들과의 협력이 중요해지며, 치열한 경쟁 속에서 온전한 자아를 확립하게 되는 시기입니다.',
+        '겁재': '격렬한 경쟁과 재물 변동이 예상되는 환경입니다. 예상치 못한 경쟁자를 만나거나 재물의 지출이 발생할 수 있으니, 무리한 투자를 피하고 내실을 다지며 주변 사람들과의 마찰을 각별히 경계해야 합니다.',
+        '식신': '창조적 에너지가 솟아나고 의식주가 풍요로워지는 평온한 환경입니다. 자신의 재능을 갈고닦아 세상에 선보이기 좋으며, 새로운 일을 시작하거나 전문성을 기르기에 가장 쾌적하고 긍정적인 시기입니다.',
+        '상관': '기존의 틀을 깨고 과감한 변화를 추구하는 혁신의 환경입니다. 뛰어난 언변과 아이디어로 무대에서 주목받지만, 기존 조직이나 규칙과 마찰을 빚을 수 있으니 구설수를 조심하고 재능을 긍정적으로 승화시켜야 합니다.',
+        '편재': '활동 무대가 넓어지고 큰 재물의 흐름이 역동적으로 요동치는 환경입니다. 사업이나 투자의 기회가 수시로 찾아오지만, 리스크 관리와 감정 통제가 동반되지 않으면 롤러코스터 같은 금전적 기복을 겪을 수 있습니다.',
+        '정재': '고정적인 수입과 안정을 추구하는 가장 차분한 환경입니다. 착실하게 자산을 축적하고 가정의 안정을 이루기에 매우 좋은 시기이며, 모험보다는 현실적이고 안전한 선택이 큰 빛을 발합니다.',
+        '편관': '어려움을 극복하고 막강한 권위와 명예를 거머쥐는 투쟁의 환경입니다. 책임감과 압박감이 커지는 시련이 동반되나, 이 무게를 이겨내면 남들이 우러러보는 묵직한 권력을 얻게 됩니다.',
+        '정관': '사회적인 인정과 안정된 명예를 얻는 평탄한 환경입니다. 취업, 승진, 결혼 등 합법적이고 안정적인 틀 안에서 원하던 바를 순조롭게 성취하며 조직의 핵심 인재로 자리 잡습니다.',
+        '편인': '고독한 철학자처럼 내면을 탐구하고 독특한 전문성을 기르는 정신적 환경입니다. 대중적인 길보다는 종교, 학문, 기술, 예술 등 특수한 분야에서 두각을 나타내며 영적인 성숙과 멘탈의 강화를 이룹니다.',
+        '정인': '귀인의 도움을 받고 문서, 학문, 자격증으로 성취를 이루는 평온한 환경입니다. 윗사람의 전폭적인 인정을 받으며 지식을 흡수하기 좋고, 섣부른 행동보다는 신중한 계획과 배움이 큰 자산이 됩니다.'
     };
 
     const DB_JIGAN_LONG = {
@@ -480,8 +447,45 @@ const OrthodoxEngine = (() => {
             "水": "신장, 방광 등 하복부 생식기 계통을 항상 따뜻하게 보호해야 강한 면역력을 유지할 수 있으며, 차가운 음식을 피하고 수분 밸런스를 맞춰야 합니다." 
         }
     };
+    // 💡 [NEW] 실시간 기상 데이터 + 위치 융합 로직 추가
+    const getWeatherLuck = (yongshin, weather, regionName) => {
+        const wMap = {
+            '맑음': { el: '火', icon: '☀️', desc: '태양의 열기가 쏟아지는' },
+            '비': { el: '水', icon: '🌧️', desc: '대지를 흠뻑 적시는' },
+            '눈': { el: '金', icon: '❄️', desc: '서늘하고 고요한' },
+            '흐림': { el: '土', icon: '☁️', desc: '구름이 해를 가려 차분해진' },
+            '바람': { el: '木', icon: '🌬️', desc: '대기를 강하게 흔드는' }
+        };
+        const currentW = wMap[weather.condition] || wMap['맑음'];
+        let status, msg, color, bg;
 
-    // 3. 엔진 핵심 연산 함수 모음
+        if (currentW.el === yongshin.el) {
+            status = "극상의 시너지 (최고조)"; color = "var(--color-info)"; bg = "rgba(88, 166, 255, 0.08)";
+            msg = `현재 <b>${regionName}</b> 일대에는 당신의 꼬인 운을 풀어줄 완벽한 수호 기운인 <b>${currentW.el}(${HANGUL_MAP[currentW.el]})</b> 파동이 강하게 뿜어져 나오고 있습니다. 망설이던 일이 있다면 당장 실행하십시오.`;
+        } else if (currentW.el === yongshin.ki) {
+            status = "에너지 충돌 (주의 요망)"; color = "var(--color-danger)"; bg = "rgba(248, 81, 73, 0.08)";
+            msg = `현재 <b>${regionName}</b>의 기상은 당신의 에너지를 소모시키는 <b>${currentW.el}(${HANGUL_MAP[currentW.el]})</b> 파동이 지배하고 있습니다. 무리한 감정적 결정을 피하고, 내실을 다지며 폭풍이 지나가길 기다리십시오.`;
+        } else {
+            status = "안정적인 흐름 (평온)"; color = "var(--gold-light)"; bg = "rgba(212, 175, 55, 0.08)";
+            msg = `현재 <b>${regionName}</b>의 ${currentW.desc} 기상 환경은 당신의 명식과 무난하게 조화되어 평온한 밸런스를 유지합니다. 차분하게 일정을 소화하기 좋은 시간입니다.`;
+        }
+
+        return `
+            <div style="background:${bg}; border:1px solid ${color}; padding:22px; border-radius:14px; margin-bottom:15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <div style="display:flex; align-items:center; gap:15px; margin-bottom:12px;">
+                    <span style="font-size:2.5rem; text-shadow: 0 0 10px rgba(255,255,255,0.2);">${currentW.icon}</span>
+                    <div>
+                        <div style="font-size:0.85rem; color:var(--text-muted); font-weight:700; margin-bottom:3px;">
+                            📍 ${regionName} 실시간 기상 (${weather.temp}℃)
+                        </div>
+                        <div style="font-weight:900; color:${color}; font-size:1.1rem; letter-spacing:0.5px;">${status}</div>
+                    </div>
+                </div>
+                <p style="font-size:0.95rem; line-height:1.7; color:var(--text-main); text-align:justify;">${msg}</p>
+            </div>
+        `;
+    };
+
     const getTenGod = (dayMaster, targetChar) => {
         if (!dayMaster || !targetChar || targetChar === '-' || dayMaster === '-') return '-';
         const dmEl = ELEMENTS[dayMaster]; const dPol = YIN_YANG[dayMaster];
@@ -532,7 +536,6 @@ const OrthodoxEngine = (() => {
         return scores;
     };
 
-    // 💡 결단력 텍스트 수정 적용 완료
     const getOhaengDesc = (scores) => {
         let maxEl = '', minEl = '', maxSc = -1, minSc = 999;
         for(let el in scores) {
@@ -605,16 +608,19 @@ const OrthodoxEngine = (() => {
             const seunL = window.Lunar.fromDate(new Date(ipDate.getTime() + 864e5));
             const sg = seunL.getYearGan(), sz = seunL.getYearZhi();
             const sEl = ELEMENTS[sg], sZEl = ELEMENTS[sz];
-            const age = yr - birthYear;
+            const age = yr - birthYear + 1;
+            
+            // 💡 5년 단위 분할 대운 매칭 로직 적용
             const currentDw = daewoons.find(d => age >= d.startAge && age <= d.endAge) || daewoons[0];
-            const dwEl = ELEMENTS[currentDw.zhi];
+            const dwEl = ELEMENTS[currentDw.phase === 'gan' ? currentDw.gan : currentDw.zhi];
+            const dwZhiForChung = currentDw.zhi; 
 
             let bonus = 0;
             if (sEl === yongEl) bonus += 15; if (sZEl === yongEl) bonus += 15;
             if (sEl === kiEl) bonus -= 15; if (sZEl === kiEl) bonus -= 15;
             if (dwEl === yongEl && sZEl === yongEl) bonus += 10;
             if (dwEl === kiEl && sZEl === kiEl) bonus -= 10;
-            if (DB_CHUNG[currentDw.zhi] === sz) bonus -= 12; 
+            if (DB_CHUNG[dwZhiForChung] === sz) bonus -= 12; 
             
             const sajuB = bazi.branches.filter(x => x !== '-');
             sajuB.forEach(b => { if (DB_CHUNG[b] === sz) bonus -= 8; });
@@ -625,7 +631,6 @@ const OrthodoxEngine = (() => {
         return graph;
     };
 
-    // 💡 에러의 원인이었던 명식 구조 도출 함수!
     const determineStructure = (bazi) => {
         const hidden = HIDDEN_STEMS[bazi.monthZhi];
         if(!hidden) return { name: "불명격", basis: "월지가 불분명하여 격을 잡기 어렵습니다.", type: "-" };
@@ -706,44 +711,11 @@ const OrthodoxEngine = (() => {
         const branches = '子丑寅卯辰巳午未申酉戌亥';
         return [branches.charAt((diff+10)%12), branches.charAt((diff+11)%12)];
     };
-    const generateHapChungStory = (stems, branches) => {
-        const findings = [];
-        const stemHap = { '甲己':'천간합', '乙庚':'천간합', '丙辛':'천간합', '丁壬':'천간합', '戊癸':'천간합' };
-        const branchChung = ['子午', '丑未', '寅申', '卯酉', '辰戌', '巳亥'];
 
-        const dayGan = stems[2], dayZhi = branches[2];
-
-        stems.forEach((gan, idx) => {
-            if (idx !== 2 && gan !== '-') {
-                if (stemHap[dayGan + gan] || stemHap[gan + dayGan]) findings.push({ type: '합', target: idx === 0 ? '초년/조상' : (idx === 1 ? '사회/부모' : '말년/자식') });
-            }
-        });
-
-        branches.forEach((zhi, idx) => {
-             if (idx !== 2 && zhi !== '-') {
-                 const pair = dayZhi + zhi;
-                 if (branchChung.includes(pair) || branchChung.includes(zhi + dayZhi)) findings.push({ type: '충', target: idx === 0 ? '초년/조상' : (idx === 1 ? '사회/부모' : '말년/자식') });
-             }
-        });
-
-        if(findings.length === 0) {
-            return "당신의 궤적은 큰 요동이나 파괴 없이, 깊고 고요한 강물처럼 묵직한 안정감을 유지하며 흘러갑니다. 극적인 위기가 적은 대신 스스로 변화를 주도해야 하는 사명감을 쥐고 있습니다.";
-        }
-        
-        let story = "과거의 기억과 앞으로 다가올 시간들을 짚어보면, 당신의 운명에는 강렬한 끌림과 피할 수 없는 부딪힘이 교차하는 드라마틱한 변곡점들이 짙게 새겨져 있습니다.<br><br>";
-        findings.forEach(f => {
-            if(f.type === '합') story += `<b>[운명적 결속 : ${f.target}과의 합]</b><br>마치 자석의 양극이 만나듯, 당신의 이성과 목표는 특정 시기와 인연에 불가항력적으로 묶여 들어가는 깊은 서사를 지니고 있습니다. 이는 단순한 우연이 아니라, 당신의 영혼이 진정으로 갈망하는 방향으로 삶의 닻을 내리려는 묵직한 이끌림입니다.<br><br>`;
-            if(f.type === '충') story += `<b>[피할 수 없는 격랑 : ${f.target}과의 충]</b><br>잔잔한 수면에 거대한 바위가 떨어지듯, 당신이 굳게 뿌리내린 현실의 환경에서 예기치 못한 강렬한 충돌이 일어나는 순간이 존재합니다. 하지만 이 부서짐은 결코 파멸을 의미하지 않습니다. 낡고 굳어버린 껍데기를 깨부수고 나와, 완전히 새로운 세계를 맞이하기 위해 당신이 반드시 겪어내야만 했던 눈부신 성장의 진통입니다.<br><br>`;
-        });
-        return story;
-    };
-
-    // 💡 [동적 텍스트 결합 로직]
     const dynamicReading = (bazi, scores, struct, yong, category) => {
         const dmEl = ELEMENTS[bazi.dayGan];
         const isStrong = yong.isStrong;
         const tgStr = struct.type;
-
         let content = "";
 
         if (category === 'early') {
@@ -794,10 +766,9 @@ const OrthodoxEngine = (() => {
         return content;
     };
 
-    // 💡 [엔진 결합] V56 종합 분석 파이프라인 (최종 조립)
     return { 
         analyze: async (req) => {
-            const { y, m, d, h, cal, name, gender } = req;
+            const { y, m, d, h, cal, name, gender, weather, region } = req;
             let hr = 12, min = 0; if(h === 'yaja') hr = 23; else if(h === 'joja') hr = 0; else if(h !== 'none' && !isNaN(parseInt(h))) hr = parseInt(h);
             let lun, sol;
             try {
@@ -851,12 +822,17 @@ const OrthodoxEngine = (() => {
             let daewunHtml = `<div class="daewun-scroll">`;
             let curDaewoonText = "";
             
+            // 💡 5년 단위 분할 대운 로직 적용
             let activeDwIndex = 1;
+            let activePhase = 'gan'; 
+            
             for (let i = 1; i <= 8; i++) {
                 const start = daYunList[i].getStartAge();
                 const end = i < 8 ? daYunList[i+1].getStartAge() - 1 : start + 9;
                 if (currentAge >= start && currentAge <= end) {
                     activeDwIndex = i;
+                    if (currentAge < start + 5) activePhase = 'gan';
+                    else activePhase = 'zhi';
                 }
             }
             if (currentAge < daYunList[1].getStartAge()) activeDwIndex = 1;
@@ -866,29 +842,41 @@ const OrthodoxEngine = (() => {
                 const curDaYun = daYunList[i]; 
                 const dAge = curDaYun.getStartAge(); 
                 const dGanZhi = curDaYun.getGanZhi();
+                const gan = dGanZhi.charAt(0);
+                const zhi = dGanZhi.charAt(1);
+                
+                daewoons.push({ startAge: dAge, endAge: dAge + 4, gan: gan, zhi: zhi, phase: 'gan' });
+                daewoons.push({ startAge: dAge + 5, endAge: dAge + 9, gan: gan, zhi: zhi, phase: 'zhi' });
+                
                 const isCurrent = (i === activeDwIndex);
-                
-                daewoons.push({ startAge: dAge, endAge: dAge + 9, gan: dGanZhi.charAt(0), zhi: dGanZhi.charAt(1) });
-                
+                const isGanCurrent = isCurrent && activePhase === 'gan';
+                const isZhiCurrent = isCurrent && activePhase === 'zhi';
+
                 if (isCurrent) {
-                    const dwEl = ELEMENTS[dGanZhi.charAt(1)];
-                    const dwTen = getTenGod(bazi.dayGan, MAIN_QI[dGanZhi.charAt(1)] || dGanZhi.charAt(1));
+                    const dwEl = ELEMENTS[activePhase === 'gan' ? gan : zhi];
+                    const dwTen = getTenGod(bazi.dayGan, activePhase === 'gan' ? gan : (MAIN_QI[zhi] || zhi));
+                    
                     let dwLuck = "";
-                    if (dwEl === yongshin.el) dwLuck = `이 10년의 거대한 기후는 당신의 수호 기운인 <b>${dwEl}(${HANGUL_MAP[dwEl]})</b>을 완벽하게 등지고 부는 강력한 순풍입니다. 돛을 올리고 거침없이 나아가십시오. 막혔던 문제들이 풀리며 폭발적인 성취를 거머쥘 수 있는 황금기입니다.`;
-                    else if (dwEl === yongshin.ki) dwLuck = `아쉽게도 이 10년의 배경은 당신의 기운을 깎아먹는 <b>${dwEl}(${HANGUL_MAP[dwEl]})</b>의 거센 역풍이 불고 있습니다. 무리하게 창을 휘두를 때가 아니라 방패를 견고하게 세우고 수성(守城)하며 다음을 기약해야 하는 시기입니다. 섣부른 확장은 금물입니다.`;
-                    else dwLuck = `큰 파도도 없지만 큰 순풍도 없는 평탄한 과도기의 10년입니다. 환경에 기대기보다 스스로의 피나는 노력과 치밀한 계획만이 운명을 이끌어가는 원동력이 됩니다.`;
+                    if (dwEl === yongshin.el) dwLuck = `이 5년의 거대한 기후는 당신의 수호 기운인 <b>${dwEl}(${HANGUL_MAP[dwEl]})</b>을 완벽하게 등지고 부는 강력한 순풍입니다. 돛을 올리고 거침없이 나아가십시오. 막혔던 문제들이 풀리며 폭발적인 성취를 거머쥘 수 있는 황금기입니다.`;
+                    else if (dwEl === yongshin.ki) dwLuck = `아쉽게도 이 5년의 배경은 당신의 기운을 깎아먹는 <b>${dwEl}(${HANGUL_MAP[dwEl]})</b>의 거센 역풍이 불고 있습니다. 무리하게 창을 휘두를 때가 아니라 방패를 견고하게 세우고 수성(守城)하며 다음을 기약해야 하는 시기입니다. 섣부른 확장은 금물입니다.`;
+                    else dwLuck = `큰 파도도 없지만 큰 순풍도 없는 평탄한 과도기의 5년입니다. 환경에 기대기보다 스스로의 피나는 노력과 치밀한 계획만이 운명을 이끌어가는 원동력이 됩니다.`;
                     
                     const cleanTen = dwTen.replace(/편관|정관|편재|정재|식신|상관|비견|겁재|편인|정인/, match => match);
                     const tenDesc = DB_DAEWOON_DESC[cleanTen] || "새로운 환경과 마주하며 운명의 흐름이 전환되는 역동적인 시기입니다.";
                     
-                    curDaewoonText = `현재 당신은 <b>${dGanZhi} 대운(大運)</b>을 걷고 있습니다. 이 10년의 핵심 테마는 <b>${dwTen}</b>입니다.<br><br><b>[${dwTen} 대운의 흐름]</b><br>${tenDesc}<br><br><b>[에너지 길흉]</b><br>${dwLuck}`;
+                    curDaewoonText = `현재 당신은 <b>${dGanZhi} 대운(大運)</b> 중 <b>${activePhase === 'gan' ? '상반기(천간 5년)' : '하반기(지지 5년)'}</b> 흐름을 걷고 있습니다. 이 5년의 핵심 테마는 <b>${dwTen}</b>입니다.<br><br><b>[${dwTen} 환경의 흐름]</b><br>${tenDesc}<br><br><b>[에너지 길흉]</b><br>${dwLuck}`;
                 }
 
                 daewunHtml += `
-                    <div class="daewun-card ${isCurrent ? 'active' : ''}">
-                        <span class="d-age">${dAge}세 시작</span>
-                        <div class="d-char">${dGanZhi.charAt(0)}<span class="d-char-kr">${HANGUL_MAP[dGanZhi.charAt(0)]}</span>${dGanZhi.charAt(1)}<span class="d-char-kr">${HANGUL_MAP[dGanZhi.charAt(1)]}</span></div>
-                        <span class="d-ten">${getTenGod(bazi.dayGan, dGanZhi.charAt(0))}·${getTenGod(bazi.dayGan, MAIN_QI[dGanZhi.charAt(1)] || dGanZhi.charAt(1))}</span>
+                    <div class="daewun-card ${isGanCurrent ? 'active' : ''}">
+                        <span class="d-age">${dAge}~${dAge+4}세</span>
+                        <div class="d-char" style="${isGanCurrent ? 'color:var(--gold-primary);' : ''}">${gan}<span class="d-char-kr">${HANGUL_MAP[gan]}</span></div>
+                        <span class="d-ten">${getTenGod(bazi.dayGan, gan)}</span>
+                    </div>
+                    <div class="daewun-card ${isZhiCurrent ? 'active' : ''}">
+                        <span class="d-age">${dAge+5}~${dAge+9}세</span>
+                        <div class="d-char" style="${isZhiCurrent ? 'color:var(--gold-primary);' : ''}">${zhi}<span class="d-char-kr">${HANGUL_MAP[zhi]}</span></div>
+                        <span class="d-ten">${getTenGod(bazi.dayGan, MAIN_QI[zhi] || zhi)}</span>
                     </div>
                 `;
             }
@@ -901,6 +889,18 @@ const OrthodoxEngine = (() => {
 
             let sections = [];
             
+            // 💡 [NEW] 실시간 기상 스캔 섹션 (리포트 최상단 배치)
+            if(weather && region) {
+                sections.push({
+                    title: formatTitle("🔴 [LIVE] 실시간 기상 에너지 스캔", "(국토교통부·기상청 공공데이터 연동)"),
+                    paragraphs: [
+                        proc('proc-live', `<b>실시간 API 파이프라인 연동</b><br>현재 시간의 기상/위치 데이터를 호출하여 당신의 수호 오행(<b>${yongshin.el}</b>)과 교차 연산했습니다.`),
+                        `운명은 정지해 있지 않으며, 환경에 의해 실시간으로 요동칩니다. 지금 당장 창밖의 날씨가 당신의 사주에 미치는 영향을 스캔했습니다.`,
+                        getWeatherLuck(yongshin, weather, region)
+                    ]
+                });
+            }
+
             sections.push({
                 title: formatTitle("나의 본질과 코어 에너지", ""),
                 paragraphs: [
@@ -928,10 +928,10 @@ const OrthodoxEngine = (() => {
             });
             
             sections.push({
-                title: formatTitle("운명의 10년 주기", "(대운 환경)"),
+                title: formatTitle("운명의 5년 주기", "(대운 환경)"),
                 paragraphs: [ 
-                    proc('proc-daewun', `<b>절기 역산 대운 도출</b><br>태어난 절기와 성별 음양 교차점을 계산하여 10년 단위의 환경 변화를 정밀 산출했습니다.`),
-                    term('term-3', [['大運 대운','10년 단위로 바뀌는 거대한 환경적 운의 파동. 기후와도 같습니다.'], ['交運 교운','대운이 바뀌는 환절기. 이 시기에는 인생에 큰 혼란과 변동이 옵니다.']]),
+                    proc('proc-daewun', `<b>절기 역산 대운 도출</b><br>태어난 절기와 성별 음양 교차점을 계산하여 10년 대운을 도출한 후, 천간과 지지로 5년씩 정밀 분할했습니다.`),
+                    term('term-3', [['大運 대운','거대한 환경적 운의 파동. 기후와도 같습니다.'], ['交運 교운','대운이 바뀌는 환절기. 이 시기에는 인생에 큰 혼란과 변동이 옵니다.']]),
                     curDaewoonText,
                     daewunHtml 
                 ]
@@ -1082,10 +1082,9 @@ const OrthodoxEngine = (() => {
         } 
     }; 
 })();
-
 /**
  * =====================================================================
- * 🎨 [FRONTEND LAYER] : UI / 렌더링 / 제어 로직
+ * 🎨 [FRONTEND LAYER] : UI / 공공데이터 연동 / 렌더링 로직
  * =====================================================================
  */
 window.MockAPI = { post: async (endpoint, payload) => { if(endpoint === '/api/analyze') return await OrthodoxEngine.analyze(payload); throw new Error("404"); } };
@@ -1146,44 +1145,47 @@ const SaaSFrontend = (() => {
         });
     };
 
-    const renderOhaengChart = (scores) => {
+    // 💡 [UPDATE] 실시간 날씨 부스트가 적용되는 다이내믹 오행 차트 렌더링
+    const renderOhaengChart = (scores, weatherCond) => {
         const wrap = document.getElementById('r-element-chart');
         if(!wrap) return;
         wrap.innerHTML = ''; 
+        
+        const wMap = { '맑음': '火', '비': '水', '눈': '金', '흐림': '土', '바람': '木' };
+        const buffEl = weatherCond ? (wMap[weatherCond] || '火') : null;
+
         const colors = {'木':'wood','火':'fire','土':'earth','金':'metal','水':'water'};
         let maxScore = Math.max(...Object.values(scores), 1); 
 
         ['木','火','土','金','水'].forEach(el => {
-            const percentage = (scores[el] / maxScore) * 100;
+            const baseScore = scores[el];
+            const isBuffed = (el === buffEl);
+            const finalScore = isBuffed ? baseScore + 15 : baseScore; 
+            const percentage = Math.min((finalScore / (maxScore + 15)) * 100, 100);
+            
+            const buffLabel = isBuffed ? `<span style="font-size:0.7rem; color:var(--gold-primary); background:rgba(212,175,55,0.15); padding:2px 6px; border-radius:4px; margin-left:5px; animation: pulse 1.5s infinite;">LIVE UP ↑</span>` : '';
+            const barGlow = isBuffed ? `box-shadow: 0 0 15px var(--color-${colors[el]});` : '';
+
             wrap.innerHTML += `
-                <div class="bar-wrap">
-                    <div class="bar-label" style="color:var(--color-${colors[el]})">${el}</div>
+                <div class="bar-wrap" style="margin-bottom:18px;">
+                    <div class="bar-label" style="color:var(--color-${colors[el]}); width:80px;">${el}${buffLabel}</div>
                     <div class="bar-bg">
-                        <div class="bar-fill fill-${colors[el]}" style="width:${percentage}%"></div>
+                        <div class="bar-fill fill-${colors[el]}" style="width:0%; transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); ${barGlow}"></div>
                     </div>
-                    <div class="bar-val">${scores[el]}%</div>
+                    <div class="bar-val">${isBuffed ? `<span style="color:var(--color-${colors[el]}); font-weight:900;">${baseScore} ➔ ${finalScore}</span>` : `${baseScore}`}%</div>
                 </div>
             `;
         });
-    };
 
-    // 💡 돋보기 아이콘과 새로운 문구가 반영된 스텔스 CTA 렌더링 함수
-    const renderStealthCTA = (yongshinEl) => {
-        const wrap = document.createElement('div');
-        let targetUrl = 'https://link.coupang.com/a/eu5td7'; 
-        
-        if (yongshinEl === '木' || yongshinEl === '火') targetUrl = 'https://link.coupang.com/a/eu5td7';
-        else if (yongshinEl === '土' || yongshinEl === '金') targetUrl = 'https://link.coupang.com/a/eu5uLR';
-        else targetUrl = 'https://link.coupang.com/a/eu5vYe';
-
-        wrap.innerHTML = `
-            <a href="${targetUrl}" target="_blank" class="proc-toggle term-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: flex-start; margin-top: 30px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(212,175,55,0.15);">
-                <span style="font-size:0.75rem; transition: transform 0.3s;">🔍</span>
-                <span style="font-weight:700; letter-spacing:0.5px;"> 나의 행운템 보기</span>
-            </a>
-            <p style="text-align:center; font-size:0.75rem; color:rgba(255,255,255,0.15); margin-top:0px; margin-bottom:30px;">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
-        `;
-        return wrap;
+        setTimeout(() => {
+            const fills = wrap.querySelectorAll('.bar-fill');
+            ['木','火','土','金','水'].forEach((el, idx) => {
+                const baseScore = scores[el];
+                const finalScore = (el === buffEl) ? baseScore + 15 : baseScore;
+                const percentage = Math.min((finalScore / (maxScore + 15)) * 100, 100);
+                fills[idx].style.width = `${percentage}%`;
+            });
+        }, 100);
     };
 
     const renderChartAndGrid = (graphData) => {
@@ -1235,7 +1237,8 @@ const SaaSFrontend = (() => {
         }
     };
 
-    const renderReportTarget = (resData) => {
+    // 💡 [UPDATE] 리포트 전체 배경광 동기화 로직 포함
+    const renderReportTarget = (resData, weatherObj) => {
         const wrap = document.getElementById('dynamic-sections');
         if(!wrap) return;
         wrap.innerHTML = '';
@@ -1243,6 +1246,19 @@ const SaaSFrontend = (() => {
         safeText('r-title-name', `${String(resData.meta.name).replace(/[&<>"']/g, '')} 님의 운명 리포트`);
         safeText('r-title-date-solar', resData.meta.solarStr);
         safeText('r-title-date-lunar', resData.meta.lunarStr);
+
+        // 실시간 날씨 테마(Glow) 적용
+        if (weatherObj && weatherObj.condition) {
+            const bgGlowMap = {
+                '맑음': 'radial-gradient(circle at top, rgba(251,146,60,0.1), #0a0e14)',
+                '비': 'radial-gradient(circle at top, rgba(96,165,250,0.1), #0a0e14)',
+                '눈': 'radial-gradient(circle at top, rgba(203,213,225,0.1), #0a0e14)',
+                '흐림': 'radial-gradient(circle at top, rgba(251,191,36,0.1), #0a0e14)',
+                '바람': 'radial-gradient(circle at top, rgba(74,222,128,0.1), #0a0e14)'
+            };
+            const targetBg = bgGlowMap[weatherObj.condition] || 'var(--bg-report)';
+            document.querySelector('.report-wrapper').style.background = targetBg;
+        }
 
         renderBaziGrid(resData.meta.baziGridData);
         
@@ -1252,30 +1268,88 @@ const SaaSFrontend = (() => {
         resData.sections.forEach(sec => {
             const secDiv = document.createElement('div');
             secDiv.className = 'r-section';
-            
             const title = document.createElement('h3'); 
             title.innerHTML = sec.title; 
             secDiv.appendChild(title);
-            
             const content = document.createElement('div'); 
             content.className = 'r-content';
-            
             sec.paragraphs.forEach(p => { content.appendChild(createSafeDOM(p)); });
             secDiv.appendChild(content);
             mainFrag.appendChild(secDiv);
-
             if(sec.graphData) graphDataToRender = sec.graphData;
         });
 
         wrap.appendChild(mainFrag);
-
         if(graphDataToRender) setTimeout(() => renderChartAndGrid(graphDataToRender), 150);
-        setTimeout(() => renderOhaengChart(resData.meta.ohaengScores), 150); 
+        setTimeout(() => renderOhaengChart(resData.meta.ohaengScores, weatherObj ? weatherObj.condition : null), 150); 
+    };
+
+    // 💡 기상청 X, Y 격자 변환 함수
+    const dfs_xy_conv = (code, v1, v2) => {
+        const RE = 6371.00877; const GRID = 5.0; const SLAT1 = 30.0; const SLAT2 = 60.0;
+        const OLON = 126.0; const OLAT = 38.0; const XO = 43; const YO = 136;
+        const DEGRAD = Math.PI / 180.0; const re = RE / GRID; const slat1 = SLAT1 * DEGRAD; const slat2 = SLAT2 * DEGRAD;
+        const olon = OLON * DEGRAD; const olat = OLAT * DEGRAD;
+        let sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5); sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+        let sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5); sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
+        let ro = Math.tan(Math.PI * 0.25 + olat * 0.5); ro = re * sf / Math.pow(ro, sn);
+        let rs = {};
+        if (code === "toXY") {
+            rs['lat'] = v1; rs['lng'] = v2;
+            let ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5); ra = re * sf / Math.pow(ra, sn);
+            let theta = v2 * DEGRAD - olon; if (theta > Math.PI) theta -= 2.0 * Math.PI; if (theta < -Math.PI) theta += 2.0 * Math.PI; theta *= sn;
+            rs['x'] = Math.floor(ra * Math.sin(theta) + XO + 0.5); rs['y'] = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
+        }
+        return rs;
+    };
+
+    // 💡 기상청 초단기실황 API 연동
+    const fetchRealTimeWeather = async (lat, lon) => {
+        const API_KEY = "1ddcc7f0063f3f004733b2651211cfe7ae0b11cc01f584205c1546bab1858c60";
+        const grid = dfs_xy_conv("toXY", lat, lon);
+        const now = new Date();
+        let min = now.getMinutes(), hr = now.getHours();
+        if (min < 40) hr -= 1; 
+        if (hr < 0) { hr = 23; now.setDate(now.getDate() - 1); }
+        const base_date = now.getFullYear().toString() + (now.getMonth() + 1).toString().padStart(2, '0') + now.getDate().toString().padStart(2, '0');
+        const base_time = hr.toString().padStart(2, '0') + '00';
+        const url = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=${API_KEY}&pageNo=1&numOfRows=10&dataType=JSON&base_date=${base_date}&base_time=${base_time}&nx=${grid.x}&ny=${grid.y}`;
+
+        try {
+            const res = await fetch(url); const json = await res.json();
+            const items = json.response.body.items.item;
+            let pty = '0', temp = '20';
+            items.forEach(item => { if (item.category === 'PTY') pty = item.obsrValue; if (item.category === 'T1H') temp = item.obsrValue; });
+            let condition = '맑음';
+            if (pty === '1' || pty === '5') condition = '비';
+            else if (pty === '2' || pty === '3' || pty === '6' || pty === '7') condition = '눈'; 
+            return { condition, temp: Math.round(parseFloat(temp)) };
+        } catch (e) {
+            console.error("기상청 API 오류:", e);
+            return { condition: '맑음', temp: 20 }; 
+        }
+    };
+
+    // 💡 브이월드 위치 데이터 연동
+    const fetchRegionName = async (lat, lon) => {
+        const VWORLD_KEY = "5B0D3660-9AA8-3DEC-BDB4-BE8463D07762";
+        try {
+            const url = `https://api.vworld.kr/req/address?service=address&request=getAddress&version=2.0&crs=epsg:4326&point=${lon},${lat}&format=json&type=PARCEL&key=${VWORLD_KEY}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            if (data.response && data.response.status === "OK") {
+                const struct = data.response.result[0].structure;
+                return `${struct.level1} ${struct.level2} ${struct.level3}`.replace(/\s+/g, ' ').trim();
+            }
+            return "현재 위치";
+        } catch (e) {
+            console.error("브이월드 API 오류:", e);
+            return "현재 위치"; 
+        }
     };
 
     const requestReport = () => {
-        const nameEl = document.getElementById('user-name');
-        const name = nameEl ? nameEl.value.trim() : "고객";
+        const nameEl = document.getElementById('user-name'); const name = nameEl ? nameEl.value.trim() : "고객";
         const y = parseInt(document.getElementById('user-year').value), m = parseInt(document.getElementById('user-month').value), d = parseInt(document.getElementById('user-day').value);
         if (!isValidDate(y, m, d)) { showMsg("유효하지 않은 날짜입니다.", true); return; }
 
@@ -1286,7 +1360,7 @@ const SaaSFrontend = (() => {
         const loaderText = document.querySelector('.loading-txt');
         if(loader) loader.style.display = 'flex';
 
-        const loaderMsgs = ["과거의 궤적을 스캔 중...", "월령 승수 기반 오행 가중치 연산...", "은밀한 흉살과 공망 추적 중...", "원국/대운/세운 3중 궤적 교차...", "거대한 운명 텍스트 생성 중..."];
+        const loaderMsgs = ["과거의 궤적을 스캔 중...", "위성 기상 데이터 수신 중...", "공공데이터 위치 변환 중...", "원국/대운 5년 분할 교차...", "거대한 운명 텍스트 생성 중..."];
         let msgIdx = 0; 
         if(loaderText) loaderText.textContent = loaderMsgs[msgIdx];
         const msgInterval = setInterval(() => { 
@@ -1294,19 +1368,33 @@ const SaaSFrontend = (() => {
             if(loaderText) loaderText.textContent = loaderMsgs[msgIdx]; 
         }, 900);
 
-        setTimeout(async () => {
+        navigator.geolocation.getCurrentPosition(
+            async (pos) => { executeScan(pos.coords.latitude, pos.coords.longitude); },
+            async (err) => { 
+                console.warn("위치 정보 거부/실패. 디폴트 좌표(세종시)를 사용합니다.");
+                executeScan(36.48, 127.28); 
+            },
+            { timeout: 5000 }
+        );
+
+        const executeScan = async (lat, lon) => {
             try {
-                const response = await window.MockAPI.post('/api/analyze', {y, m, d, h, cal, gender, name});
+                // 실시간 기상/위치 공공데이터 동시 호출
+                const [liveWeather, regionName] = await Promise.all([
+                    fetchRealTimeWeather(lat, lon),
+                    fetchRegionName(lat, lon)
+                ]);
+                
+                const response = await window.MockAPI.post('/api/analyze', {
+                    y, m, d, h, cal, gender, name, 
+                    weather: liveWeather, 
+                    region: regionName 
+                });
+                
                 if(!response || response.statusCode !== 200) throw new Error("엔진 파괴 오류");
 
-                renderReportTarget(response.data);
+                renderReportTarget(response.data, liveWeather);
                 
-                const ctaContainer = document.getElementById('cta-container');
-                if(ctaContainer) {
-                    ctaContainer.innerHTML = '';
-                    ctaContainer.appendChild(renderStealthCTA(response.data.meta.yongshinEl));
-                }
-
                 clearInterval(msgInterval);
                 if(loader) loader.style.display = 'none';
                 
@@ -1322,22 +1410,43 @@ const SaaSFrontend = (() => {
                 if(loader) loader.style.display = 'none';
                 showMsg(e.message || "서버 통신에 실패했습니다.", true);
             }
-        }, 5000); 
+        };
     };
 
+    // 💡 [UPDATE] 날씨와 지역명이 박히는 초개인화 공유 기능
     const shareLink = async () => {
         const url = 'https://chomibinine.github.io/destinyroot/';
-        const shareData = { title: '운명뿌리 | 사주 분석', text: '정통 명리 데이터 기반의 내 사주 리포트를 확인해보세요.', url: url };
+        
+        const docText = document.getElementById('dynamic-sections')?.innerText || '';
+        let region = "내 위치";
+        let weather = "";
+        let weatherIcon = "✨";
+        
+        const locMatch = docText.match(/📍\s([^실]+)\s실시간\s기상\s\(([^)]+)\)/);
+        if (locMatch) {
+            region = locMatch[1].trim(); 
+            if(docText.includes('☀️')) { weather = "태양빛이 쏟아져서"; weatherIcon = "☀️"; }
+            else if(docText.includes('🌧️')) { weather = "비가 쏟아져서"; weatherIcon = "🌧️"; }
+            else if(docText.includes('❄️')) { weather = "눈이 내려서"; weatherIcon = "❄️"; }
+            else if(docText.includes('☁️')) { weather = "구름이 껴서"; weatherIcon = "☁️"; }
+            else if(docText.includes('🌬️')) { weather = "바람이 불어서"; weatherIcon = "🌬️"; }
+        }
+
+        const dynamicText = locMatch 
+            ? `📍[${region}] 지금 ${weather} 날씨 버프 발동 중! ${weatherIcon} 실시간 기후가 반영된 내 진짜 사주 점수는?`
+            : '정통 명리 데이터 기반의 내 실시간 사주 리포트를 확인해보세요.';
+
+        const shareData = { title: '운명뿌리 | 실시간 기상 사주', text: dynamicText, url: url };
         
         if (navigator.share) {
             try { await navigator.share(shareData); } catch (err) { console.error("Share canceled", err); }
         } else {
             const dummy = document.createElement('input');
             document.body.appendChild(dummy);
-            dummy.value = url;
+            dummy.value = `${dynamicText}\n${url}`;
             dummy.select(); document.execCommand('copy');
             document.body.removeChild(dummy);
-            showMsg('사이트 주소가 복사되었습니다.');
+            showMsg('사이트 주소가 복사되었습니다. 카톡에 붙여넣기 해보세요!');
         }
     };
 
