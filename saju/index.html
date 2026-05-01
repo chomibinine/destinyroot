@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>운명뿌리 | 초정밀 사주 & 기상 스캔</title>
+    <title>운명뿌리 | V56 초정밀 사주 & 기상 스캔</title>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954282181306694" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.min.js"></script>
@@ -1145,7 +1145,7 @@ const SaaSFrontend = (() => {
         });
     };
 
-    // 💡 [UPDATE] 실시간 날씨 부스트가 적용되는 다이내믹 오행 차트 렌더링
+    // 💡 실시간 날씨 부스트가 적용되는 다이내믹 오행 차트
     const renderOhaengChart = (scores, weatherCond) => {
         const wrap = document.getElementById('r-element-chart');
         if(!wrap) return;
@@ -1186,6 +1186,25 @@ const SaaSFrontend = (() => {
                 fills[idx].style.width = `${percentage}%`;
             });
         }, 100);
+    };
+
+    // 💡 [RESTORED] 원본 스텔스 쿠팡 CTA 렌더링 함수 완벽 복구
+    const renderStealthCTA = (yongshinEl) => {
+        const wrap = document.createElement('div');
+        let targetUrl = 'https://link.coupang.com/a/eu5td7'; 
+        
+        if (yongshinEl === '木' || yongshinEl === '火') targetUrl = 'https://link.coupang.com/a/eu5td7';
+        else if (yongshinEl === '土' || yongshinEl === '金') targetUrl = 'https://link.coupang.com/a/eu5uLR';
+        else targetUrl = 'https://link.coupang.com/a/eu5vYe';
+
+        wrap.innerHTML = `
+            <a href="${targetUrl}" target="_blank" class="proc-toggle term-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: flex-start; margin-top: 30px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(212,175,55,0.15);">
+                <span style="font-size:0.75rem; transition: transform 0.3s;">🔍</span>
+                <span style="font-weight:700; letter-spacing:0.5px;"> 나의 행운템 보기</span>
+            </a>
+            <p style="text-align:center; font-size:0.75rem; color:rgba(255,255,255,0.15); margin-top:0px; margin-bottom:30px;">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
+        `;
+        return wrap;
     };
 
     const renderChartAndGrid = (graphData) => {
@@ -1237,7 +1256,6 @@ const SaaSFrontend = (() => {
         }
     };
 
-    // 💡 [UPDATE] 리포트 전체 배경광 동기화 로직 포함
     const renderReportTarget = (resData, weatherObj) => {
         const wrap = document.getElementById('dynamic-sections');
         if(!wrap) return;
@@ -1247,7 +1265,6 @@ const SaaSFrontend = (() => {
         safeText('r-title-date-solar', resData.meta.solarStr);
         safeText('r-title-date-lunar', resData.meta.lunarStr);
 
-        // 실시간 날씨 테마(Glow) 적용
         if (weatherObj && weatherObj.condition) {
             const bgGlowMap = {
                 '맑음': 'radial-gradient(circle at top, rgba(251,146,60,0.1), #0a0e14)',
@@ -1284,7 +1301,7 @@ const SaaSFrontend = (() => {
         setTimeout(() => renderOhaengChart(resData.meta.ohaengScores, weatherObj ? weatherObj.condition : null), 150); 
     };
 
-    // 💡 기상청 X, Y 격자 변환 함수
+    // 기상청 격자 변환
     const dfs_xy_conv = (code, v1, v2) => {
         const RE = 6371.00877; const GRID = 5.0; const SLAT1 = 30.0; const SLAT2 = 60.0;
         const OLON = 126.0; const OLAT = 38.0; const XO = 43; const YO = 136;
@@ -1303,7 +1320,7 @@ const SaaSFrontend = (() => {
         return rs;
     };
 
-    // 💡 기상청 초단기실황 API 연동
+    // 실시간 기상청 API
     const fetchRealTimeWeather = async (lat, lon) => {
         const API_KEY = "1ddcc7f0063f3f004733b2651211cfe7ae0b11cc01f584205c1546bab1858c60";
         const grid = dfs_xy_conv("toXY", lat, lon);
@@ -1330,30 +1347,21 @@ const SaaSFrontend = (() => {
         }
     };
 
-    // 💡 브이월드 위치 데이터 연동
-        // 💡 [UPDATE] 브이월드 실패 시 OSM으로 자동 우회하는 무적의 지역명 변환기
+    // 브이월드(V-World) + OSM 하이브리드 위치 변환
     const fetchRegionName = async (lat, lon) => {
         const VWORLD_KEY = "5B0D3660-9AA8-3DEC-BDB4-BE8463D07762";
-        
         try {
-            // 1단계: 브이월드 호출 (type=BOTH로 바꿔서 도로 위에서도 검색되게 확률을 높임)
             const vworldUrl = `https://api.vworld.kr/req/address?service=address&request=getAddress&version=2.0&crs=epsg:4326&point=${lon},${lat}&format=json&type=BOTH&key=${VWORLD_KEY}`;
             const res = await fetch(vworldUrl);
             const data = await res.json();
             
-            // 정상이면 브이월드 주소 반환
             if (data.response && data.response.status === "OK") {
                 const struct = data.response.result[0].structure;
                 return `${struct.level1} ${struct.level2} ${struct.level3}`.replace(/\s+/g, ' ').trim();
             }
-            // 실패하면 바로 catch문으로 던져서 2단계를 실행하게 만듦
             throw new Error("브이월드 응답 없음"); 
-
         } catch (e) {
-            console.warn("브이월드 지연/에러 발생! 예비망(OSM)을 가동합니다.", e);
-            
             try {
-                // 2단계: 인증키나 도메인 등록이 전혀 필요 없는 OSM 공공데이터로 자동 우회
                 const osmUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=14&addressdetails=1&accept-language=ko`;
                 const res2 = await fetch(osmUrl);
                 const data2 = await res2.json();
@@ -1363,17 +1371,14 @@ const SaaSFrontend = (() => {
                     const depth1 = ad.city || ad.province || ad.state || '';
                     const depth2 = ad.borough || ad.county || ad.city_district || '';
                     const depth3 = ad.suburb || ad.town || ad.village || ad.quarter || '';
-                    
-                    const region = `${depth1} ${depth2} ${depth3}`.replace(/\s+/g, ' ').trim();
-                    return region || "현재 위치";
+                    return `${depth1} ${depth2} ${depth3}`.replace(/\s+/g, ' ').trim() || "현재 위치";
                 }
                 return "현재 위치";
             } catch (e2) {
-                return "현재 위치"; // 2단계마저 실패할 경우 최후의 수단
+                return "현재 위치"; 
             }
         }
     };
-
 
     const requestReport = () => {
         const nameEl = document.getElementById('user-name'); const name = nameEl ? nameEl.value.trim() : "고객";
@@ -1406,7 +1411,6 @@ const SaaSFrontend = (() => {
 
         const executeScan = async (lat, lon) => {
             try {
-                // 실시간 기상/위치 공공데이터 동시 호출
                 const [liveWeather, regionName] = await Promise.all([
                     fetchRealTimeWeather(lat, lon),
                     fetchRegionName(lat, lon)
@@ -1421,6 +1425,13 @@ const SaaSFrontend = (() => {
                 if(!response || response.statusCode !== 200) throw new Error("엔진 파괴 오류");
 
                 renderReportTarget(response.data, liveWeather);
+                
+                // 💡 [RESTORED] 스텔스 CTA 컨테이너에 렌더링 함수 결합
+                const ctaContainer = document.getElementById('cta-container');
+                if(ctaContainer) {
+                    ctaContainer.innerHTML = '';
+                    ctaContainer.appendChild(renderStealthCTA(response.data.meta.yongshinEl));
+                }
                 
                 clearInterval(msgInterval);
                 if(loader) loader.style.display = 'none';
@@ -1440,7 +1451,6 @@ const SaaSFrontend = (() => {
         };
     };
 
-    // 💡 [UPDATE] 날씨와 지역명이 박히는 초개인화 공유 기능
     const shareLink = async () => {
         const url = 'https://chomibinine.github.io/destinyroot/';
         
@@ -1477,9 +1487,8 @@ const SaaSFrontend = (() => {
         }
     };
 
-        // 💡 랜딩 페이지(최상단)로 아예 이동시켜버리기
+    // 💡 최상단 경로(랜딩 페이지)로 이동하도록 수정 완료
     const goHome = () => { window.location.href = '/'; };
-
 
     const init = () => {
         const ys = document.getElementById('user-year'), ms = document.getElementById('user-month'), ds = document.getElementById('user-day');
