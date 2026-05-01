@@ -1331,22 +1331,49 @@ const SaaSFrontend = (() => {
     };
 
     // 💡 브이월드 위치 데이터 연동
+        // 💡 [UPDATE] 브이월드 실패 시 OSM으로 자동 우회하는 무적의 지역명 변환기
     const fetchRegionName = async (lat, lon) => {
         const VWORLD_KEY = "5B0D3660-9AA8-3DEC-BDB4-BE8463D07762";
+        
         try {
-            const url = `https://api.vworld.kr/req/address?service=address&request=getAddress&version=2.0&crs=epsg:4326&point=${lon},${lat}&format=json&type=PARCEL&key=${VWORLD_KEY}`;
-            const res = await fetch(url);
+            // 1단계: 브이월드 호출 (type=BOTH로 바꿔서 도로 위에서도 검색되게 확률을 높임)
+            const vworldUrl = `https://api.vworld.kr/req/address?service=address&request=getAddress&version=2.0&crs=epsg:4326&point=${lon},${lat}&format=json&type=BOTH&key=${VWORLD_KEY}`;
+            const res = await fetch(vworldUrl);
             const data = await res.json();
+            
+            // 정상이면 브이월드 주소 반환
             if (data.response && data.response.status === "OK") {
                 const struct = data.response.result[0].structure;
                 return `${struct.level1} ${struct.level2} ${struct.level3}`.replace(/\s+/g, ' ').trim();
             }
-            return "현재 위치";
+            // 실패하면 바로 catch문으로 던져서 2단계를 실행하게 만듦
+            throw new Error("브이월드 응답 없음"); 
+
         } catch (e) {
-            console.error("브이월드 API 오류:", e);
-            return "현재 위치"; 
+            console.warn("브이월드 지연/에러 발생! 예비망(OSM)을 가동합니다.", e);
+            
+            try {
+                // 2단계: 인증키나 도메인 등록이 전혀 필요 없는 OSM 공공데이터로 자동 우회
+                const osmUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=14&addressdetails=1&accept-language=ko`;
+                const res2 = await fetch(osmUrl);
+                const data2 = await res2.json();
+                
+                if (data2 && data2.address) {
+                    const ad = data2.address;
+                    const depth1 = ad.city || ad.province || ad.state || '';
+                    const depth2 = ad.borough || ad.county || ad.city_district || '';
+                    const depth3 = ad.suburb || ad.town || ad.village || ad.quarter || '';
+                    
+                    const region = `${depth1} ${depth2} ${depth3}`.replace(/\s+/g, ' ').trim();
+                    return region || "현재 위치";
+                }
+                return "현재 위치";
+            } catch (e2) {
+                return "현재 위치"; // 2단계마저 실패할 경우 최후의 수단
+            }
         }
     };
+
 
     const requestReport = () => {
         const nameEl = document.getElementById('user-name'); const name = nameEl ? nameEl.value.trim() : "고객";
@@ -1450,7 +1477,9 @@ const SaaSFrontend = (() => {
         }
     };
 
-    const goHome = () => { window.location.reload(); };
+        // 💡 랜딩 페이지(최상단)로 아예 이동시켜버리기
+    const goHome = () => { window.location.href = '/'; };
+
 
     const init = () => {
         const ys = document.getElementById('user-year'), ms = document.getElementById('user-month'), ds = document.getElementById('user-day');
