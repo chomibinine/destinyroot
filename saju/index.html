@@ -1348,7 +1348,7 @@ const SaaSFrontend = (() => {
         }
     };
 
-    // 💡 브이월드(V-World) + OSM 하이브리드 위치 변환 (무적 우회)
+        // 💡 브이월드(V-World) + OSM 하이브리드 위치 변환 (중복 단어 필터링 적용)
     const fetchRegionName = async (lat, lon) => {
         const VWORLD_KEY = "5B0D3660-9AA8-3DEC-BDB4-BE8463D07762";
         try {
@@ -1358,7 +1358,12 @@ const SaaSFrontend = (() => {
             
             if (data.response && data.response.status === "OK") {
                 const struct = data.response.result[0].structure;
-                return `${struct.level1} ${struct.level2} ${struct.level3}`.replace(/\s+/g, ' ').trim();
+                
+                // 💡 [수정] 배열로 만든 뒤 Set을 이용해 중복(예: 도담동 도담동)을 제거합니다.
+                const parts = [struct.level1, struct.level2, struct.level3].filter(Boolean);
+                const uniqueParts = [...new Set(parts)]; 
+                
+                return uniqueParts.join(' ').replace(/\s+/g, ' ').trim();
             }
             throw new Error("브이월드 응답 없음"); 
         } catch (e) {
@@ -1372,7 +1377,12 @@ const SaaSFrontend = (() => {
                     const depth1 = ad.city || ad.province || ad.state || '';
                     const depth2 = ad.borough || ad.county || ad.city_district || '';
                     const depth3 = ad.suburb || ad.town || ad.village || ad.quarter || '';
-                    return `${depth1} ${depth2} ${depth3}`.replace(/\s+/g, ' ').trim() || "현재 위치";
+                    
+                    // 💡 [수정] OSM 우회 시에도 동일하게 중복 단어 제거 로직 적용
+                    const parts = [depth1, depth2, depth3].filter(Boolean);
+                    const uniqueParts = [...new Set(parts)];
+                    
+                    return uniqueParts.join(' ').replace(/\s+/g, ' ').trim() || "현재 위치";
                 }
                 return "현재 위치";
             } catch (e2) {
@@ -1380,6 +1390,7 @@ const SaaSFrontend = (() => {
             }
         }
     };
+
 
     const requestReport = () => {
         const nameEl = document.getElementById('user-name'); const name = nameEl ? nameEl.value.trim() : "고객";
