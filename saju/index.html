@@ -1348,9 +1348,21 @@ const SaaSFrontend = (() => {
         }
     };
 
-    // 💡 브이월드(V-World) + OSM 하이브리드 위치 변환 (무적 우회)
+        // 💡 브이월드(V-World) + OSM 하이브리드 위치 변환 (절대 중복 방지 로직)
     const fetchRegionName = async (lat, lon) => {
         const VWORLD_KEY = "5B0D3660-9AA8-3DEC-BDB4-BE8463D07762";
+        
+        // 어떤 문자열이 들어와도 중복된 단어는 무조건 하나로 압축해버리는 무적의 헬퍼 함수
+        const cleanUp = (str) => {
+            if (!str) return "현재 위치";
+            let words = str.replace(/\s+/g, ' ').trim().split(' ');
+            let uniqueWords = [];
+            words.forEach(w => {
+                if (!uniqueWords.includes(w)) uniqueWords.push(w);
+            });
+            return uniqueWords.join(' ');
+        };
+
         try {
             const vworldUrl = `https://api.vworld.kr/req/address?service=address&request=getAddress&version=2.0&crs=epsg:4326&point=${lon},${lat}&format=json&type=BOTH&key=${VWORLD_KEY}`;
             const res = await fetch(vworldUrl);
@@ -1358,7 +1370,9 @@ const SaaSFrontend = (() => {
             
             if (data.response && data.response.status === "OK") {
                 const struct = data.response.result[0].structure;
-                return `${struct.level1} ${struct.level2} ${struct.level3}`.replace(/\s+/g, ' ').trim();
+                // 레벨 1~4까지 다 긁어모은 뒤 중복 단어 박살내기
+                const rawStr = `${struct.level1 || ''} ${struct.level2 || ''} ${struct.level3 || ''} ${struct.level4L || ''}`;
+                return cleanUp(rawStr);
             }
             throw new Error("브이월드 응답 없음"); 
         } catch (e) {
@@ -1369,10 +1383,8 @@ const SaaSFrontend = (() => {
                 
                 if (data2 && data2.address) {
                     const ad = data2.address;
-                    const depth1 = ad.city || ad.province || ad.state || '';
-                    const depth2 = ad.borough || ad.county || ad.city_district || '';
-                    const depth3 = ad.suburb || ad.town || ad.village || ad.quarter || '';
-                    return `${depth1} ${depth2} ${depth3}`.replace(/\s+/g, ' ').trim() || "현재 위치";
+                    const rawStr = `${ad.city || ad.province || ad.state || ''} ${ad.borough || ad.county || ad.city_district || ''} ${ad.suburb || ad.town || ad.village || ad.quarter || ''}`;
+                    return cleanUp(rawStr);
                 }
                 return "현재 위치";
             } catch (e2) {
