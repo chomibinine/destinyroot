@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>사주 분석 | 초정밀 사주풀이</title>
+    <title>운명뿌리 | V56 초정밀 사주 & 기상 스캔</title>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954282181306694" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.min.js"></script>
@@ -178,7 +178,7 @@
 
 <div id="loader">
     <div class="spinner"></div>
-    <div id="loader-text" class="loading-txt"> 운명 궤적 추적 중...</div>
+    <div id="loader-text" class="loading-txt">V56 운명 궤적 추적 중...</div>
 </div>
 
 <div id="custom-modal" class="modal">
@@ -892,7 +892,7 @@ const OrthodoxEngine = (() => {
             // 💡 [NEW] 실시간 기상 스캔 섹션 (리포트 최상단 배치)
             if(weather && region) {
                 sections.push({
-                    title: formatTitle("🔴 title: formatTitle("🔴 [LIVE] 실시간 기상 에너지 스캔", "(국토교통부·기상청 공공데이터 연동)"),
+                    title: formatTitle("🔴 [LIVE] 실시간 기상 에너지 스캔", "(국토교통부·기상청 공공데이터 연동)"),
                     paragraphs: [
                         proc('proc-live', `<b>실시간 API 파이프라인 연동</b><br>현재 시간의 기상/위치 데이터를 호출하여 당신의 수호 오행(<b>${yongshin.el}</b>)과 교차 연산했습니다.`),
                         `운명은 정지해 있지 않으며, 환경에 의해 실시간으로 요동칩니다. 지금 당장 창밖의 날씨가 당신의 사주에 미치는 영향을 스캔했습니다.`,
@@ -1199,8 +1199,8 @@ const SaaSFrontend = (() => {
 
         wrap.innerHTML = `
             <a href="${targetUrl}" target="_blank" class="proc-toggle term-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: flex-start; margin-top: 30px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(212,175,55,0.15);">
-                <span style="font-size:0.75rem; transition: transform 0.3s;">🔍</span>
-                <span style="font-weight:700; letter-spacing:0.5px;"> 나의 행운템 보기</span>
+                <span style="font-size:0.75rem; transition: transform 0.3s;">▼</span>
+                <span style="font-weight:700; letter-spacing:0.5px;">🔍 나의 행운템 보기</span>
             </a>
             <p style="text-align:center; font-size:0.75rem; color:rgba(255,255,255,0.15); margin-top:0px; margin-bottom:10px;">* 파트너스 활동을 통해 소정의 수수료를 제공받을 수 있습니다.</p>
         `;
@@ -1348,7 +1348,7 @@ const SaaSFrontend = (() => {
         }
     };
 
-        // 💡 브이월드(V-World) + OSM 하이브리드 위치 변환 (중복 단어 필터링 적용)
+    // 💡 브이월드(V-World) + OSM 하이브리드 위치 변환 (무적 우회)
     const fetchRegionName = async (lat, lon) => {
         const VWORLD_KEY = "5B0D3660-9AA8-3DEC-BDB4-BE8463D07762";
         try {
@@ -1358,12 +1358,7 @@ const SaaSFrontend = (() => {
             
             if (data.response && data.response.status === "OK") {
                 const struct = data.response.result[0].structure;
-                
-                // 💡 [수정] 배열로 만든 뒤 Set을 이용해 중복(예: 도담동 도담동)을 제거합니다.
-                const parts = [struct.level1, struct.level2, struct.level3].filter(Boolean);
-                const uniqueParts = [...new Set(parts)]; 
-                
-                return uniqueParts.join(' ').replace(/\s+/g, ' ').trim();
+                return `${struct.level1} ${struct.level2} ${struct.level3}`.replace(/\s+/g, ' ').trim();
             }
             throw new Error("브이월드 응답 없음"); 
         } catch (e) {
@@ -1377,12 +1372,7 @@ const SaaSFrontend = (() => {
                     const depth1 = ad.city || ad.province || ad.state || '';
                     const depth2 = ad.borough || ad.county || ad.city_district || '';
                     const depth3 = ad.suburb || ad.town || ad.village || ad.quarter || '';
-                    
-                    // 💡 [수정] OSM 우회 시에도 동일하게 중복 단어 제거 로직 적용
-                    const parts = [depth1, depth2, depth3].filter(Boolean);
-                    const uniqueParts = [...new Set(parts)];
-                    
-                    return uniqueParts.join(' ').replace(/\s+/g, ' ').trim() || "현재 위치";
+                    return `${depth1} ${depth2} ${depth3}`.replace(/\s+/g, ' ').trim() || "현재 위치";
                 }
                 return "현재 위치";
             } catch (e2) {
@@ -1390,7 +1380,6 @@ const SaaSFrontend = (() => {
             }
         }
     };
-
 
     const requestReport = () => {
         const nameEl = document.getElementById('user-name'); const name = nameEl ? nameEl.value.trim() : "고객";
